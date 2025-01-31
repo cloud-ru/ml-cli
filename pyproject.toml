@@ -1,0 +1,118 @@
+[build-system]
+requires = ["hatchling>=1.24.2", "hatch-vcs>=0.3.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mls"
+dynamic = ["version"]
+
+requires-python = ">=3.9,<4"
+dependencies = [
+    "click (>=8.1.8,<9.0.0)",
+    "keyrings-alt (>=5.0.2,<6.0.0)",
+    "types-requests (>=2.32.0.20241016,<3.0.0.0)",
+    "responses (>=0.25.6,<0.26.0)",
+    "types-pyyaml (>=6.0.12.20241230,<7.0.0.0)",
+]
+
+description = "Библиотека для работы с api Cloud.ru MLSpace"
+authors = [
+    {name = "Максим Налимов",email = "msnalimov@cloud.ru"}
+]
+readme = "README.md"
+keywords = ["cloud.ru"]
+classifiers = [
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent"
+]
+
+[project.optional-dependencies]
+dev = [
+  "check-manifest",
+  "types-requests",
+]
+test = [
+    "coverage",
+    "pytest",
+    "pytest-cov"
+]
+lint = [
+  "pre-commit",
+]
+release = [
+    "hatch",
+    "hatchling",
+    "python-semantic-release"
+]
+
+# Заглушка для разработчиков
+[tool.poetry]
+version = "0.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pre-commit = "^4.1.0"
+pytest-cov = "^6.0.0"
+hatch = "^1.14.0"
+tomli = "^2.2.1"
+mypy = "^1.14.1"
+
+
+[project.scripts]
+mls = "mls.cli:entry_point"
+activate-autocomplete = "mls.cli:activate_autocomplete_function"
+
+[tool.hatch.version.raw-options]
+version_scheme = "python-simplified-semver"
+local_scheme = "no-local-version"
+parentdir_prefix_version = "hatch-"
+git_describe_command = ["git", "describe", "--dirty", "--tags", "--long", "--match", "hatch-v*"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.version]
+path = "mls/__about__.py"
+validate-bump = false
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "mls", "mls_core"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["mls", "mls_core"]
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests"
+]
+
+[tool.semantic_release]
+version_variables = ["mls/__about__.py:__version__"]
+upload_to_repository = true
+upload_to_release = true
+tag_commit = false
+
+[tool.semantic_release.branches.master]
+match = "master"
+prerelease_token = "rc"
+prerelease = false
+
+[tool.semantic_release.remote]
+type = "gitlab"
+domain = "https://git.sbercloud.tech"
+token = { env = "GITLAB_REPO_TOKEN" }
+
+
+[tool.semantic_release.commit_parser_options]
+message_format = "^(feat|fix)"
+
+[mypy]
+ignore_missing_imports = true
