@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.2 (2025-02-01)
+
+### Bug Fixes
+
+- **prod-sync-issue**: Исправляю версии для прода
+  ([`900ef36`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/900ef3620f9904f4019e12684d065cad2c8f872e))
+
+
 ## v0.2.1 (2025-02-01)
 
 ### Bug Fixes
