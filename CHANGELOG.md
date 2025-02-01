@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.3.1 (2025-02-01)
+
+### Bug Fixes
+
+- **click**: Пытаюсь подобрать зависимости
+  ([`9e360ee`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/9e360ee379c1dfdeca35972b3771afbb160ea037))
+
+
 ## v0.3.0 (2025-02-01)
 
 ### Features
@@ -63,6 +71,3 @@
 
 - **argo**: Fix
   ([`55b9502`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/55b950209e9f7c1cebfcedaf3f49be73f9ca6aab))
-
-- **pipe**: Argo
-  ([`c30996b`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/c30996bc32045eb586fce61f093668382744cfaf))
