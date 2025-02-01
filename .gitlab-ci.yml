@@ -1,5 +1,4 @@
-# TODO @kvsorokin
 include:
-- project: 'products/aicloud/cicd'
-  ref: feature/AICJOBS-2422
-  file: 'gitlab-ci-mlspace-cli.yaml'
+  - project: products/aicloud/cicd
+    ref: feature/AICJOBS-2422
+    file: /gitlab-ci-mlspace-cli.yaml
