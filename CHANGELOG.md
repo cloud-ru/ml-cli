@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.4 (2025-02-01)
+
+### Bug Fixes
+
+- **pipelines**: Prod
+  ([`2046ba9`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/2046ba99643b9fa1f9f684b88f7d2ef128d8ba20))
+
+
 ## v0.2.3 (2025-02-01)
 
 ### Bug Fixes
