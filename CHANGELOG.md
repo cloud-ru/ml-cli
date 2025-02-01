@@ -11,6 +11,9 @@
 - **pipelines**: Prod
   ([`2046ba9`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/2046ba99643b9fa1f9f684b88f7d2ef128d8ba20))
 
+- **version**: Click=8.1.8
+  ([`94ad607`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/94ad607e631cb9157f80b5addf7ed9d19c7cb7a1))
+
 ### Chores
 
 - **click**: Установил четкую версию click
@@ -51,9 +54,6 @@
 - **piplines**: Исправления на стороне арго
   ([`f931598`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/f9315985863f364e0d3d58fcbb6183c1952b10e2))
 
-- **Проврека**: Проверка работы pipline
-  ([`d6161bb`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/d6161bb6a2439cdd1b4807373d3c5fc3e9a4c2db))
-
 ### Features
 
 - **argo**: Fix
@@ -64,6 +64,3 @@
 
 - **pipe**: Argo
   ([`c30996b`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/c30996bc32045eb586fce61f093668382744cfaf))
-
-
-## v0.1.0 (2025-02-01)
