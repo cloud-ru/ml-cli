@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.3.2 (2025-02-01)
+
+### Bug Fixes
+
+- **python**: >=3.10,<4
+  ([`7768cb1`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/7768cb168e03fc1d33ff1094f059cf7f83df32c6))
+
+
 ## v0.3.1 (2025-02-01)
 
 ### Bug Fixes
@@ -61,13 +69,3 @@
 
 
 ## v0.2.0 (2025-02-01)
-
-### Bug Fixes
-
-- **argo**: Pipelines
-  ([`5be47b3`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/5be47b3ea4711f33fa40292266095ae150d73cce))
-
-### Features
-
-- **argo**: Fix
-  ([`55b9502`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/55b950209e9f7c1cebfcedaf3f49be73f9ca6aab))
