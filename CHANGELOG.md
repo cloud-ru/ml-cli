@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.3 (2025-02-01)
+
+### Bug Fixes
+
+- **pipline**: Prod-release
+  ([`34c472e`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/34c472e8c1389d73a542a49b0eff66692c9df18c))
+
+
 ## v0.2.2 (2025-02-01)
 
 ### Bug Fixes
