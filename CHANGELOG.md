@@ -5,8 +5,16 @@
 
 ### Bug Fixes
 
+- **click**: Зависимости
+  ([`df35801`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/df3580160fe1c9c6d3613837ff27fef02b2a2034))
+
 - **pipelines**: Prod
   ([`2046ba9`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/2046ba99643b9fa1f9f684b88f7d2ef128d8ba20))
+
+### Chores
+
+- **click**: Установил четкую версию click
+  ([`c1e538d`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/c1e538d435cf031f141c797602e14c59a3130ebb))
 
 
 ## v0.2.3 (2025-02-01)
@@ -59,19 +67,3 @@
 
 
 ## v0.1.0 (2025-02-01)
-
-### Bug Fixes
-
-- **ci/cd**: Запуск тестов
-  ([`36140f5`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/36140f5631a1cb132d0682d29fa65b5c5de9ccea))
-
-- **init**: Отключение загрузки релиза в репозиторий
-  ([`b242b73`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/b242b739ad4e6a3738cb7b6f90f4510c09e2d223))
-
-- **init**: Указал директорию для тестов
-  ([`3b3b7c1`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/3b3b7c1c3aa4691b5152ea93c508115d2d31cb8b))
-
-### Features
-
-- **init**: Создание функционала для SDK
-  ([`0459e9c`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/0459e9c4f3d78033e1a52d76f1121633717040b5))
