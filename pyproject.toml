@@ -90,7 +90,9 @@ packages = ["mls", "mls_core"]
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q"
-testpaths = ["tests"]
+testpaths = [
+    "tests"
+]
 
 [tool.semantic_release]
 version_variables = ["mls/__about__.py:__version__"]
