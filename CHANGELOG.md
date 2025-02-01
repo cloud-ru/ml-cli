@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.1 (2025-02-01)
+
+### Bug Fixes
+
+- **pipelines**: Исправляю логику pipelines
+  ([`9aed6f3`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/9aed6f3a227f2cb20f72fbeb050f1ddd136d7151))
+
+
 ## v0.2.0 (2025-02-01)
 
 ### Bug Fixes
