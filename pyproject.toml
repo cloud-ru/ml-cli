@@ -8,7 +8,7 @@ dynamic = ["version"]
 
 requires-python = ">=3.9,<4"
 dependencies = [
-    "click (==8.1.8)",
+    "click (>=8.0.0,<9.0.0)",
     "keyrings-alt (>=5.0.2,<6.0.0)",
     "types-requests (>=2.32.0.20241016,<3.0.0.0)",
     "responses (>=0.25.6,<0.26.0)",
