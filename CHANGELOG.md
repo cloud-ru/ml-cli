@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.0 (2025-02-06)
+
+### Features
+
+- **autocomplete**: Добавил функцию автозаполнения
+  ([`ada8529`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/ada85290ef2a66cf695611c6a082ce6a8194ec56))
+
+
 ## v0.3.2 (2025-02-01)
 
 ### Bug Fixes
@@ -61,11 +69,3 @@
 
 
 ## v0.2.1 (2025-02-01)
-
-### Bug Fixes
-
-- **pipelines**: Исправляю логику pipelines
-  ([`9aed6f3`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/9aed6f3a227f2cb20f72fbeb050f1ddd136d7151))
-
-
-## v0.2.0 (2025-02-01)
