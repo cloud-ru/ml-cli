@@ -2,6 +2,8 @@
 from configparser import ConfigParser
 
 import click
+from click import Command
+from click import Group
 
 from .settings import CONFIG_FILE
 from .settings import CREDENTIALS_FILE
@@ -59,3 +61,32 @@ def handle_click_exception(error: click.ClickException, ctx: click.Context):
     if ctx:
         click.echo(f'{ctx.get_help()}')
     click.echo(error_format(message))
+
+
+def suggest_autocomplete(input_str, commands_dict):
+    """Функция предположений о значении ввода пользователя."""
+    suggestions = []
+    # Поиск совпадений в ключах словаря
+    for command in commands_dict:
+        if command.startswith(input_str):
+            # Добавление найденных подкоманд/параметров
+            full = input_str.split(' ')
+            last = full[-1]
+            prev = ' '.join(full[:-1])
+            items = commands_dict.get(prev, [])
+            sss = [*filter(lambda x: x.startswith(last), items)]
+            suggestions.extend(sss)
+
+    return list(set(suggestions))
+
+
+def create_autocomplete(start_point, command_or_group, mapping):
+    """Рекурсивная функция наполняющая автозаполнения."""
+    if isinstance(command_or_group, Group):
+        mapping[start_point] = [str(command) for command in command_or_group.commands]
+        for command_name, command_obj in command_or_group.commands.items():
+            next_point = f'{start_point} {command_name}'.strip()
+            create_autocomplete(next_point, command_obj, mapping)
+
+    elif isinstance(command_or_group, Command):
+        mapping[start_point] = [param.opts[0] for param in command_or_group.params if param.opts]

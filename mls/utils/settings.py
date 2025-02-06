@@ -8,7 +8,6 @@
     CONFIG_FILE (str): Путь к файлу конфигурации системы MLS.
     CREDENTIALS_FILE (str): Путь к файлу с учётными данными пользователя.
     DEFAULT_PROFILE (str): Имя профиля по умолчанию, определяется через переменную окружения `MLS_PROFILE`.
-    MLSPACE_PUBLIC_API_URL TODO
 """
 import os
 
