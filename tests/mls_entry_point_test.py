@@ -9,7 +9,9 @@ import urllib3
 from urllib3.connection import HTTPConnection
 from urllib3.connectionpool import ConnectionPool
 
+from mls.cli import auto_complete_function
 from mls.cli import entry_point
+from mls.utils.common import suggest_autocomplete
 from mls.utils.execption import ConfigReadError
 from mls.utils.execption import ConfigWriteError
 from mls.utils.style import error_format
@@ -61,7 +63,7 @@ def test_entry_point_abort(mock_echo, mock_cli):
     mock_cli.side_effect = error
     entry_point()
     error_text, *_ = [execution.args for execution in mock_echo.mock_calls][0]
-    assert error_text == '\x1b[22mОборвано CTRL+Z\x1b[0m'
+    assert error_text == '\x1b[22mОборвано пользователем\x1b[0m'
 
 
 @patch('mls.cli.cli')
@@ -92,3 +94,20 @@ def test_entry_point_connection_error(mock_echo, mock_cli):
     entry_point()
     error_text, *_ = [execution.args for execution in mock_echo.mock_calls][0]
     assert error_text == '\x1b[31m\x1b[1mНе удалось установить соединение за указанное время\x1b[0m'
+
+
+def test_cli_autocomplete():
+    """Тест наполнения map для cli."""
+    mapping = {}
+    auto_complete_function(mapping)
+    assert mapping['mls job restart'] == ['name', '--debug', '--endpoint_url', '--output', '--profile', '--region']
+
+
+def test_cli_suggest():
+    """Тестирование предполагаемых предложений по вводу для пользователя."""
+    mapping = {}
+    auto_complete_function(mapping)
+    assert suggest_autocomplete('mls job re', mapping) == ['restart']
+    assert suggest_autocomplete('mls job ru', mapping) == ['run']
+    assert suggest_autocomplete('mls j', mapping) == ['job']
+    assert suggest_autocomplete('mls co', mapping) == ['configure']

@@ -53,9 +53,9 @@ def kill(api_job, name, region):
 
 @job.command(cls=RunHelp)
 @click.option('--config', type=Path(exists=True), help='Путь к YAML файлу с описанием задачи', default=None)
-@click.option('--instance-type', help='Тип ресурса', default=None)
+@click.option('--instance_type', help='Тип ресурса', default=None)
 @click.option('--image', help='Название образа', default=None)
-@click.option('--job-description', help='Описание задачи', default=None)
+@click.option('--job_description', help='Описание задачи', default=None)
 @click.option('--script', help='Путь к сценарию запуска', default=None)
 @click.option('--type', help='Тип задачи', default=None)
 @click.option('--number_of_workers', type=positive_int_with_zero, help='Количество обработчиков задачи', default=1)

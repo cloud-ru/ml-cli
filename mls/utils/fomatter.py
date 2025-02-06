@@ -114,6 +114,7 @@ class CommonGroupFormatter(click.Group):
                                 f'--{param.name:<15}',
                             ) + text_format(f' ::[{str(param.type):>10}]  {help_option}'),
                         )
+                self.dedent(2, formatter)
 
     def format_commands_section(self, ctx: click.Context, formatter: click.HelpFormatter):
         """Форматирует раздел доступных в группе команд."""

@@ -18,6 +18,11 @@
     Конфигурация профиля:
         $ python cli.py configure --profile dev
 """
+import sys
+from typing import Any
+from typing import Dict
+from typing import Optional
+
 import click
 import requests
 import urllib3
@@ -25,11 +30,14 @@ import urllib3
 from mls.manager.configure.cli import configure
 from mls.manager.job.cli import job
 from mls.utils.cli_entrypoint_help import MLSHelp
+from mls.utils.common import create_autocomplete
 from mls.utils.common import handle_click_exception
+from mls.utils.common import suggest_autocomplete
 from mls.utils.execption import ConfigReadError
 from mls.utils.execption import ConfigWriteError
 from mls.utils.style import error_format
 from mls.utils.style import text_format
+from mls_core.exeptions import AuthorizationError
 
 
 @click.group(cls=MLSHelp)
@@ -41,9 +49,37 @@ cli.add_command(job)
 cli.add_command(configure)
 
 
-def activate_autocomplete_function():
-    """Функция содержащая инструкцию включения mls <TAB> auto complete."""
-    click.echo("""TODO""")
+def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):
+    """Функция наполнения mls авто заполнителями."""
+    if mapping is None:
+        mapping = {}
+    create_autocomplete('mls', cli, mapping)
+    max_depth = 3
+
+    args = sys.argv
+    cleaned_arg = ' '.join([arg.strip() for arg in args if arg.strip()][1:][:max_depth])
+    help_options = mapping.get(cleaned_arg, [])
+
+    if help_options:
+        print('\n'.join(help_options))
+    else:
+        print('\n'.join(suggest_autocomplete(cleaned_arg, mapping))) or ''
+
+
+def autocomplete():
+    """Входная точка для запуска autocomplete.
+
+    Используется как complete entrypoint
+
+    _mls_completion() {
+        autocomplete "${COMP_WORDS[@]}"
+    }
+    complete -F _mls_completion mls
+    """
+    try:
+        auto_complete_function()
+    except Exception:
+        pass
 
 
 def entry_point():
@@ -58,14 +94,19 @@ def entry_point():
         ctx = getattr(error, 'ctx', None)
         handle_click_exception(error, ctx)
     except click.exceptions.Abort:
-        click.echo(text_format('Оборвано CTRL+Z'))
+        click.echo(text_format('Оборвано пользователем'))
     except urllib3.exceptions.MaxRetryError as error:
         click.echo(error_format(f'Достигнут предел по количеству обращений к {error.url}'))
     except urllib3.exceptions.NameResolutionError as error:
         click.echo(error_format(f'Ошибка разрешения ip адреса при обращении к домену {error.conn.host}'))
     except requests.exceptions.ConnectionError:
         click.echo(error_format('Не удалось установить соединение за указанное время'))
+    except AuthorizationError:
+        click.echo(error_format('Запрос не авторизован'))
+    except BrokenPipeError as error:
+        click.echo(error_format(error))
 
 
 if __name__ == '__main__':
+    # autocomplete() для debug
     entry_point()

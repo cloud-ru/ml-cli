@@ -1,3 +1,4 @@
+"""Модуль содержащий клиентов для работы с платформой MLSPACE."""
 import http.client
 import json
 import logging
@@ -7,6 +8,8 @@ from functools import wraps
 import requests
 from requests.adapters import HTTPAdapter  # type: ignore
 from urllib3.util.retry import Retry
+
+from mls_core.exeptions import AuthorizationError
 
 
 class _CommonPublicApiInterface:
@@ -47,8 +50,6 @@ class _CommonPublicApiInterface:
 
         self._logger = self._create_logger(debug)
         self._init_session(backoff_factor, max_retries)
-        # self._raise_for_status = raise_for_status
-        # self._output = output
 
         headers = {
             'authorization': self._get_auth_token(client_id, client_secret),
@@ -111,7 +112,7 @@ class _CommonPublicApiInterface:
             )
             response.raise_for_status()
         except requests.exceptions.RetryError as ex:
-            self._logger.error(ex)
+            self._logger.debug(ex)
         else:
             if response.headers.get('content-type') == 'application/json':
                 return response.json()
@@ -126,8 +127,8 @@ class _CommonPublicApiInterface:
                 },
             )
         except requests.exceptions.HTTPError as ex:
-            self._logger.error(ex)
-            raise ex
+            self._logger.debug(ex)
+            raise AuthorizationError(ex)
         return response['token']['access_token']
 
     def get(self, *args, **kwargs):
@@ -182,7 +183,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
 
     def _handle_http_error(self, ex):
         """Обработка исключений HTTPError."""
-        self._logger.error(ex)
+        self._logger.debug(ex)
         if ex.response.headers.get('content-type') == 'application/json':
             result = ex.response.json()
         else:
