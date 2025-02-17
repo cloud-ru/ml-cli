@@ -9,8 +9,8 @@ from mls.manager.job.utils import job_client
 def user_profile():
     """Фикстура настроек пользователя."""
     return {
-        'mls_apikey_id': 'test_id',
-        'mls_apikey_secret': 'test_secret',
+        'apikey_id': 'test_id',
+        'apikey_secret': 'test_secret',
         'workspace_id': 'test_workspace',
         'x_api_key': 'test_x_api_key',
         'output': 'json',

@@ -7,3 +7,7 @@ import requests
 
 class AuthorizationError(requests.exceptions.HTTPError):
     """Ошибка авторизации пользователя."""
+
+
+class DataStreamingFailure(Exception):
+    """Исключение, обозначающее ошибку потокового чтения данных."""

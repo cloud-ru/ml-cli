@@ -63,7 +63,7 @@ def test_entry_point_abort(mock_echo, mock_cli):
     mock_cli.side_effect = error
     entry_point()
     error_text, *_ = [execution.args for execution in mock_echo.mock_calls][0]
-    assert error_text == '\x1b[22mОборвано пользователем\x1b[0m'
+    assert error_text == '\x1b[22mВыполнение прервано пользователем\x1b[0m'
 
 
 @patch('mls.cli.cli')
@@ -73,7 +73,7 @@ def test_entry_point_max_retry_error(mock_echo, mock_cli):
     mock_cli.side_effect = urllib3.exceptions.MaxRetryError(ConnectionPool('abc.com', 80), url='http://abc.com')
     entry_point()
     error_text, *_ = [execution.args for execution in mock_echo.mock_calls][0]
-    assert error_text == '\x1b[31m\x1b[1mДостигнут предел по количеству обращений к http://abc.com\x1b[0m'
+    assert error_text == '\x1b[31m\x1b[1mДостигнут предел по количеству запросов к http://abc.com\x1b[0m'
 
 
 @patch('mls.cli.cli')
@@ -83,7 +83,7 @@ def test_entry_point_name_resolution_error(mock_echo, mock_cli):
     mock_cli.side_effect = urllib3.exceptions.NameResolutionError('abc.com', HTTPConnection('abc.com'), socket.gaierror())
     entry_point()
     error_text, *_ = [execution.args for execution in mock_echo.mock_calls][0]
-    assert error_text == '\x1b[31m\x1b[1mОшибка разрешения ip адреса при обращении к домену abc.com\x1b[0m'
+    assert error_text == '\x1b[31m\x1b[1mНе удалось сопоставить IP-адрес с abc.com\x1b[0m'
 
 
 @patch('mls.cli.cli')
@@ -93,7 +93,7 @@ def test_entry_point_connection_error(mock_echo, mock_cli):
     mock_cli.side_effect = requests.exceptions.ConnectionError()
     entry_point()
     error_text, *_ = [execution.args for execution in mock_echo.mock_calls][0]
-    assert error_text == '\x1b[31m\x1b[1mНе удалось установить соединение за указанное время\x1b[0m'
+    assert error_text == '\x1b[31m\x1b[1mНе удалось установить соединение, проверьте настройки сети\x1b[0m'
 
 
 def test_cli_autocomplete():

@@ -61,9 +61,9 @@ def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):
     help_options = mapping.get(cleaned_arg, [])
 
     if help_options:
-        print('\n'.join(help_options))
+        sys.stdout.write('\n'.join(help_options))
     else:
-        print('\n'.join(suggest_autocomplete(cleaned_arg, mapping))) or ''
+        sys.stdout.write('\n'.join(suggest_autocomplete(cleaned_arg, mapping))) or ''
 
 
 def autocomplete():
@@ -83,7 +83,7 @@ def autocomplete():
 
 
 def entry_point():
-    """Входная точка ядл поддержки работы в рамках вызова через mls.cli(в режиме cli приложения)."""
+    """Входная точка для поддержки работы в рамках вызова через mls.cli (в режиме cli-приложения)."""
     try:
         cli(standalone_mode=False)
     except ConfigReadError as error:
@@ -94,15 +94,15 @@ def entry_point():
         ctx = getattr(error, 'ctx', None)
         handle_click_exception(error, ctx)
     except click.exceptions.Abort:
-        click.echo(text_format('Оборвано пользователем'))
+        click.echo(text_format('Выполнение прервано пользователем'))
     except urllib3.exceptions.MaxRetryError as error:
-        click.echo(error_format(f'Достигнут предел по количеству обращений к {error.url}'))
+        click.echo(error_format(f'Достигнут предел по количеству запросов к {error.url}'))
     except urllib3.exceptions.NameResolutionError as error:
-        click.echo(error_format(f'Ошибка разрешения ip адреса при обращении к домену {error.conn.host}'))
+        click.echo(error_format(f'Не удалось сопоставить IP-адрес с {error.conn.host}'))
     except requests.exceptions.ConnectionError:
-        click.echo(error_format('Не удалось установить соединение за указанное время'))
+        click.echo(error_format('Не удалось установить соединение, проверьте настройки сети'))
     except AuthorizationError:
-        click.echo(error_format('Запрос не авторизован'))
+        click.echo(error_format('Попытка выполнить запрос неавторизованным пользователем'))
     except BrokenPipeError as error:
         click.echo(error_format(error))
 

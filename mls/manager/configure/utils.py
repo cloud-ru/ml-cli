@@ -103,13 +103,13 @@ def collect_user_inputs(config, credentials, profile_name):
         None
     """
     fields = [
-        ('mls_apikey_id', 'MLS API key ID', credentials, mask_secret),
-        ('mls_apikey_secret', 'MLS API key secret', credentials, mask_secret),
-        ('workspace_id', 'Workspace ID', credentials, mask_secret),
-        ('x_api_key', 'Workspace API key', credentials, mask_secret),
+        ('apikey_id', 'API key ID', credentials, mask_secret),
+        ('apikey_secret', 'API key secret', credentials, mask_secret),
+        ('workspace_id', 'ID воркспейса', credentials, mask_secret),
+        ('x_api_key', 'API key воркспейса', credentials, mask_secret),
 
-        ('region', 'Default region name', config, lambda x: x),
-        ('output', 'Default output format [json|text]', config, lambda x: x),
+        ('region', 'Название региона по умолчанию', config, lambda x: x),
+        ('output', 'Формат вывода по умолчанию [json|text]', config, lambda x: x),
     ]
 
     for key, prompt, cfg_obj, value_modifier in fields:
