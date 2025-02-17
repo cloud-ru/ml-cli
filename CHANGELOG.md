@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## v0.4.1 (2025-02-17)
+
+### Bug Fixes
+
+- **pipeline**: Исправление pipeleine
+  ([`868d4f8`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/868d4f83e782497460c7126abe1facad6e00680d))
+
+- **pipeline**: Исправление pipeline
+  ([`89bfbc5`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/89bfbc59a4941ea9416719a61a3f6dd91e7dc1b8))
+
+- **pipeline**: Исправление pipeline
+  ([`e918045`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/e91804507e3dd9a8a094f7201fdea6d9b3eb1868))
+
+- **pipeline**: Исправление синхронизации
+  ([`2d8e042`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/2d8e04271451aa283dc9aa4a8f0d5a1911c41ed8))
+
+- **pipeline**: Исправляю pipeline
+  ([`66a91a8`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/66a91a84b777498deede3fb08b57f5d4d05ccd2a))
+
+- **readme**: Исправил отображение gif
+  ([`9a1e1ea`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/9a1e1ea14b9f1b43ba5f9e0a5bbba7be3945819d))
+
+- **stream**: Добавил поддержку stream в TrainingJobClient
+  ([`d113004`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/d113004a9ec8b8aebd1d71532fcc4df07d835d33))
+
+- **target-repo**: Удалил отображение
+  ([`e392c85`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/e392c855c2431ddb0f86c872a58bfec8637d3a86))
+
+
 ## v0.4.0 (2025-02-06)
 
 ### Features
@@ -64,8 +93,40 @@
 
 ### Bug Fixes
 
+- **argo**: Pipelines
+  ([`5be47b3`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/5be47b3ea4711f33fa40292266095ae150d73cce))
+
+- **ci/cd**: Запуск тестов
+  ([`36140f5`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/36140f5631a1cb132d0682d29fa65b5c5de9ccea))
+
+- **init**: Отключение загрузки релиза в репозиторий
+  ([`b242b73`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/b242b739ad4e6a3738cb7b6f90f4510c09e2d223))
+
+- **init**: Указал директорию для тестов
+  ([`3b3b7c1`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/3b3b7c1c3aa4691b5152ea93c508115d2d31cb8b))
+
+- **pipelines**: Исправляю логику pipelines
+  ([`9aed6f3`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/9aed6f3a227f2cb20f72fbeb050f1ddd136d7151))
+
+- **piplines**: Исправления на стороне арго
+  ([`f931598`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/f9315985863f364e0d3d58fcbb6183c1952b10e2))
+
 - **prod-sync-issue**: Исправляю версии для прода
   ([`900ef36`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/900ef3620f9904f4019e12684d065cad2c8f872e))
 
+- **Проврека**: Проверка работы pipline
+  ([`d6161bb`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/d6161bb6a2439cdd1b4807373d3c5fc3e9a4c2db))
 
-## v0.2.1 (2025-02-01)
+### Features
+
+- **argo**: Fix
+  ([`55b9502`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/55b950209e9f7c1cebfcedaf3f49be73f9ca6aab))
+
+- **argo**: Исправляю арго
+  ([`af04364`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/af04364f68c19c00f4f5190ff3e08174eb8ee0c3))
+
+- **init**: Создание функционала для SDK
+  ([`0459e9c`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/0459e9c4f3d78033e1a52d76f1121633717040b5))
+
+- **pipe**: Argo
+  ([`c30996b`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/c30996bc32045eb586fce61f093668382744cfaf))
