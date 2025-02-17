@@ -3,3 +3,9 @@ Doxyfile
 CODEOWNERS
 CHANGELOG.md
 .gitlab-ci.yml
+.git
+.idea
+.DS_Store
+.coverage
+.mypy_cache
+.pytest_cache
