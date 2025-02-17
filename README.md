@@ -11,7 +11,7 @@
 ```bash
 pip install mls --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple -U
 ```
-[GIF Установка](install.gif)
+![GIF Установка](install.gif)
 
 `mls-core` установится автоматически.
 
@@ -22,14 +22,14 @@ pip install mls --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple
 ```Bash
 mls job list
 ```
-[GIF Получение списка задач](list.gif)
+![GIF Получение списка задач](list.gif)
 
 ## Просмотр логов задачи
 
 ```Bash
 mls job logs
 ```
-[GIF Просмотр логов задачи](logs.gif)
+![GIF Просмотр логов задачи](logs.gif)
 
 ## Запуск задачи через библиотеку
 
