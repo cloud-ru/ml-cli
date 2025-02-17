@@ -133,8 +133,8 @@ def test_configure_profile(profile_read, mock_inputs, profile_name, inputs):
     config, crededentials = profile_read(profile_name)
     assert config.has_section(profile_name)
     assert crededentials.has_section(profile_name)
-    assert crededentials.get(profile_name, 'mls_apikey_id') == api_key
-    assert crededentials.get(profile_name, 'mls_apikey_secret') == secret
+    assert crededentials.get(profile_name, 'apikey_id') == api_key
+    assert crededentials.get(profile_name, 'apikey_secret') == secret
     assert crededentials.get(profile_name, 'workspace_id') == workspace_id
     assert crededentials.get(profile_name, 'x_api_key') == x_api_key
 
@@ -171,8 +171,8 @@ def test_configure_profile_default(profile_read, mock_inputs, inputs):
     config, crededentials = profile_read(None)
     assert crededentials.has_section('default')
     assert config.has_section('default')
-    assert crededentials.get('default', 'mls_apikey_id') == api_key
-    assert crededentials.get('default', 'mls_apikey_secret') == secret
+    assert crededentials.get('default', 'apikey_id') == api_key
+    assert crededentials.get('default', 'apikey_secret') == secret
     assert crededentials.get('default', 'workspace_id') == workspace_id
     assert crededentials.get('default', 'x_api_key') == x_api_key
 
@@ -209,8 +209,8 @@ def test_configure_with_prompt(monkeypatch, profile_read):
 
     assert result.exit_code == 0, result.output
     assert "Профиль 'Alice' успешно сохранен!" in result.output
-    assert crededentials.get('Alice', 'mls_apikey_id') == 'my_api_key'
-    assert crededentials.get('Alice', 'mls_apikey_secret') == 'my_secret_key'
+    assert crededentials.get('Alice', 'apikey_id') == 'my_api_key'
+    assert crededentials.get('Alice', 'apikey_secret') == 'my_secret_key'
     assert crededentials.get('Alice', 'workspace_id') == '00000000-0000-0000-0000-000000000000'
     assert crededentials.get('Alice', 'x_api_key') == 'x-api-key'
 

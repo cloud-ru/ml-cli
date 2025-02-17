@@ -21,21 +21,19 @@ from mls.utils.style import success_format
 def job():
     """Группа команд (входная точка) при работе с задачами обучения.
 
-    Пример: mls job [command] [args] [options]
+    Синтаксис: mls job [command] [args] [options]
     """
 
 
 @job.command(cls=LogHelp)
 @click.argument('name')
-@click.option('--tail', type=positive_int_with_zero, help='Отображает последнею часть файла', default=0)
-@click.option('--verbose', is_flag=True, help='Подробный вывод журнала', default=False)
+@click.option('--tail', type=positive_int_with_zero, help='Отображает последнюю часть файла логов', default=0)
+@click.option('--verbose', is_flag=True, help='Подробный вывод журнала логов', default=False)
 @job_client
 def logs(api_job, name, tail, verbose, region):
-    """Команда получения журнала (logs).
+    """Команда получения журнала логов.
 
-    Позволяет получить журнал
-
-    Пример: mls job logs [NAME] [options]
+    Синтаксис: mls job logs [NAME] [options]
     """
     click.echo(success_format(api_job.get_job_logs(name, region, tail, verbose)))
 
@@ -44,45 +42,50 @@ def logs(api_job, name, tail, verbose, region):
 @click.argument('name')
 @job_client
 def kill(api_job, name, region):
-    """Команда остановки задачи обучения в кластера.
+    """Команда остановки задачи обучения в регионе.
 
-    Пример: mls job kill [NAME] [options]
+    Синтаксис: mls job kill [NAME] [options]
     """
     click.echo(success_format(api_job.delete_job(name, region)))
 
 
 @job.command(cls=RunHelp)
-@click.option('--config', type=Path(exists=True), help='Путь к YAML файлу с описанием задачи', default=None)
+@click.option('--config', type=Path(exists=True), help='Путь к YAML-файлу с описанием задачи', default=None)
 @click.option('--instance_type', help='Тип ресурса', default=None)
-@click.option('--image', help='Название образа', default=None)
+@click.option(
+    '--image',
+    help=(
+        'Название образа.'
+        'Документация со списком образов: '
+        'https://cloud.ru/docs/aicloud/mlspace/concepts/environments__basic-images-list__jobs.html'
+    ), default=None,
+)
 @click.option('--job_description', help='Описание задачи', default=None)
-@click.option('--script', help='Путь к сценарию запуска', default=None)
+@click.option('--script', help='Путь к скрипту запуска', default=None)
 @click.option('--type', help='Тип задачи', default=None)
-@click.option('--number_of_workers', type=positive_int_with_zero, help='Количество обработчиков задачи', default=1)
+@click.option('--number_of_workers', type=positive_int_with_zero, help='Количество воркеров у задачи', default=1)
 @job_client
 def run(api_job, region, config, instance_type, image, job_description, script, type, number_of_workers):
     """Команда запуска задачи.
 
-    Пример: Файла конфигурации
-
-    1.yaml
+    Пример файла конфигурации для запуска config_file.yaml
 
     job:
 
         instance_type: a100plus.1gpu.80vG.12C.96G
 
-        image: cr.ai.cloud.ru/9136e8ca-7a11-4d48-a850-7ff8d6888f3b/job-ada-xland:latest
+        image: cr.ai.cloud.ru/00000000-0000-0000-0000-000000000000/job-sample:latest
 
-        job_description: h100-1x-lapo
+        job_description: hello-world
 
-        script: /home/jovyan/quick-start/job_launch_pt/train_distributed_example-torch2.py
+        script: /home/jovyan/quick-start/hello_world.py
 
         type: pytorch2
 
         number_of_workers: 1
 
 
-    Пример: mls job run --config 1.yaml
+    Пример: mls job run --config config_file.yaml
 
         Или
 
@@ -90,7 +93,7 @@ def run(api_job, region, config, instance_type, image, job_description, script, 
 
         Или
 
-    Пример: mls job run --config 1.yaml  --job_description <...>
+    Пример: mls job run --config config_file.yaml  --job_description <...>
     """
     job_arguments = {}
     if config:
@@ -114,7 +117,7 @@ def run(api_job, region, config, instance_type, image, job_description, script, 
 def status(api_job, name, region):
     """Команда просмотра статуса задачи.
 
-    Пример: mls job status [NAME] [options]
+    Синтаксис: mls job status [NAME] [options]
     """
     click.echo(success_format(api_job.get_job_status(name, region)))
 
@@ -123,9 +126,9 @@ def status(api_job, name, region):
 @click.argument('name')
 @job_client
 def pods(api_job, name, region):
-    """Команда просмотра статуса подов.
+    """Команда просмотра статусов подов.
 
-    Пример: mls job pods [NAME] [options]
+    Синтаксис: mls job pods [NAME] [options]
     """
     click.echo(success_format(api_job.get_pods(name, region)))
 
@@ -133,13 +136,13 @@ def pods(api_job, name, region):
 @job.command(cls=ListHelp, name='list')
 @click.option('--allocation_name', help='Набор выделенных ресурсов GPU и CPU', default=None)
 @click.option('--status', type=job_choices, multiple=True, help='Статусы задач', default=None)
-@click.option('--limit', help='Лимит отображения количества задача', default=6000, type=positive_int_with_zero)
-@click.option('--offset', help='Номер начала отображения списка', default=0, type=positive_int_with_zero)
+@click.option('--limit', help='Лимит отображения количества задач', default=6000, type=positive_int_with_zero)
+@click.option('--offset', help='Смещение относительно начала списка', default=0, type=positive_int_with_zero)
 @job_client
 def list_(api_job, region, allocation_name, status, limit, offset):
-    """Команда просмотра списка задачи.
+    """Команда просмотра списка задач.
 
-    Пример: mls job list [options]
+    Синтаксис: mls job list [options]
     """
     click.echo(success_format(api_job.get_list_jobs(region, allocation_name, status, limit, offset)))
 
@@ -150,6 +153,6 @@ def list_(api_job, region, allocation_name, status, limit, offset):
 def restart(api_job, name, region):
     """Команда перезапуска задачи по имени.
 
-    Пример: mls job restart [NAME] [options]
+    Синтаксис: mls job restart [NAME] [options]
     """
     click.echo(success_format(api_job.restart_job(name, region)))

@@ -3,13 +3,16 @@ import http.client
 import json
 import logging
 import sys
+import time
 from functools import wraps
 
 import requests
 from requests.adapters import HTTPAdapter  # type: ignore
+from requests.sessions import ChunkedEncodingError  # type: ignore
 from urllib3.util.retry import Retry
 
 from mls_core.exeptions import AuthorizationError
+from mls_core.exeptions import DataStreamingFailure
 
 
 class _CommonPublicApiInterface:
@@ -50,6 +53,8 @@ class _CommonPublicApiInterface:
 
         self._logger = self._create_logger(debug)
         self._init_session(backoff_factor, max_retries)
+        self.max_retries = max_retries
+        self.backoff_factor = backoff_factor
 
         headers = {
             'authorization': self._get_auth_token(client_id, client_secret),
@@ -231,3 +236,67 @@ class TrainingJobApi(_CommonPublicApiInterface):
     def run_job(self, payload):
         """Вызов запуска задачи."""
         return self.post('jobs', json=payload)
+
+    def stream(self, method: str, path: str, **kwargs):
+        """Выполняет HTTP запрос с использованием заданного метода к указанному пути возвращает данные порционно(потоково).
+
+        :param method: HTTP метод запроса
+        :param path: Путь запроса, который будет добавлен к базовому URL
+        :param kwargs: Дополнительные параметры запроса.
+        :return: Генератор, который возвращает данные ответа по частям. В случае ошибки запроса возвращает статус ответа с описанием ошибки.
+        """
+        timeout = kwargs.pop('timeout', (self._connect_timeout, self._read_timeout))
+        headers = kwargs.pop('headers', {})
+        try:
+            response = self._session.request(
+                method, f'{self._endpoint_url}/{path}', headers=headers, timeout=timeout,  stream=True, **kwargs,
+            )
+        except requests.exceptions.RetryError as ex:
+            self._logger.debug(ex)
+        else:
+            if response.status_code == 200:
+                yield from self._stream_data_with_retry(response)
+            else:
+                yield f'{response.status_code}, {response.text}'
+
+    def _stream_data_with_retry(self, response):
+        """Потоково читает данные ответа, пытаясь снова при возникновении ошибки `ChunkedEncodingError`.
+
+        :param response: Объект ответа `requests. Response`, из которого будут читаться данные.
+        :return: Генератор, возвращающий данные ответа по частям.
+
+        В случае повторяющихся ошибок `ChunkedEncodingError` до достижения максимального количества попыток
+        инициирует исключение `DataStreamingFailure`.
+        """
+        last_error = None
+        for attempt in range(1, self.max_retries + 1):
+            try:
+                for chunk in response.iter_content(chunk_size=256, decode_unicode=True):
+                    yield chunk
+                return
+            except ChunkedEncodingError as er:
+                sleep_time = self.backoff_factor * (2 ** (attempt - 1))
+                self._logger.debug(
+                    f'Обработка ошибки потоковой передачи данных: {er}. Ожидаем {sleep_time} секунд перед следующей попыткой.',
+                )
+                time.sleep(sleep_time)
+                last_error = er
+            finally:
+                response.close()
+
+        raise DataStreamingFailure(
+            f'Не удалось выполнить потоковое чтение данных после {self.max_retries} '
+            f'повторных попыток из-за ошибки кодирования Chunk. Последняя ошибка: {last_error}',
+        )
+
+    def stream_logs(self, name, region, tail=0, verbose=False):
+        """Выполняет потоковую загрузку логов для указанной задачи с использованием заданных параметров.
+
+        :param name: Имя задачи, для которой запрашиваются логи.
+        :param region: Регион, в котором выполнена задача.
+        :param tail: Количество последних строк лога для отображения.
+        :param verbose: Флаг, указывающий на необходимость вывода подробных логов.
+        :return: Вызывает функцию `stream`, чтобы выполнить потоковую загрузку логов задачи.
+        """
+        params = {'region': region, 'tail': tail, 'verbose': verbose}
+        yield from self.stream('GET', f'jobs/{name}/logs', params=params)

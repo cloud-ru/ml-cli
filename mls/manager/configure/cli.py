@@ -8,12 +8,12 @@ from .utils import configure_profile
 @click.command(cls=ConfigureHelp)
 @click.option('--profile', default=None,  help='Имя профиля')
 def configure(profile):
-    """Команда конфигурации профиля пользователя.
+    """Команда настройки конфигурации профиля пользователя.
 
-    Позволяет настраивать профили конфигурации для системы MLS.
+    Если профиль не указан, используется профиль по умолчанию ('default').
+    Документация по настройкам профиля:
+        https://cloud.ru/docs/aicloud/mlspace/concepts/guides/guides__profile/profile__develop-func.html.
 
-    Если профиль не указан, используется профиль по умолчанию.
-
-    Пример: mls configure --profile [name]
+    Синтаксис: mls configure --profile [name]
     """
     configure_profile(profile)

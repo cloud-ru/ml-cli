@@ -23,10 +23,10 @@ from mls_core import TrainingJobApi
 def common_cli_options(func):
     """Декоратор для добавления общих опций."""
     # Высший приоритет ближе к пользователю консоль
-    func = click.option('--region', help='Название кластера')(func)
+    func = click.option('--region', help='Ключ региона')(func)
 
     # Средний приоритет загрузка из файла
-    func = click.option('--profile', default=DEFAULT_PROFILE, help='Название конфигурации пользователя')(func)
+    func = click.option('--profile', default=DEFAULT_PROFILE, help='Имя профиля')(func)
 
     # Опции имеющие умолчания
     func = click.option('--output', type=output_choice, help='Формат вывода в консоль')(func)
@@ -51,8 +51,8 @@ def job_client(func):
         )
 
         stable_rules = dict(
-            client_id=profile.get('mls_apikey_id', ''),
-            client_secret=profile.get('mls_apikey_secret', ''),
+            client_id=profile.get('apikey_id', ''),
+            client_secret=profile.get('apikey_secret', ''),
             workspace_id=profile.get('workspace_id'),
             x_api_key=profile.get('x_api_key'),
 

@@ -1,0 +1,5 @@
+exclude.txt
+Doxyfile
+CODEOWNERS
+CHANGELOG.md
+.gitlab-ci.yml

@@ -1,7 +1,0 @@
-job:
-    instance_type: a100.1gpu.40
-    image: cr.ai.cloud.ru/9136e8ca-7a11-4d48-a850-7ff8d6888f3b/job-ada-xland:latest
-    job_description: h100-1x-lapo
-    script: /home/jovyan/quick-start/job_launch_pt/train_distributed_example-torch2.py
-    type: pytorch2
-    number_of_workers: 1

@@ -1,3 +1,0 @@
-job:
-    instance_type: a100.1gpu.40
-    image: cr.ai.cloud.ru/9136e8ca-7a11-4d48-a850-7ff8d6888f3b/job-ada-xland:latest
