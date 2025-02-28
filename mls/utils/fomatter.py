@@ -80,18 +80,55 @@ class CommonGroupFormatter(click.Group):
             formatter.write_text(text_format(help_text + '\n'))
         formatter.write_text('')
 
+    @staticmethod
+    def sort_custom_structure(data):
+        """Метод сортировки по ключу для групп и подгрупп."""
+        sorted_groups = sorted(data.keys(), key=lambda k: data[k]['sort_key'])
+
+        # Сортируем элементы внутри групп
+        for group_name in sorted_groups:
+            group = data[group_name]
+            group['items'].sort(key=lambda item: item['sort_key'])
+
+        # Возвращаем новый отсортированный словарь
+        return {group_name: data[group_name] for group_name in sorted_groups}
+
     def format_options_section(self, ctx: click.Context, formatter: click.HelpFormatter):
         """Форматирует раздел опций команды."""
         opts = ctx.command.params or self.get_params(ctx)
-        arguments = []
-        options = []
-        if opts:
-            for param in opts:
-                if len(param.opts) and param.name == param.opts[0]:
-                    arguments.append(param)
-                else:
-                    options.append(param)
+        arguments, options = self.separate_arguments_options(opts)
+        self.extract_argument(arguments, formatter)
+        groups: dict = {}
+        for param in options:
+            group_str = getattr(param, 'group', 'Опции')
+            group_index = getattr(param, 'group_index', -9999)
+            index = getattr(param, 'index', -9999)
+            intend = getattr(param, 'intend', 0)
+            groups[group_str] = groups.get(group_str, {'sort_key': group_index, 'items': [], 'intend': intend})
+            groups[group_str]['items'].append({'sort_key': index, 'value': param})
 
+        if options:
+            for param_name, ordered_param in self.sort_custom_structure(groups).items():
+                intend = ordered_param['intend']
+                items = ordered_param['items']
+                self.indent(intend, formatter)
+                with formatter.section(text_format(param_name)):
+                    for item in items:
+                        param = item['value']
+                        if isinstance(param, click.decorators.HelpOption):
+                            formatter.write_text(text_format(f'--{param.name}'))
+                        else:
+                            help_option = getattr(param, 'help', None) or '-'
+                            if not getattr(param, 'hidden', False):
+                                formatter.write_text(
+                                    highlight_format(
+                                        f'{" ".join(param.opts):<25}',
+                                    ) + text_format(f' ::[{str(param.type):>10}]  {help_option}'),
+                                )
+                    self.dedent(intend, formatter)
+
+    def extract_argument(self, arguments, formatter):
+        """Метод печати справки по аргументам."""
         if arguments:
             with formatter.section(text_format('Аргументы')):
                 self.indent(2, formatter)
@@ -101,20 +138,18 @@ class CommonGroupFormatter(click.Group):
                     )
                 self.dedent(2, formatter)
 
-        if options:
-            with formatter.section(text_format('Опции')):
-                self.indent(2, formatter)
-                for param in options:
-                    if isinstance(param, click.decorators.HelpOption):
-                        formatter.write_text(text_format(f'--{param.name}'))
-                    else:
-                        help_option = getattr(param, 'help', None) or '-'
-                        formatter.write_text(
-                            highlight_format(
-                                f'--{param.name:<15}',
-                            ) + text_format(f' ::[{str(param.type):>10}]  {help_option}'),
-                        )
-                self.dedent(2, formatter)
+    @staticmethod
+    def separate_arguments_options(opts):
+        """Метод разделения аргументов и опций."""
+        arguments = []
+        options = []
+        if opts:
+            for param in opts:
+                if len(param.opts) and param.name == param.opts[0]:
+                    arguments.append(param)
+                else:
+                    options.append(param)
+        return arguments, options
 
     def format_commands_section(self, ctx: click.Context, formatter: click.HelpFormatter):
         """Форматирует раздел доступных в группе команд."""

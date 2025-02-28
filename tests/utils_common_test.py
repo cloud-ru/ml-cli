@@ -37,9 +37,12 @@ def test_load_saved_config():
         patch('mls.utils.common.CREDENTIALS_FILE', 'path/to/credentials_file'),
     ):
         mock_config.return_value.read.return_value = True
+        mock_config.return_value.read_string.return_value = True
+
         config, credentials = load_saved_config()
-        assert config.read.called
-        assert credentials.read.called
+
+        assert config.read.call_count == 1
+        assert credentials.read_string.call_count == 1
 
 
 @pytest.fixture

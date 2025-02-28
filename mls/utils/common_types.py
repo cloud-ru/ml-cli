@@ -30,7 +30,7 @@ class Choice(click.Choice):
         return ', '.join(self.choices)
 
 
-class PositiveIntWithZero(click.ParamType):
+class PositiveIntWithZeroView(click.ParamType):
     """Класс конвектор позитивных целых чисел."""
     name = 'positive_int_with_zero'
 
@@ -53,11 +53,11 @@ class PositiveIntWithZero(click.ParamType):
     def __str__(self):
         """Метод __str__.
 
-        Возвращает строку 'INT GTE(0)', символизируя, что класс представляет путь в
-        операционной системе. Это упрощенное представление, не отражающее реальный
+        Возвращает строку 'INT GTE(0)'.
+        Это упрощенное представление, не отражающее реальный
         путь или его свойства, а служащее лишь предметом кастомизации.
         """
         return 'INT GTE(0)'
 
 
-positive_int_with_zero = PositiveIntWithZero()
+positive_int_with_zero = PositiveIntWithZeroView()

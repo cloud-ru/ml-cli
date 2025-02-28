@@ -5,22 +5,37 @@ import click
 from click import Command
 from click import Group
 
+from .openssl import decrypt
 from .settings import CONFIG_FILE
 from .settings import CREDENTIALS_FILE
+from .settings import ENCRYPTED_CREDENTIALS_FILE
 from .style import error_format
 
 
-def load_saved_config():
+def load_saved_config(password=None):
     """Загружает в память пользовательские настройки файлов (профиля) config, credentials.
 
     Возвращает:
         tuple:
             config (ConfigParser): Объект конфигурации с настройками.
             credentials (ConfigParser): Объект конфигурации с учётными данными.
+            password (str): Пароль для расшифровки файла с учётными данными.
     """
     config, credentials = ConfigParser(), ConfigParser()
     config.read(CONFIG_FILE)
-    credentials.read(CREDENTIALS_FILE)
+
+    try:
+        if password:
+            with open(ENCRYPTED_CREDENTIALS_FILE, 'rb') as cred_file:
+                credentials_data = decrypt(cred_file.read(), password)
+        else:
+            with open(CREDENTIALS_FILE, 'r') as cred_file:
+                credentials_data = cred_file.read()
+    except FileNotFoundError:
+        credentials_data = ''
+
+    credentials.read_string(credentials_data)
+
     return config, credentials
 
 
@@ -39,6 +54,8 @@ def handle_click_exception(error: click.ClickException, ctx: click.Context):
         'is not': 'не является',
         'Option': 'Опция',
         'requires': 'требует',
+        'an argument': 'аргумента',
+        'an arguments': 'аргументов',
         'arguments': 'аргументов',
         'argument': 'аргумента',
         'does not exist': 'указанного пути не существует',
@@ -89,4 +106,6 @@ def create_autocomplete(start_point, command_or_group, mapping):
             create_autocomplete(next_point, command_obj, mapping)
 
     elif isinstance(command_or_group, Command):
-        mapping[start_point] = [param.opts[0] for param in command_or_group.params if param.opts]
+        mapping[start_point] = [
+            '--' + param.name for param in command_or_group.params if param.opts and isinstance(param, click.core.Option)
+        ]

@@ -26,7 +26,9 @@ from typing import Optional
 import click
 import requests
 import urllib3
+from requests.exceptions import MissingSchema  # type: ignore
 
+from mls import __version__ as version
 from mls.manager.configure.cli import configure
 from mls.manager.job.cli import job
 from mls.utils.cli_entrypoint_help import MLSHelp
@@ -35,14 +37,22 @@ from mls.utils.common import handle_click_exception
 from mls.utils.common import suggest_autocomplete
 from mls.utils.execption import ConfigReadError
 from mls.utils.execption import ConfigWriteError
+from mls.utils.execption import DecryptionError
+from mls.utils.execption import EncryptionError
+from mls.utils.execption import MissingPassword
 from mls.utils.style import error_format
 from mls.utils.style import text_format
 from mls_core.exeptions import AuthorizationError
 
 
 @click.group(cls=MLSHelp)
+@click.version_option(version, '-v', '--version', message='mls %(version)s')
 def cli():
-    """Основная точка входа для команд MLS."""
+    """Основная точка входа для команд MLS.
+
+    Совет:
+        Настройте профиль в первую очередь. Выполните mls configure для настройки профиля по умолчанию.
+    """
 
 
 cli.add_command(job)
@@ -61,6 +71,7 @@ def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):
     help_options = mapping.get(cleaned_arg, [])
 
     if help_options:
+        sys.stdout.write('\n\u00A0\n')
         sys.stdout.write('\n'.join(help_options))
     else:
         sys.stdout.write('\n'.join(suggest_autocomplete(cleaned_arg, mapping))) or ''
@@ -103,8 +114,18 @@ def entry_point():
         click.echo(error_format('Не удалось установить соединение, проверьте настройки сети'))
     except AuthorizationError:
         click.echo(error_format('Попытка выполнить запрос неавторизованным пользователем'))
+    except DecryptionError:
+        click.echo(error_format('Невозможно расшифровать учётные данные'))
+    except EncryptionError:
+        click.echo(error_format('Невозможно зашифровать учётные данные'))
     except BrokenPipeError as error:
         click.echo(error_format(error))
+    except MissingSchema as error:
+        click.echo(error_format(f'Не указан endpoint_url. {error.args}'))
+    except requests.exceptions.InvalidURL as error:
+        click.echo(error_format(f'Указан не валидный endpoint_url. {error.args[0]}'))
+    except MissingPassword:
+        click.echo(error_format('Пароль не может быть пустым'))
 
 
 if __name__ == '__main__':

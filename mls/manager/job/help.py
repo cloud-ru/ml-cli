@@ -56,3 +56,18 @@ class RestartHelp(CommandHelp):
 class JobHelp(CommonGroupFormatter):
     """Класс Формат Помощи MLS JOB."""
     HEADING = 'Управление задачами обучения:'
+
+
+class YamlHelp(CommandHelp):
+    """Класс помощи отображения yaml примера."""
+    HEADING = 'Генератор примера yaml файла по типу задачи'
+
+
+class TypeHelp(CommandHelp):
+    """Класс справочник по типам."""
+    HEADING = 'Справочник по типам задач'
+
+
+class ClusterHelp(CommandHelp):
+    """Класс справочник по типам."""
+    HEADING = 'Справочник по кластерам'

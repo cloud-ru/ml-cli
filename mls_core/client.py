@@ -5,14 +5,19 @@ import logging
 import sys
 import time
 from functools import wraps
+from typing import Optional
 
 import requests
 from requests.adapters import HTTPAdapter  # type: ignore
 from requests.sessions import ChunkedEncodingError  # type: ignore
 from urllib3.util.retry import Retry
 
-from mls_core.exeptions import AuthorizationError
-from mls_core.exeptions import DataStreamingFailure
+from .exeptions import AuthorizationError
+from .exeptions import DataStreamingFailure
+from .setting import BACKOFF_FACTOR
+from .setting import CONNECT_TIMEOUT
+from .setting import MAX_RETRIES
+from .setting import READ_TIMEOUT
 
 
 class _CommonPublicApiInterface:
@@ -24,13 +29,14 @@ class _CommonPublicApiInterface:
             endpoint_url: str,
             client_id: str,
             client_secret: str,
-            workspace_id: str,
+            x_workspace_id: str,
             x_api_key: str,
-            max_retries: int = 3,  # TODO Вынести опции в settings core проекта
-            backoff_factor: float = 0.3,  # TODO Вынести опции в settings
-            connect_timeout: int = 5,  # TODO Вынести опции в settings
-            read_timeout: int = 5,  # TODO Вынести опции в settings
+            max_retries: int = MAX_RETRIES,
+            backoff_factor: float = BACKOFF_FACTOR,
+            connect_timeout: int = CONNECT_TIMEOUT,
+            read_timeout: int = READ_TIMEOUT,
             debug: bool = False,
+            logger: Optional[logging.Logger] = None,
 
     ):
         """Инициализация класса PublicApi.
@@ -38,27 +44,29 @@ class _CommonPublicApiInterface:
         :param endpoint_url: Базовый URL API.
         :param client_id: Идентификатор клиента.
         :param client_secret: Секрет клиента.
-        :param workspace_id: Идентификатор воркспейса
+        :param x_workspace_id: Идентификатор воркспейса
         :param x_api_key: ключ доступа к воркспейсу
         :param max_retries: Максимальное количество попыток повторного запроса.
         :param backoff_factor: Фактор экспоненциальной задержки между повторными попытками.
         :param connect_timeout: Таймаут подключения (в секундах).
         :param read_timeout: Таймаут чтения (в секундах).
         :param debug: Включение отладочного режима.
+        :param logger: Журнал приложения
 
         """
         self._endpoint_url = endpoint_url
         self._connect_timeout = connect_timeout
         self._read_timeout = read_timeout
+        self._debug = debug
 
-        self._logger = self._create_logger(debug)
+        self._logger = logger if logger is not None else self._create_logger(self._debug)
         self._init_session(backoff_factor, max_retries)
         self.max_retries = max_retries
         self.backoff_factor = backoff_factor
 
         headers = {
             'authorization': self._get_auth_token(client_id, client_secret),
-            'x-workspace-id': workspace_id,
+            'x-workspace-id': x_workspace_id,
             'x-api-key': x_api_key,
         }
 
@@ -80,12 +88,11 @@ class _CommonPublicApiInterface:
         session.mount('https://', HTTPAdapter(max_retries=retries))
         self._session = session
 
-    def _create_logger(self, debug: bool):  # TODO Настройка форматтера settings
+    def _create_logger(self, debug: bool):
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.WARNING)
 
         handler = logging.StreamHandler(sys.stdout)
-        # TODO Настройка форматтера settings core проетка
         formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s')
         handler.setFormatter(formatter)
 
