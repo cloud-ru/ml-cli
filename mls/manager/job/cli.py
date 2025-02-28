@@ -1,7 +1,12 @@
 """Описание интерфейса запуска распределённых задач обучения."""
 import click
 
+from .custom_types import cluster_keys
 from .custom_types import job_choices
+from .custom_types import job_types
+from .custom_types import JobRecommenderOptions
+from .dataclasses import Job
+from .help import ClusterHelp
 from .help import JobHelp
 from .help import KillHelp
 from .help import ListHelp
@@ -10,8 +15,10 @@ from .help import LogHelp
 from .help import RestartHelp
 from .help import RunHelp
 from .help import StatusHelp
+from .help import TypeHelp
+from .help import YamlHelp
+from .utils import apply_options
 from .utils import job_client
-from .utils import read_yaml
 from mls.utils.common_types import Path
 from mls.utils.common_types import positive_int_with_zero
 from mls.utils.style import success_format
@@ -27,8 +34,8 @@ def job():
 
 @job.command(cls=LogHelp)
 @click.argument('name')
-@click.option('--tail', type=positive_int_with_zero, help='Отображает последнюю часть файла логов', default=0)
-@click.option('--verbose', is_flag=True, help='Подробный вывод журнала логов', default=False)
+@click.option('-t', '--tail', type=positive_int_with_zero, help='Отображает последнюю часть файла логов', default=0)
+@click.option('-v', '--verbose', is_flag=True, help='Подробный вывод журнала логов', default=False)
 @job_client
 def logs(api_job, name, tail, verbose, region):
     """Команда получения журнала логов.
@@ -50,71 +57,20 @@ def kill(api_job, name, region):
 
 
 @job.command(cls=RunHelp)
-@click.option('--config', type=Path(exists=True), help='Путь к YAML-файлу с описанием задачи', default=None)
-@click.option('--instance_type', help='Тип ресурса', default=None)
 @click.option(
-    '--image',
-    help=(
-        'Название образа.'
-        'Документация со списком образов: '
-        'https://cloud.ru/docs/aicloud/mlspace/concepts/environments__basic-images-list__jobs.html'
-    ), default=None,
+    '-c', '--config', cls=JobRecommenderOptions, type=Path(exists=True), help='Путь к YAML манифесту с описанием задачи', default=None,
 )
-@click.option('--job_description', help='Описание задачи', default=None)
-@click.option('--script', help='Путь к скрипту запуска', default=None)
-@click.option('--type', help='Тип задачи', default=None)
-@click.option('--number_of_workers', type=positive_int_with_zero, help='Количество воркеров у задачи', default=1)
+@apply_options
 @job_client
-def run(api_job, region, config, instance_type, image, job_description, script, type, number_of_workers):
-    """Команда запуска задачи.
-
-    Пример файла конфигурации для запуска config_file.yaml
-
-    job:
-
-        instance_type: a100plus.1gpu.80vG.12C.96G
-
-        image: cr.ai.cloud.ru/00000000-0000-0000-0000-000000000000/job-sample:latest
-
-        job_description: hello-world
-
-        script: /home/jovyan/quick-start/hello_world.py
-
-        type: pytorch2
-
-        number_of_workers: 1
+def submit(api_job, region, type_job, *_, **__):
+    """Функция для отправки задачи."""
+    click.echo(success_format(api_job.run_job(type_job.to_json(region))))
 
 
-    Пример: mls job run --config config_file.yaml
-
-        Или
-
-    Пример: mls job run --instance_type <...> --image <...> --job_description <...> --script <...> --type <...> --number_of_workers <...>
-
-        Или
-
-    Пример: mls job run --config config_file.yaml  --job_description <...>
-    """
-    job_arguments = {}
-    if config:
-        job_arguments = read_yaml(config).get('job', job_arguments)
-    payload = {
-        'script': script or job_arguments.get('script'),
-        'base_image': image or job_arguments.get('image'),
-        'instance_type': instance_type or job_arguments.get('instance_type'),
-        'region': region,
-        'type': type or job_arguments.get('type'),
-        'n_workers': number_of_workers or job_arguments.get('number_of_workers'),
-        'job_desc': job_description or job_arguments.get('job_description'),
-    }
-
-    click.echo(success_format(api_job.run_job(payload)))
-
-
-@job.command(cls=StatusHelp)
+@job.command(cls=StatusHelp, name='status')
 @click.argument('name')
 @job_client
-def status(api_job, name, region):
+def status_(api_job, name, region):
     """Команда просмотра статуса задачи.
 
     Синтаксис: mls job status [NAME] [options]
@@ -134,10 +90,10 @@ def pods(api_job, name, region):
 
 
 @job.command(cls=ListHelp, name='list')
-@click.option('--allocation_name', help='Набор выделенных ресурсов GPU и CPU', default=None)
-@click.option('--status', type=job_choices, multiple=True, help='Статусы задач', default=None)
-@click.option('--limit', help='Лимит отображения количества задач', default=6000, type=positive_int_with_zero)
-@click.option('--offset', help='Смещение относительно начала списка', default=0, type=positive_int_with_zero)
+@click.option('-a', '--allocation_name', help='Набор выделенных ресурсов GPU и CPU', default=None)
+@click.option('-s', '--status', type=job_choices, multiple=True, help='Статусы задач', default=None)
+@click.option('-l', '--limit', help='Лимит отображения количества задач', default=6000, type=positive_int_with_zero)
+@click.option('-o', '--offset', help='Смещение относительно начала списка', default=0, type=positive_int_with_zero)
 @job_client
 def list_(api_job, region, allocation_name, status, limit, offset):
     """Команда просмотра списка задач.
@@ -156,3 +112,34 @@ def restart(api_job, name, region):
     Синтаксис: mls job restart [NAME] [options]
     """
     click.echo(success_format(api_job.restart_job(name, region)))
+
+
+@job.command(cls=YamlHelp)
+@click.argument('type', required=False, default='binary')
+def yaml(type):
+    """Справочный метод.
+
+    Например:
+        mls job yaml binary > binary.yaml
+
+    Без переданного TYPE - показывает задачу binary
+
+    Совет:
+
+        Запустите: mls job types
+
+        Из полученного списка используйте TYPE : mls job yaml <TYPE>
+    """
+    click.echo(Job.to_yaml(type), nl=False)
+
+
+@job.command(cls=TypeHelp)
+def types():
+    """Справочный метод - типы задач."""
+    click.echo(success_format('\n'.join(job_types)))
+
+
+@job.command(cls=ClusterHelp)
+def regions():
+    """Справочный метод - Список регинов."""
+    click.echo(success_format('\n'.join(cluster_keys)))

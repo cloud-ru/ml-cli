@@ -100,14 +100,22 @@ def test_cli_autocomplete():
     """Тест наполнения map для cli."""
     mapping = {}
     auto_complete_function(mapping)
-    assert mapping['mls job restart'] == ['name', '--debug', '--endpoint_url', '--output', '--profile', '--region']
+    assert mapping['mls job restart'] == ['--debug', '--endpoint_url', '--output', '--profile', '--region']
+
+
+def test_cli_autocomplete_config():
+    """Тест наполнения map для cli."""
+    mapping = {}
+    auto_complete_function(mapping)
+    assert set(mapping['mls configure']) == {'--profile', '--encrypt'}
 
 
 def test_cli_suggest():
     """Тестирование предполагаемых предложений по вводу для пользователя."""
     mapping = {}
     auto_complete_function(mapping)
-    assert suggest_autocomplete('mls job re', mapping) == ['restart']
-    assert suggest_autocomplete('mls job ru', mapping) == ['run']
+    assert set(suggest_autocomplete('mls job re', mapping)) == {'regions', 'restart'}
+    assert set(suggest_autocomplete('mls job s', mapping)) == {'status', 'submit'}
+    assert suggest_autocomplete('mls job su', mapping) == ['submit']
     assert suggest_autocomplete('mls j', mapping) == ['job']
     assert suggest_autocomplete('mls co', mapping) == ['configure']

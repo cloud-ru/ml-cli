@@ -21,7 +21,7 @@ def api_client():
         endpoint_url=MockTrainingJobApi.ENDPOINT_URL,
         client_id='fake_id',
         client_secret='fake_secret',
-        workspace_id='fake_workspace',
+        x_workspace_id='fake_workspace',
         x_api_key='fake_key',
         debug=True,
     )

@@ -120,11 +120,11 @@ def test_format_options_section(runner):
     result = runner.invoke(cmd, ['--help'])
     assert result.exit_code == 0
     assert 'ARG' in result.output
-    assert '--option_with_help' in result.output
+    assert '--option-with-help' in result.output
     assert 'Тестовая' in result.output
     assert 'опция' in result.output
     assert 'с описанием.' in result.output
-    assert '--option_without_help' in result.output
+    assert '--option-without-help' in result.output
     assert 'STRING' in result.output
 
 

@@ -4,19 +4,19 @@ import pytest
 
 from mls.utils.common_types import Choice
 from mls.utils.common_types import Path
-from mls.utils.common_types import PositiveIntWithZero
+from mls.utils.common_types import PositiveIntWithZeroView
 
 
 def test_types():
     """Тесты типов."""
     assert str(Path(exists=True)) == 'OS.PATH'
     assert str(Choice(['поработать до полуночи', 'пойти спать'])) == 'поработать до полуночи, пойти спать'
-    assert str(PositiveIntWithZero()) == 'INT GTE(0)'
+    assert str(PositiveIntWithZeroView()) == 'INT GTE(0)'
 
 
 def test_positive_convector_alphabet():
     """Тест конвертации алфавита."""
-    instance = PositiveIntWithZero()
+    instance = PositiveIntWithZeroView()
     with pytest.raises(click.BadParameter) as err:
         instance('abc')
 
@@ -25,7 +25,7 @@ def test_positive_convector_alphabet():
 
 def test_positive_convector_negative():
     """Тест конвертации отрицательных чисел."""
-    instance = PositiveIntWithZero()
+    instance = PositiveIntWithZeroView()
     with pytest.raises(click.BadParameter) as err:
         instance(-1)
     assert err.value.args == ('-1 не является положительным числом или нулем',)
@@ -33,7 +33,7 @@ def test_positive_convector_negative():
 
 def test_positive_convector_float():
     """Тест конвертации float int."""
-    instance = PositiveIntWithZero()
+    instance = PositiveIntWithZeroView()
     assert instance(1.0) == 1
     assert instance(0.0) == 0
     assert instance(1.1) == 1

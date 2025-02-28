@@ -10,3 +10,15 @@ class ConfigReadError(Exception):
 
 class ConfigWriteError(Exception):
     """Исключение, возникающее при ошибках записи_profile из файла конфигурации."""
+
+
+class EncryptionError(Exception):
+    """Исключение, возникающее при ошибках шифрования учётных данных."""
+
+
+class DecryptionError(Exception):
+    """Исключение, возникающее при ошибках дешифрования учётных данных."""
+
+
+class MissingPassword(Exception):
+    """Исключение, возникающее при отсутствии пароля."""
