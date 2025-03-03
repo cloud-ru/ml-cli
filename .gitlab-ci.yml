@@ -1,4 +1,4 @@
 include:
   - project: products/aicloud/cicd
-    ref: feature/AICJOBS-2422
+    ref: master
     file: /gitlab-ci-mlspace-cli.yaml
