@@ -30,10 +30,8 @@ from .custom_types import JobSparkOptions
 from .custom_types import json
 from .custom_types import MaxRetryInView
 from .custom_types import NFSPathView
-from .custom_types import output_choice
 from .custom_types import priority_class
 from .custom_types import ProfileOptions
-from .custom_types import ViewRegionKeys
 from .custom_types import ViewTypeTask
 from .dataclasses import Job
 from mls.utils.common import load_saved_config
@@ -47,7 +45,7 @@ from mls_core import TrainingJobApi
 def common_cli_options(func):
     """Декоратор для добавления общих опций."""
     # Высший приоритет ближе к пользователю консоль
-    func = click.option('-R', '--region', cls=ProfileOptions, index=0, type=ViewRegionKeys(), help='Ключ региона')(func)
+    # func = click.option('-R', '--region', cls=ProfileOptions, index=0, type=ViewRegionKeys(), help='Ключ региона')(func)
 
     # Средний приоритет загрузка из файла
     func = click.option(
@@ -56,7 +54,7 @@ def common_cli_options(func):
     )(func)
 
     # Опции имеющие умолчания
-    func = click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')(func)
+    # func = click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')(func)
     func = click.option('-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API')(func)
     func = click.option('-D', '--debug',  cls=JobDebugOptions, is_flag=True, help='Вывод в консоль отладочной информации')(func)
     return func

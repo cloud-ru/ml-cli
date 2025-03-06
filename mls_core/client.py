@@ -18,6 +18,7 @@ from .setting import BACKOFF_FACTOR
 from .setting import CONNECT_TIMEOUT
 from .setting import MAX_RETRIES
 from .setting import READ_TIMEOUT
+from .setting import SSL_VERIFY
 
 
 class _CommonPublicApiInterface:
@@ -35,6 +36,7 @@ class _CommonPublicApiInterface:
             backoff_factor: float = BACKOFF_FACTOR,
             connect_timeout: int = CONNECT_TIMEOUT,
             read_timeout: int = READ_TIMEOUT,
+            ssl_verify=SSL_VERIFY,
             debug: bool = False,
             logger: Optional[logging.Logger] = None,
 
@@ -50,6 +52,7 @@ class _CommonPublicApiInterface:
         :param backoff_factor: Фактор экспоненциальной задержки между повторными попытками.
         :param connect_timeout: Таймаут подключения (в секундах).
         :param read_timeout: Таймаут чтения (в секундах).
+        :param ssl_verify: Параметр проверки сертификатов.
         :param debug: Включение отладочного режима.
         :param logger: Журнал приложения
 
@@ -63,6 +66,7 @@ class _CommonPublicApiInterface:
         self._init_session(backoff_factor, max_retries)
         self.max_retries = max_retries
         self.backoff_factor = backoff_factor
+        self.ssl_verify = ssl_verify
 
         headers = {
             'authorization': self._get_auth_token(client_id, client_secret),
@@ -120,7 +124,7 @@ class _CommonPublicApiInterface:
 
         try:
             response = self._session.request(
-                method, f'{self._endpoint_url}/{path}', headers=headers, timeout=timeout, **kwargs,
+                method, f'{self._endpoint_url}/{path}', headers=headers, timeout=timeout, **kwargs, verify=self.ssl_verify,
             )
             response.raise_for_status()
         except requests.exceptions.RetryError as ex:
@@ -209,7 +213,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
         return self.get(f'jobs/{name}/logs', params=params)
 
     @_handle_api_response
-    def get_job_status(self, name, region):
+    def get_job_status(self, name):
         """Получение статуса задачи."""
         return self.get(f'jobs/{name}')
 
@@ -223,7 +227,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
         return self.get('jobs', params=params)
 
     @_handle_api_response
-    def get_pods(self, name, region):
+    def get_pods(self, name):
         """Вызов получения списка подов для задач pytorch (elastic) или spark."""
         return self.get(f'jobs/spark/{name}/pods')
 
@@ -234,7 +238,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
         return self.delete(f'jobs/{name}', params=params)
 
     @_handle_api_response
-    def restart_job(self, name, region):
+    def restart_job(self, name):
         """Вызов перезапуска задачи."""
         payload = {'job_name': name}
         return self.post('jobs/restart', json=payload)
@@ -256,7 +260,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
         headers = kwargs.pop('headers', {})
         try:
             response = self._session.request(
-                method, f'{self._endpoint_url}/{path}', headers=headers, timeout=timeout,  stream=True, **kwargs,
+                method, f'{self._endpoint_url}/{path}', headers=headers, timeout=timeout,  stream=True, **kwargs, verify=self.ssl_verify,
             )
         except requests.exceptions.RetryError as ex:
             self._logger.debug(ex)

@@ -6,13 +6,15 @@ import click
 
 from mls.utils.common_types import Choice
 
-job_statuses = 'Completing', 'Deleted', 'Failed', 'Pending', 'Running', 'Stopped', 'Succeeded', 'Terminated'
+job_statuses = 'Completed', 'Completing', 'Deleted', 'Failed', 'Pending', 'Running', 'Stopped', 'Succeeded', 'Terminated'
 output_formats = json, text = 'json', 'text'
 priority = 'low', 'medium', 'high'  # TODO вынести в константы
+table_sort_filter_fields = 'gpu_count', 'instance_type', 'job_desc', 'job_name'
 
 priority_class = Choice(priority)
 job_choices = Choice(job_statuses)
 output_choice = Choice(output_formats)
+filter_sort_choice = Choice(table_sort_filter_fields)
 job_types = 'binary', 'horovod', 'pytorch', 'pytorch2', 'pytorch_elastic', 'spark', 'binary_exp'
 cluster_keys = 'DGX2-MT', 'A100-MT', 'SR002-MT', 'SR003', 'SR004', 'SR005', 'SR006', 'SR008'  # TODO константы
 
@@ -267,3 +269,15 @@ class JobSparkOptions(CustomGroupedOption):
     """Класс очередности отображения."""
     GROUP: str = 'Дополнительные опции управления Spark'
     GROUP_INDEX = 10
+
+
+class FilterOptions(CustomGroupedOption):
+    """Класс очередности отображения."""
+    GROUP: str = 'Опции фильтрации'
+    GROUP_INDEX = 8
+
+
+class SortOptions(CustomGroupedOption):
+    """Класс очередности отображения."""
+    GROUP: str = 'Опции сортировки'
+    GROUP_INDEX = 9

@@ -91,8 +91,8 @@ def suggest_autocomplete(input_str, commands_dict):
             last = full[-1]
             prev = ' '.join(full[:-1])
             items = commands_dict.get(prev, [])
-            sss = [*filter(lambda x: x.startswith(last), items)]
-            suggestions.extend(sss)
+            suggest = [*filter(lambda x: x.startswith(last), items)]
+            suggestions.extend(suggest)
 
     return list(set(suggestions))
 

@@ -70,7 +70,7 @@
 
 **Работа с pipe:**
    Пример ```mls job status  lm-mpi-job-787e491e-b098-4b00-bf79-5841dfc1f910 | jq .job_name```
-    ![ Запуск ](static/FAQ 1.png)
+    ![ Запуск ](static/FAQ1.png)
    Пояснения jq работает json ответом. Для работы pipe определите формат в котором будет работать cli глобально. 
 
 **Сокрытие credentials :**
@@ -78,14 +78,14 @@
 
 **Отладка приложения:**
    Пример ```mls job status  lm-mpi-job-787e491e-b098-4b00-bf79-5841dfc1f910 -D```
-   ![ Запуск ](static/FAQ 2.png)
+   ![ Запуск ](static/FAQ2.png)
    Позволяет получить x-request-id или иную информацию о ходе подключения и выполнении запроса
-   ![ Запуск ](static/FAQ 3.png)
+   ![ Запуск ](static/FAQ3.png)
 
 
 **Отображение списка:**
    Пример ```mls job list --limit 3|jq -r '.jobs[] | [.uid, .job_name, .region] | @tsv' | column -t```
-   ![ Запуск ](static/FAQ 4.png)
+   ![ Запуск ](static/FAQ4.png)
 
    Пример с watch. (Нужно добавить ~/.zshrc или ~/.bashrc).
    ```bash
@@ -93,8 +93,11 @@
          watch -n 2 "echo 'UID\t\t\t\t\tJOB_NAME\t\t\t\t\tREGION'; mls job list --limit 3 --status Pending | jq -r '.jobs[] | [.uid, .job_name, .region] | @tsv' | column -t"
       }
    ```
-   ![ Запуск ](static/FAQ 5.png)
+   ![ Запуск ](static/FAQ5.png)
 
 **Профиль по умолчанию:**
    Задайте профиль в сессии терминала. Или определите в ~/.zshrc или ~/.bashrc
    > export PD=
+
+**Запуск задачи с просмотром логов одной строкой:**
+   > mls job logs $(mls job submit --config binary.yaml | jq -r '.job_name') -w > sample.log | tee sample.log
