@@ -126,6 +126,8 @@ def entry_point():
         click.echo(error_format(f'Указан не валидный endpoint_url. {error.args[0]}'))
     except MissingPassword:
         click.echo(error_format('Пароль не может быть пустым'))
+    except requests.exceptions.ChunkedEncodingError:
+        click.echo(error_format('Сервер объявил chunked кодировку, но отправил не валидный chunk'))
 
 
 if __name__ == '__main__':

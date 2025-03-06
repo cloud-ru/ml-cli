@@ -1794,6 +1794,21 @@ files = [
 ]
 
 [[package]]
+name = "tabulate"
+version = "0.9.0"
+description = "Pretty-print tabular data"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
+    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
+]
+
+[package.extras]
+widechars = ["wcwidth"]
+
+[[package]]
 name = "tomli"
 version = "2.2.1"
 description = "A lil' TOML parser"
@@ -1897,6 +1912,18 @@ files = [
 
 [package.dependencies]
 urllib3 = ">=2"
+
+[[package]]
+name = "types-tabulate"
+version = "0.9.0.20241207"
+description = "Typing stubs for tabulate"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "types_tabulate-0.9.0.20241207-py3-none-any.whl", hash = "sha256:b8dad1343c2a8ba5861c5441370c3e35908edd234ff036d4298708a1d4cf8a85"},
+    {file = "types_tabulate-0.9.0.20241207.tar.gz", hash = "sha256:ac1ac174750c0a385dfd248edc6279fa328aaf4ea317915ab879a2ec47833230"},
+]
 
 [[package]]
 name = "typing-extensions"
@@ -2135,4 +2162,4 @@ test = ["coverage", "pytest", "pytest-cov"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "a33cca6671385b5b6157784398812972fe6e63ce841065fed0a283e2f70de48a"
+content-hash = "c966c32cf4083513937bb7c6dec6ffb039f9e8442b17c79995bbacbf1ded5b4a"

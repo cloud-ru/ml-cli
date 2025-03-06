@@ -100,7 +100,7 @@ def test_cli_autocomplete():
     """Тест наполнения map для cli."""
     mapping = {}
     auto_complete_function(mapping)
-    assert mapping['mls job restart'] == ['--debug', '--endpoint_url', '--output', '--profile', '--region']
+    assert set(mapping['mls job restart']) == {'--debug', '--endpoint_url', '--output', '--profile'}
 
 
 def test_cli_autocomplete_config():

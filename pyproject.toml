@@ -14,6 +14,8 @@ dependencies = [
     "responses (>=0.25.6,<0.26.0)",
     "types-pyyaml (>=6.0.12.20241230,<7.0.0.0)",
     "pycryptodome (>=3.21.0,<4.0.0)",
+    "tabulate (>=0.9.0,<0.10.0)",
+    "types-tabulate (>=0.9.0.20241207,<0.10.0.0)",
 ]
 
 description = "Библиотека для работы с api Cloud.ru MLSpace"
