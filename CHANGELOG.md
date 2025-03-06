@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.0 (2025-03-06)
+
+### Features
+
+- **mls job table**: Добавил метод оторажения списка задач таблицей
+  ([`e7281b1`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/e7281b1dedbdb1b5f4078bf744c6eb399f701739))
+
+
 ## v0.5.0 (2025-02-28)
 
 ### Features
