@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.1 (2025-03-10)
+
+### Bug Fixes
+
+- **region**: Исправление в вызове метода status с регионом
+  ([`71b5440`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/71b54409db3b447515a2636fe559eced1403ac01))
+
+
 ## v0.6.0 (2025-03-06)
 
 ### Features
