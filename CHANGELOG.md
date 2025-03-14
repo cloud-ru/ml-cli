@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.2 (2025-03-14)
+
+### Bug Fixes
+
+- **table**: Исправление отображение в таблице
+  ([`92aeaba`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/92aeaba31e0298ba067a1e8a5d80c6776140bc45))
+
+
 ## v0.6.1 (2025-03-10)
 
 ### Bug Fixes
