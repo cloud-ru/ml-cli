@@ -108,7 +108,8 @@ def kill(api_job, name, region):
 
 @job.command(cls=RunHelp)
 @click.option(
-    '-c', '--config', cls=JobRecommenderOptions, type=Path(exists=True), help='Путь к YAML манифесту с описанием задачи', default=None,
+    '-c', '--config', cls=JobRecommenderOptions, type=Path(exists=True),
+    help='Путь к YAML манифесту с описанием задачи. Mls.yaml - по умолчанию', default=None,
 )
 @click.option('-R', '--region', cls=ProfileOptions, index=0, type=ViewRegionKeys(), help='Ключ региона')
 @click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')

@@ -60,7 +60,7 @@ def display_jobs(json_data):
         duration_seconds = int(job.get('duration', '0s').rstrip('s'))
         duration = timedelta(seconds=duration_seconds)
         table_data.append([
-            job.get('job_name')[:3] + '...' + job.get('job_name')[-16:],
+            job.get('job_name'),
             job.get('status'),
             job.get('region'),
             job.get('instance_type'),
