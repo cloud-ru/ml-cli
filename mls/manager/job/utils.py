@@ -5,6 +5,7 @@
 функции для обработки данных, валидации входных значений, форматирования
 вывода и прочие общие инструменты, необходимые для выполнения задач.
 """
+import os
 from configparser import NoSectionError
 from functools import update_wrapper
 from typing import List
@@ -205,7 +206,11 @@ def apply_options(func):
         if config:
             from_yaml = read_yaml(kwargs.get('config')).get('job', {})
         else:
-            from_yaml = {}
+            default = 'Mls.yaml'
+            if os.path.isfile(default):
+                from_yaml = read_yaml(default).get('job', {})
+            else:
+                from_yaml = {}
         return func(*args, **kwargs, type_job=Job.fabric(from_yaml, **kwargs))
 
     return update_wrapper(forward_type_job, func)
