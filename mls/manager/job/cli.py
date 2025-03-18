@@ -46,9 +46,9 @@ def job():
 
 @job.command(cls=LogHelp)
 @click.argument('name')
-@click.option('-t', '--tail', type=positive_int_with_zero, help='Отображает последнюю часть файла логов', default=0)
-@click.option('-v', '--verbose', is_flag=True, help='Подробный вывод журнала логов', default=False)
-@click.option('-w', '--wait', is_flag=True, help='Флаг ожидания смены статуса с pending', default=False)
+@click.option('-t', '--tail', type=positive_int_with_zero, help='Отображает последнюю часть файла логов.', default=0)
+@click.option('-v', '--verbose', is_flag=True, help='Подробный вывод журнала логов.', default=False)
+@click.option('-w', '--wait', is_flag=True, help='Флаг ожидания смены статуса с pending.', default=False)
 @job_client
 def logs(api_job, name, tail, verbose, region, wait):
     """Команда получения журнала логов.
@@ -96,7 +96,7 @@ def logs(api_job, name, tail, verbose, region, wait):
 
 @job.command(cls=KillHelp)
 @click.argument('name')
-@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')
+@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
 def kill(api_job, name, region):
     """Команда остановки задачи обучения в регионе.
@@ -108,11 +108,10 @@ def kill(api_job, name, region):
 
 @job.command(cls=RunHelp)
 @click.option(
-    '-c', '--config', cls=JobRecommenderOptions, type=Path(exists=True),
-    help='Путь к YAML манифесту с описанием задачи. Mls.yaml - по умолчанию', default=None,
+    '-c', '--config', cls=JobRecommenderOptions, type=Path(exists=True), help='Путь к YAML манифесту с описанием задачи.', default=None,
 )
-@click.option('-R', '--region', cls=ProfileOptions, index=0, type=ViewRegionKeys(), help='Ключ региона')
-@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')
+@click.option('-R', '--region', cls=ProfileOptions, index=0, type=ViewRegionKeys(), help='Ключ региона.')
+@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @apply_options
 @job_client
 def submit(api_job, region, type_job, *_, **__):
@@ -122,9 +121,9 @@ def submit(api_job, region, type_job, *_, **__):
 
 @job.command(cls=StatusHelp, name='status')
 @click.argument('name')
-@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')
+@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
-def status_(api_job, name, **_):
+def status_(api_job, name):
     """Команда просмотра статуса задачи.
 
     Синтаксис: mls job status [NAME] [options]
@@ -134,9 +133,9 @@ def status_(api_job, name, **_):
 
 @job.command(cls=ListPodsHelp)
 @click.argument('name')
-@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')
+@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
-def pods(api_job, name, **_):  # TODO **_  вынести в регион исправить тесты
+def pods(api_job, name):
     """Команда просмотра статусов подов.
 
     Синтаксис: mls job pods [NAME] [options]
@@ -145,11 +144,11 @@ def pods(api_job, name, **_):  # TODO **_  вынести в регион исп
 
 
 @job.command(cls=ListHelp, name='list')
-@click.option('-a', '--allocation_name', help='Набор выделенных ресурсов GPU и CPU', default=None)
-@click.option('-s', '--status', type=job_choices, multiple=True, help='Статусы задач', default=None)
-@click.option('-l', '--limit', help='Лимит отображения количества задач', default=6000, type=positive_int_with_zero)
-@click.option('-o', '--offset', help='Смещение относительно начала списка', default=0, type=positive_int_with_zero)
-@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')
+@click.option('-a', '--allocation_name', help='Набор выделенных ресурсов GPU и CPU.', default=None)
+@click.option('-s', '--status', type=job_choices, multiple=True, help='Статусы задач.', default=None)
+@click.option('-l', '--limit', help='Лимит отображения количества задач.', default=6000, type=positive_int_with_zero)
+@click.option('-o', '--offset', help='Смещение относительно начала списка.', default=0, type=positive_int_with_zero)
+@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
 def list_(api_job, region, allocation_name, status, limit, offset):
     """Команда просмотра списка задач.
@@ -161,9 +160,9 @@ def list_(api_job, region, allocation_name, status, limit, offset):
 
 @job.command(cls=RestartHelp)
 @click.argument('name')
-@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')
+@click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
-def restart(api_job, name, **_):
+def restart(api_job, name):
     """Команда перезапуска задачи по имени.
 
     Синтаксис: mls job restart [NAME] [options]
@@ -179,7 +178,7 @@ def yaml(type):
     Например:
         mls job yaml binary > binary.yaml
 
-    Без переданного TYPE - показывает задачу binary
+    Без переданного TYPE - показывает задачу binary.
 
     Совет:
 
@@ -205,7 +204,7 @@ def regions():
 @job.command(cls=TableHelp)
 @click.option('-l', '--limit', help='Лимит отображения количества задач.', default=6000, type=positive_int_with_zero)
 @click.option('-o', '--offset', help='Смещение относительно начала списка.', default=0, type=positive_int_with_zero)
-@click.option('-s', '--status', type=job_choices, multiple=True, help='Статусы задач', default=None)
+@click.option('-s', '--status', type=job_choices, multiple=True, help='Статусы задач.', default=None)
 @click.option('-a', '--allocation', help='Набор выделенных ресурсов GPU и CPU.', default=None)
 @click.option('-R', '--region', cls=ProfileOptions, index=0, type=ViewRegionKeys(), help='Ключ региона.')
 @click.option('-g', '--gpu_count', cls=FilterOptions, index=0, type=int)

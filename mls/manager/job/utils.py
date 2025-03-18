@@ -55,9 +55,9 @@ def common_cli_options(func):
     )(func)
 
     # Опции имеющие умолчания
-    # func = click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль')(func)
-    func = click.option('-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API')(func)
-    func = click.option('-D', '--debug',  cls=JobDebugOptions, is_flag=True, help='Вывод в консоль отладочной информации')(func)
+    # func = click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')(func)
+    func = click.option('-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API.')(func)
+    func = click.option('-D', '--debug',  cls=JobDebugOptions, is_flag=True, help='Вывод в консоль отладочной информации.')(func)
     return func
 
 
@@ -98,13 +98,13 @@ def read_profile(profile_name):
         profile_name (str): Имя профиля, который загружается.
 
     Возвращает:
-        dict : Собранный в словарь профиль
+        dict : Собранный в словарь профиль.
     """
     config, credentials = load_saved_config(SECRET_PASSWORD)
     try:
         return {**dict(config.items(profile_name)), **dict(credentials.items(profile_name))}
     except NoSectionError as err:
-        raise ConfigReadError(f'Нет секции с названием {err.section}')
+        raise ConfigReadError(f'Нет секции с названием: {err.section}')
 
 
 def read_yaml(file_path: str):
@@ -135,7 +135,7 @@ def define_run_job_options() -> List:
         option('-p', '--processes', cls=JobResourceOptions, index=1, type=int_or_default, help='Кол-во процессов.'),
 
         # Job options
-        option('-t', '--type',  cls=JobRequiredOptions, index=2, type=ViewTypeTask(), help='Тип задачи обучения'),
+        option('-t', '--type',  cls=JobRequiredOptions, index=2, type=ViewTypeTask(), help='Тип задачи обучения.'),
         option('-s', '--script', cls=JobRequiredOptions, index=3, type=ExecuteScriptView(), help='Путь к исполняемому файлу.'),
         option('-d', '--description', type=click.STRING, help='Описание задачи.'),
 
@@ -150,7 +150,7 @@ def define_run_job_options() -> List:
             '-r', '--max_retry', cls=JobPolicyAllocationOptions, index=2,
             type=MaxRetryInView(), help='Макс. количество попыток перезапуска.',
         ),
-        option('-k', '--checkpoint_dir', cls=JobPolicyOptions, index=1, type=NFSPathView(), help='Путь для сохранения checkpoint'),
+        option('-k', '--checkpoint_dir', cls=JobPolicyOptions, index=1, type=NFSPathView(), help='Путь для сохранения checkpoint.'),
         option('-a', '--internet_access', cls=JobPolicyOptions, index=0, type=click.BOOL, help='Разрешён ли доступ в интернет.'),
         option('--priority_class', cls=JobPolicyOptions, index=2, type=priority_class, help='Приоритет выполнения задачи.'),
 
@@ -163,7 +163,7 @@ def define_run_job_options() -> List:
         # Исключение из правил это единственная опция
         option(
             '--external_actions', multiple=True, cls=JobHealthOptions, index=2,
-            type=ExternalActionView(), default=['notify'], help='Действие направленное к пользователю',
+            type=ExternalActionView(), default=['notify'], help='Действие направленное к пользователю.',
         ),
 
         # ElasticJob options
@@ -194,7 +194,7 @@ def define_run_job_options() -> List:
 def apply_options(func):
     """Включение параметров задачи.
 
-    Выделено в отдельную функцию из-за большого количества опций
+    Выделено в отдельную функцию из-за большого количества опций.
     """
     options = define_run_job_options()
     for option in reversed(options):

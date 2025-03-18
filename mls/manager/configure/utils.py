@@ -80,7 +80,7 @@ def configure_profile(profile=None, encrypt=False):
 
     Аргументы:
         profile (str, optional): Имя профиля для конфигурации. Если не указано, используется профиль по умолчанию.
-        encrypt (bool, optional): Если задан, учётные данные шифруются
+        encrypt (bool, optional): Если задан, учётные данные шифруются.
     Возвращает:
         None
     """
@@ -206,7 +206,7 @@ def save_profile(config, credentials, password=None):
     Аргументы:
         config (ConfigParser): Объект конфигурации с настройками пользователя.
         credentials (ConfigParser): Объект конфигурации с учётными данными пользователя.
-        password (str): Пароль шифрования, если задан данные credentials шифруются перед записью
+        password (str): Пароль шифрования, если задан данные credentials шифруются перед записью.
 
     Возвращает:
         None

@@ -46,15 +46,15 @@ class _CommonPublicApiInterface:
         :param endpoint_url: Базовый URL API.
         :param client_id: Идентификатор клиента.
         :param client_secret: Секрет клиента.
-        :param x_workspace_id: Идентификатор воркспейса
-        :param x_api_key: ключ доступа к воркспейсу
+        :param x_workspace_id: Идентификатор воркспейса.
+        :param x_api_key: ключ доступа к воркспейсу.
         :param max_retries: Максимальное количество попыток повторного запроса.
         :param backoff_factor: Фактор экспоненциальной задержки между повторными попытками.
         :param connect_timeout: Таймаут подключения (в секундах).
         :param read_timeout: Таймаут чтения (в секундах).
         :param ssl_verify: Параметр проверки сертификатов.
         :param debug: Включение отладочного режима.
-        :param logger: Журнал приложения
+        :param logger: Журнал приложения.
 
         """
         self._endpoint_url = endpoint_url
@@ -108,7 +108,6 @@ class _CommonPublicApiInterface:
             http.client.HTTPConnection.debuglevel = 1
 
             # Настройка логирования для библиотеки `requests` и `urllib3`
-            logging.basicConfig()
             logging.getLogger('urllib3').setLevel(logging.DEBUG)
             logging.getLogger('urllib3').propagate = True
 
@@ -251,8 +250,8 @@ class TrainingJobApi(_CommonPublicApiInterface):
     def stream(self, method: str, path: str, **kwargs):
         """Выполняет HTTP запрос с использованием заданного метода к указанному пути возвращает данные порционно(потоково).
 
-        :param method: HTTP метод запроса
-        :param path: Путь запроса, который будет добавлен к базовому URL
+        :param method: HTTP метод запроса.
+        :param path: Путь запроса, который будет добавлен к базовому URL.
         :param kwargs: Дополнительные параметры запроса.
         :return: Генератор, который возвращает данные ответа по частям. В случае ошибки запроса возвращает статус ответа с описанием ошибки.
         """

@@ -43,6 +43,7 @@ from mls.utils.execption import MissingPassword
 from mls.utils.style import error_format
 from mls.utils.style import text_format
 from mls_core.exeptions import AuthorizationError
+from mls_core.exeptions import InvalidAuthorizationToken
 
 
 @click.group(cls=MLSHelp)
@@ -80,7 +81,7 @@ def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):
 def autocomplete():
     """Входная точка для запуска autocomplete.
 
-    Используется как complete entrypoint
+    Используется как complete entrypoint.
 
     _mls_completion() {
         autocomplete "${COMP_WORDS[@]}"
@@ -114,6 +115,8 @@ def entry_point():
         click.echo(error_format('Не удалось установить соединение, проверьте настройки сети'))
     except AuthorizationError:
         click.echo(error_format('Попытка выполнить запрос неавторизованным пользователем'))
+    except InvalidAuthorizationToken:
+        click.echo(error_format('Неизвестная ошибка авторизации'))
     except DecryptionError:
         click.echo(error_format('Невозможно расшифровать учётные данные'))
     except EncryptionError:
