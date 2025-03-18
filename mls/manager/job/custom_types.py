@@ -1,6 +1,6 @@
 """Модуль custom_types содержит определения пользовательских типов данных.
 
-Эти типы данных кастомизированны в строчное представление для вывода в CLI
+Эти типы данных кастомизированны в строчное представление для вывода в CLI.
 """
 import click
 
@@ -201,83 +201,83 @@ class CustomGroupedOption(click.Option):
 
 class ProfileOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Опции профиля'
+    GROUP: str = 'Опции профиля:'
     GROUP_INDEX = 11
 
 
 class JobRequiredOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Минимальный набор опций для запуска задачи'
+    GROUP: str = 'Минимальный набор опций для запуска задачи:'
     GROUP_INDEX = -9999 - 1
 
 
 class JobRecommenderOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Манифест параметров запуска задачи'
+    GROUP: str = 'Манифест параметров запуска задачи:'
     GROUP_INDEX = -9999 - 2
 
 
 class JobDebugOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Режим отладки'
+    GROUP: str = 'Режим отладки:'
     GROUP_INDEX = 100
 
 
 class JobEnvironmentOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления окружением'
+    GROUP: str = 'Дополнительные опции управления окружением:'
     GROUP_INDEX = 3
 
 
 class JobResourceOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления ресурсами'
+    GROUP: str = 'Дополнительные опции управления ресурсами:'
     GROUP_INDEX = 4
 
 
 class JobPolicyOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления политиками'
+    GROUP: str = 'Дополнительные опции управления политиками:'
     GROUP_INDEX = 5
 
 
 class JobPolicyAllocationOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления в аллокации'
+    GROUP: str = 'Дополнительные опции управления в аллокации:'
     GROUP_INDEX = 6
 
 
 class JobHealthOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления оповещением'
+    GROUP: str = 'Дополнительные опции управления оповещением:'
     GROUP_INDEX = 7
 
 
 class JobElasticOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления Pytorch Elastic'
+    GROUP: str = 'Дополнительные опции управления Pytorch Elastic:'
     GROUP_INDEX = 8
 
 
 class JobPytorch2Options(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления Pytorch2'
+    GROUP: str = 'Дополнительные опции управления Pytorch2:'
     GROUP_INDEX = 9
 
 
 class JobSparkOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Дополнительные опции управления Spark'
+    GROUP: str = 'Дополнительные опции управления Spark:'
     GROUP_INDEX = 10
 
 
 class FilterOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Опции фильтрации'
+    GROUP: str = 'Опции фильтрации:'
     GROUP_INDEX = 8
 
 
 class SortOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Опции сортировки'
+    GROUP: str = 'Опции сортировки:'
     GROUP_INDEX = 9

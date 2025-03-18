@@ -68,13 +68,13 @@ def config_clean(config_env, request):
 def profile_read(config_clean):  # TODO
     """Фикстура чтения профиля.
 
-    Фикстура прочитывает файлы
+    Фикстура прочитывает файлы.
 
     Параметры:
-            config_clean: FixtureFunction
+            config_clean: FixtureFunction.
 
     Возвращает:
-        tuple(ConfigParser, ConfigParser): ConfigParser для config и crededentials
+        tuple(ConfigParser, ConfigParser): ConfigParser для config и crededentials.
     """
 
     def _tmp_config(name, encrypt=False, password=None):
@@ -88,13 +88,13 @@ def profile_read(config_clean):  # TODO
 def mock_inputs(monkeypatch):
     """Фикстура имитации ввода пользователя.
 
-    Фикстура подменяет builtins.input на генератор
+    Фикстура подменяет builtins.input на генератор.
 
     Параметры:
-            config_clean: FixtureFunction
+            config_clean: FixtureFunction.
 
     Возвращает:
-        tuple(ConfigParser, ConfigParser): ConfigParser для config и crededentials
+        tuple(ConfigParser, ConfigParser): ConfigParser для config и crededentials.
     """
 
     def _mock(inputs, password_inputs=None):

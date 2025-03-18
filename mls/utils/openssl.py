@@ -1,25 +1,25 @@
 """Модуль openssl.
 
-Реализует методы шифрования/дешифрования совместимые с openssl
+Реализует методы шифрования/дешифрования совместимые с openssl.
 
-шифрование аналогично
+шифрование аналогично:
     > openssl aes-256-cbc -pbkdf2 -a
 
-дешифрование аналогично
+дешифрование аналогично:
     > openssl aes-256-cbc -pbkdf2 -a -d
 
-параметры шифрования используют значения принятые в openssl по умолчанию
+параметры шифрования используют значения принятые в openssl по умолчанию:
     -iter 10000
     -salt
     -saltlen 8
 
 используется 48 байтный ключ (derived key) вида:
-    первые 32 байта - ключ шифрования, следующие 16 байт - вектор инициализации для AES
+    первые 32 байта - ключ шифрования, следующие 16 байт - вектор инициализации для AES.
 
 структура зашифрованного сообщения openssl:
-    Salted__[соль][сообщение выравненное по блокам в 16 байт]
+    Salted__[соль][сообщение выравненное по блокам в 16 байт].
 
-сообщения закодировано в base64 c длинной строки 64 байта
+сообщения закодировано в base64 c длинной строки 64 байта.
 """
 import base64
 import os
@@ -52,7 +52,7 @@ _get_dkey = partial(PBKDF2, dkLen=KEY_LENGTH + IV_LENGTH, count=ITERATIONS, hmac
 def _format_output(data: bytes) -> bytes:
     """Форматирование вывода в соответствии с форматом openssl.
 
-    :param data: Данные для форматирования
+    :param data: Данные для форматирования.
     """
     def batch(iterable, size):
         it = iter(iterable)
@@ -69,11 +69,11 @@ def encrypt(data: str, password: str) -> bytes:
 
     Возвращает зашифрованные данные в формате base64
 
-    :param data: Данные для шифрования
-    :param password: Пароль для генерации ключа
+    :param data: Данные для шифрования.
+    :param password: Пароль для генерации ключа.
     """
     salt = os.urandom(SALT_LENGTH)
-    dkey = _get_dkey(password, salt)
+    dkey = _get_dkey(password.encode('utf-8'), salt)
     key = dkey[:KEY_LENGTH]
     iv = dkey[KEY_LENGTH:]
 
@@ -93,8 +93,8 @@ def encrypt(data: str, password: str) -> bytes:
 def decrypt(msg: bytes, password: str) -> str:
     """Расшифровывает данные с использованием сгенерированного ключа.
 
-    :param msg: Зашифрованное сообщение в формате base64
-    :param password: Пароль для генерации ключа
+    :param msg: Зашифрованное сообщение в формате base64.
+    :param password: Пароль для генерации ключа.
     """
     try:
         data = base64.b64decode(msg)
@@ -106,7 +106,7 @@ def decrypt(msg: bytes, password: str) -> str:
 
     data = data.removeprefix(SALTED_LITERAL)
     salt = data[:SALT_LENGTH]
-    dkey = _get_dkey(password, salt)
+    dkey = _get_dkey(password.encode('utf-8'), salt)
     key = dkey[:KEY_LENGTH]
     iv = dkey[KEY_LENGTH:]
 

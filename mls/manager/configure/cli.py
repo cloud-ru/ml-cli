@@ -6,8 +6,8 @@ from .utils import configure_profile
 
 
 @click.command(cls=ConfigureHelp)
-@click.option('-P', '--profile', default=None,  help='Имя профиля')
-@click.option('-E', '--encrypt', is_flag=True, default=False,  help='Шифрование профиля')
+@click.option('-P', '--profile', default=None,  help='Имя профиля.')
+@click.option('-E', '--encrypt', is_flag=True, default=False,  help='Шифрование профиля.')
 def configure(profile, encrypt):
     """Команда настройки конфигурации профиля пользователя.
 

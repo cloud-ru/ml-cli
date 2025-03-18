@@ -11,3 +11,7 @@ class AuthorizationError(requests.exceptions.HTTPError):
 
 class DataStreamingFailure(Exception):
     """Исключение, обозначающее ошибку потокового чтения данных."""
+
+
+class InvalidAuthorizationToken(Exception):
+    """Ошибка при чтении токена авторизации."""

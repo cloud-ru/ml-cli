@@ -10,10 +10,10 @@ from tabulate import tabulate   # type: ignore
 def sort_by(json_data, options):
     """Сортирует JSON-данные по нескольким полям с указанными направлениями.
 
-    :param json_data: Список словарей для сортировки
-    :param options: Список критериев сортировки вида
+    :param json_data: Список словарей для сортировки.
+    :param options: Список критериев сортировки вида:
                    [{'field': 'имя_поля', 'direction': 'asc/desc'}]
-    :return: Отсортированный список
+    :return: Отсортированный список.
     """
 
     def _sort_key(item):
@@ -36,10 +36,10 @@ def sort_by(json_data, options):
 def filter_by(json_data, options):
     """Фильтрует JSON-данные по нескольким полям с указанными направлениями.
 
-    :param json_data: Список словарей для фильтрации
-    :param options: Список критериев фильтрации вида
-                   [{'field': 'имя_поля', 'values': 'Any', 'type': 'FilterTypes'}] # TODO Вынести в класс
-    :return: Отфильтрованный список
+    :param json_data: Список словарей для фильтрации.
+    :param options: Список критериев фильтрации вида:
+                   [{'field': 'имя_поля', 'values': 'Any', 'type': 'FilterTypes'}]. # TODO Вынести в класс
+    :return: Отфильтрованный список.
     """
     key = options['field']
     values = options['values']
@@ -102,11 +102,11 @@ class JobTableView(TableView):
         data (List[Dict]):
             Список словарей с исходными данными о задачах
         filters (List[FilterConfig]): # TODO Вынести в класс
-            Конфигурация фильтрации данных (объекты с полями 'field' и 'value')
+            Конфигурация фильтрации данных (объекты с полями 'field' и 'value').
         sorters (List[SorterConfig]): # TODO Вынести в класс
-            Конфигурация сортировки (объекты с полями 'field' и 'direction')
+            Конфигурация сортировки (объекты с полями 'field' и 'direction').
         schema (DisplaySchema, optional):
-            Схема отображения столбцов. По умолчанию используется display_jobs
+            Схема отображения столбцов. По умолчанию используется display_jobs.
     """
 
     def __init__(self, data, filters, sorters, schema=None):

@@ -9,8 +9,8 @@ from mls.utils import openssl
 from mls.utils.execption import ConfigWriteError
 from mls.utils.execption import DecryptionError
 
-PLAIN_DATA = 'Test data to be encrypted'
-PASSWORD = 'secret'
+PLAIN_DATA = 'Test data to be encrypted. Текст на кириллице 😁'
+PASSWORD = 'пароль'
 
 
 def test_encrypt_decrypt_success():
@@ -20,11 +20,6 @@ def test_encrypt_decrypt_success():
 
     decrypted_data = openssl.decrypt(encrypted_data, PASSWORD)
     assert decrypted_data == PLAIN_DATA
-
-
-def test_encrypt_invalid_msg():
-    """Проверка на шифрование невалидного сообщения."""
-    assert openssl.encrypt('😎 Wrong plain data 😈', PASSWORD)
 
 
 def test_invalid_password():
@@ -47,7 +42,8 @@ def test_openssl_compat():
     Пытается расшифровать строку, зашифрованную командой
         > openssl aes-256-cbc -pbkdf2 -a
     """
-    openssl_msg = b'U2FsdGVkX19ai4taar/H6ceO8OrDlLQfe3wuobKS0v25oQcHTHpDxTgzMcWHkvVj'
+    openssl_msg = b'''U2FsdGVkX18rDWPsrMzcsp18DJFADyvWxC5foVu5B2Y735vBCrk/snguwqMEa92y
+KQQrbmCjGo4b7cjCLQ4d55xiEZutkbUM+Nq0CJM0cXPjFspsU8Tpp6BFFZD8n1jC'''
 
     decrypted_data = openssl.decrypt(openssl_msg, PASSWORD)
     assert decrypted_data == PLAIN_DATA
