@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.4 (2025-03-27)
+
+### Bug Fixes
+
+- **AICJOBS-2590**: Обработка пустого ответа авторизации
+  ([`61cf40b`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/61cf40b7a02f2d1037788cadb99ce6c2be4715ba))
+
+
 ## v0.6.3 (2025-03-18)
 
 ### Bug Fixes
