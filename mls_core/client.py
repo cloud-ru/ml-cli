@@ -14,6 +14,7 @@ from urllib3.util.retry import Retry
 
 from .exeptions import AuthorizationError
 from .exeptions import DataStreamingFailure
+from .exeptions import InvalidAuthorizationToken
 from .setting import BACKOFF_FACTOR
 from .setting import CONNECT_TIMEOUT
 from .setting import MAX_RETRIES
@@ -141,10 +142,14 @@ class _CommonPublicApiInterface:
                     'client_id': client_id, 'client_secret': client_secret,
                 },
             )
+            if not (token := response['token']['access_token']):
+                self._logger.debug(response)
+                raise InvalidAuthorizationToken()
+
+            return token
         except requests.exceptions.HTTPError as ex:
             self._logger.debug(ex)
             raise AuthorizationError(ex)
-        return response['token']['access_token']
 
     def get(self, *args, **kwargs):
         """GET запрос."""

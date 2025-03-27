@@ -6,6 +6,7 @@ import responses
 from requests import ReadTimeout
 
 from mls_core import TrainingJobApi
+from mls_core.exeptions import InvalidAuthorizationToken
 
 
 @pytest.fixture
@@ -76,3 +77,21 @@ def test_stream_without_data(monkeypatch, api_client):
     responses.add(responses.GET, f'{api_client.ENDPOINT_URL}/{test_path}', stream=True, status=404, body='Not found')
     response = api_client.stream_logs(name, region)
     assert '404, Not found' == ''.join(response)
+
+
+@responses.activate
+def test_empty_auth_token(monkeypatch, api_client):
+    """Проверка обработки ответа авторизации с пустым токеном."""
+    auth_endpoint = TrainingJobApi.AUTH_ENDPOINT
+    endpoint_url = 'https://fake.api.com'
+
+    responses.add(responses.POST, f'{endpoint_url}/{auth_endpoint}', json={'token': {'access_token': ''}})
+
+    with pytest.raises(InvalidAuthorizationToken):
+        TrainingJobApi(
+            endpoint_url=endpoint_url,
+            client_id='fake_id',
+            client_secret='fake_secret',
+            x_workspace_id='fake_workspace',
+            x_api_key='fake_key',
+        )
