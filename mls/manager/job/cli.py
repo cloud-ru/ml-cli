@@ -123,7 +123,7 @@ def submit(api_job, region, type_job, *_, **__):
 @click.argument('name')
 @click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
-def status_(api_job, name):
+def status_(api_job, name, *_, **__):
     """Команда просмотра статуса задачи.
 
     Синтаксис: mls job status [NAME] [options]
@@ -135,7 +135,7 @@ def status_(api_job, name):
 @click.argument('name')
 @click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
-def pods(api_job, name):
+def pods(api_job, name, *_, **__):
     """Команда просмотра статусов подов.
 
     Синтаксис: mls job pods [NAME] [options]
