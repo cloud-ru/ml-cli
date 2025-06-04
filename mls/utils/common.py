@@ -49,7 +49,7 @@ def handle_click_exception(error: click.ClickException, ctx: click.Context):
         'Got unexpected extra argument': 'Получен не поддерживаемый аргумент',
         'No such command': 'Нет такой команды',
         'does not take a value': 'не принимает значений',
-        'Invalid value for': 'Не верное значение для',
+        'Invalid value for': 'Неверное значение для',
         'is not one of': 'не входит в перечень',
         'is not': 'не является',
         'Option': 'Опция',

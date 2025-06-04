@@ -30,6 +30,8 @@ from requests.exceptions import MissingSchema  # type: ignore
 
 from mls import __version__ as version
 from mls.manager.configure.cli import configure
+from mls.manager.dts.connector_cli import connector
+from mls.manager.dts.transfer_cli import transfer
 from mls.manager.job.cli import job
 from mls.utils.cli_entrypoint_help import MLSHelp
 from mls.utils.common import create_autocomplete
@@ -58,6 +60,8 @@ def cli():
 
 cli.add_command(job)
 cli.add_command(configure)
+cli.add_command(connector)
+cli.add_command(transfer)
 
 
 def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):
