@@ -97,7 +97,7 @@
 
 **Профиль по умолчанию:**
    Задайте профиль в сессии терминала. Или определите в ~/.zshrc или ~/.bashrc
-   > export PD=
+   > export MLS_PROFILE_DEFAULT=
 
 **Запуск задачи с просмотром логов одной строкой:**
    > mls job logs $(mls job submit --config binary.yaml | jq -r '.job_name') -w > sample.log | tee sample.log

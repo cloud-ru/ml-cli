@@ -118,4 +118,9 @@ def test_cli_suggest():
     assert set(suggest_autocomplete('mls job s', mapping)) == {'status', 'submit'}
     assert suggest_autocomplete('mls job su', mapping) == ['submit']
     assert suggest_autocomplete('mls j', mapping) == ['job']
-    assert suggest_autocomplete('mls co', mapping) == ['configure']
+    assert set(suggest_autocomplete('mls co', mapping)) == {'configure', 'connector'}
+    assert suggest_autocomplete('mls conf', mapping) == ['configure']
+    assert suggest_autocomplete('mls conn', mapping) == ['connector']
+    assert suggest_autocomplete('mls connector cr', mapping) == ['create']
+    assert suggest_autocomplete('mls tr', mapping) == ['transfer']
+    assert set(suggest_autocomplete('mls transfer de', mapping)) == {'deactivate', 'delete'}

@@ -51,11 +51,11 @@ cat ~/.mls/credentials.key | openssl aes-256-cbc -pbkdf2 -a -d > ~/.mls/credenti
 **Запуск задачи**
    
    в одной строке передайте 
-   > PASSWD=<Ваш пароль> mls job submit .... 
+   > MLS_PASSWORD=<Ваш пароль> mls job submit .... 
    
    Или
    
-   > export PASSWD=<Ваш пароль>
+   > export MLS_PASSWORD=<Ваш пароль>
    > 
    > mls job submit ....
 
@@ -64,6 +64,6 @@ cat ~/.mls/credentials.key | openssl aes-256-cbc -pbkdf2 -a -d > ~/.mls/credenti
 function set_mls_password() {
     echo "Введите пароль:"
     read var_value
-    export PASSWD="$var_value"
+    export MLS_PASSWORD="$var_value"
 }
 ```

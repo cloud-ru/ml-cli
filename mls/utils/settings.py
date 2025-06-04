@@ -18,7 +18,7 @@ PROFILE_DIR = os.path.expanduser('~/.mls')
 CONFIG_FILE = os.path.join(PROFILE_DIR, 'config')
 
 # пароль для шифрования credentials
-SECRET_PASSWORD = os.getenv('PASSWD', None)
+SECRET_PASSWORD = os.getenv('MLS_PASSWORD', None)
 
 # Путь к файлу с учётными данными пользователя для системы MLS.
 CREDENTIALS_FILE = os.path.join(PROFILE_DIR, 'credentials')
@@ -28,6 +28,6 @@ ENCRYPTED_CREDENTIALS_FILE = os.path.join(PROFILE_DIR, 'credentials.key')
 
 # Имя профиля по умолчанию. Если переменная окружения `ML_PROFILE` не установлена,
 # используется значение 'default'.
-DEFAULT_PROFILE = os.getenv('PD', 'default')
+DEFAULT_PROFILE = os.getenv('MLS_PROFILE_DEFAULT', 'default')
 
 ENDPOINT_URL = 'https://api.ai.cloud.ru/public/v2'

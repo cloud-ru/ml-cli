@@ -167,3 +167,5 @@ target-repo/
 /samples/pytorch2.yaml
 /samples/pytorch_elastic.yaml
 /samples/spark.yaml
+
+.idea/
