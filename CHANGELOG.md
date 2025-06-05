@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v0.7.0 (2025-06-05)
+
+### Bug Fixes
+
+- **AICJOBS-2590**: Обработка пустого ответа авторизации
+  ([`3d033d8`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/3d033d8dfe720b549830cba2669df4840b95bd5b))
+
+- **AICJOBS-2590**: Обработка пустого ответа авторизации
+  ([`05d4829`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/05d4829dfcf8a0996567c1ad4418cdbeafe91934))
+
+### Features
+
+- **transfer**: Добавили поддержку переносов
+  ([`483506f`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/483506fe65982ee07e683187947154cd8c266748))
+
+
 ## v0.6.4 (2025-03-27)
 
 ### Bug Fixes
