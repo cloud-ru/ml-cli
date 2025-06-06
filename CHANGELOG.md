@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.7.1 (2025-06-06)
+
+### Bug Fixes
+
+- **text**: До-записи
+  ([`656142f`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/656142f5357332ed6821dd74b1d1a9da7fe0ea1f))
+
+- **text**: Поставиk точки в т.е
+  ([`da294a0`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/da294a065f19b761723f650ff836b24ea4f3f807))
+
+
 ## v0.7.0 (2025-06-05)
 
 ### Bug Fixes
