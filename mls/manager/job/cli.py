@@ -162,7 +162,7 @@ def list_(api_job, region, allocation_name, status, limit, offset):
 @click.argument('name')
 @click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')
 @job_client
-def restart(api_job, name):
+def restart(api_job, name, *_, **__):
     """Команда перезапуска задачи по имени.
 
     Синтаксис: mls job restart [NAME] [options]
