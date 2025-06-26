@@ -12,7 +12,10 @@ MLS_CONNECTOR_COMMANDS = activate create deactivate delete list sources update
 # Генерируем цели для всех команд
 .PHONY: all
 
-all: $(MLS_COMMANDS)
+all: $(MLS_COMMANDS) main
+
+main:
+	$(PYTHON) $(SCRIPT) $(TEMPLATE) "mls --help" mls.rst
 
 job: $(addprefix references__job-, $(addsuffix .rst, $(MLS_JOB_COMMANDS)))
 
@@ -32,4 +35,4 @@ references__connector-%.rst:
 
 # Очистка всех сгенерированных файлов
 clean:
-	rm -f references__job-*.rst references__transfer-*.rst references__connector-*.rst
+	rm -f references__job-*.rst references__transfer-*.rst references__connector-*.rst mls.rst
