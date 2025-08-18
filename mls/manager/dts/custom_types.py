@@ -182,26 +182,24 @@ class TransferUpdate:
 class TransferCreateRequired(CustomGroupedOption):
     """Класс очередности отображения обязательных опций."""
 
-    GROUP: str = 'Обязательные опций'
+    GROUP: str = 'Опции обязательные'
     GROUP_INDEX = -9999 - 1
 
 
 class TransferCreateOptional(CustomGroupedOption):
     """Класс очередности отображения необязательных опций."""
 
-    GROUP: str = 'Необязательные опции'
+    GROUP: str = 'Опции дополнительные'
     GROUP_INDEX = -9999
 
 
-class FieldOptions(CustomGroupedOption):
-    """Класс очередности отображения полей таблицы."""
-
-    GROUP: str = 'Опции дополнительных полей таблицы'
-    GROUP_INDEX = 8
-
-
-class PaginationParamsOptional(CustomGroupedOption):
-    """Класс очередности отображения необязательных параметров пагинации."""
-
-    GROUP: str = 'Параметры пагинации'
+class RequiredOptions(CustomGroupedOption):
+    """Класс очередности отображения обязательных опций."""
+    GROUP: str = 'Опции обязательные'
     GROUP_INDEX = 9
+
+
+class OptionalOptions(CustomGroupedOption):
+    """Класс очередности отображения необязательных опций."""
+    GROUP: str = 'Опции дополнительные'
+    GROUP_INDEX = 10

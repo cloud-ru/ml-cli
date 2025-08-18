@@ -25,7 +25,7 @@ def test_common_group_formatter(runner):
 
     result = runner.invoke(cli, ['--help'])
     assert result.exit_code == 0
-    assert 'Использование:' in result.output
+    assert 'Опции:' in result.output
 
 
 def test_mlshelp_formatter(runner):
@@ -119,13 +119,12 @@ def test_format_options_section(runner):
     cmd = create_command_with_options()
     result = runner.invoke(cmd, ['--help'])
     assert result.exit_code == 0
-    assert 'ARG' in result.output
+    assert 'arg' in result.output
     assert '--option-with-help' in result.output
     assert 'Тестовая' in result.output
-    assert 'опция' in result.output
-    assert 'с описанием.' in result.output
+    assert 'опция с описанием.' in result.output
     assert '--option-without-help' in result.output
-    assert 'STRING' in result.output
+    assert 'string' in result.output
 
 
 class MyTestCommand(CommandHelp):
