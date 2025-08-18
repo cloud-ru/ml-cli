@@ -41,6 +41,7 @@ def job():
     """Группа команд (входная точка) при работе с задачами обучения.
 
     Синтаксис: mls job [command] [args] [options]
+
     """
 
 
@@ -139,6 +140,9 @@ def pods(api_job, name, *_, **__):
     """Команда просмотра статусов подов.
 
     Синтаксис: mls job pods [NAME] [options]
+
+     Пример:
+        mls job pods
     """
     click.echo(success_format(api_job.get_pods(name)))
 
@@ -175,7 +179,7 @@ def restart(api_job, name, *_, **__):
 def yaml(type):
     """Справочный метод.
 
-    Например:
+    Пример:
         mls job yaml binary > binary.yaml
 
     Без переданного TYPE - показывает задачу binary.
