@@ -78,7 +78,6 @@ class CommonGroupFormatter(click.Group):
         help_text = ctx.command.help or ''
         if help_text:
             formatter.write_text(text_format(help_text + '\n'))
-        formatter.write_text('')
 
     @staticmethod
     def sort_custom_structure(data):
@@ -123,20 +122,19 @@ class CommonGroupFormatter(click.Group):
                                 formatter.write_text(
                                     highlight_format(
                                         f'{" ".join(param.opts):<25}',
-                                    ) + text_format(f' ::[{str(param.type):>10}]  {help_option}'),
+                                    ) + text_format(f' [{str(param.type).lower():>10}]  {help_option}'),
                                 )
                     self.dedent(intend, formatter)
 
-    def extract_argument(self, arguments, formatter):
+    @staticmethod
+    def extract_argument(arguments, formatter):
         """Метод печати справки по аргументам."""
         if arguments:
             with formatter.section(text_format('Аргументы')):
-                self.indent(2, formatter)
                 for param in arguments:
                     formatter.write_text(
-                        highlight_format(f'{param.name.upper()}'),
+                        highlight_format(f'{param.name}'),
                     )
-                self.dedent(2, formatter)
 
     @staticmethod
     def separate_arguments_options(opts):
@@ -145,7 +143,7 @@ class CommonGroupFormatter(click.Group):
         options = []
         if opts:
             for param in opts:
-                if len(param.opts) and param.name == param.opts[0]:
+                if len(param.opts) and param.name.replace('_', '-', -1) == param.opts[0]:
                     arguments.append(param)
                 else:
                     options.append(param)
@@ -180,7 +178,6 @@ class CommonGroupFormatter(click.Group):
         init_formater(formatter)
         self.format_heading(formatter)
         self.format_help_text(ctx, formatter)
-        self.format_usage(ctx, formatter)
         self.format_options_section(ctx, formatter)
         self.format_commands_section(ctx, formatter)
 

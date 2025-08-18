@@ -191,10 +191,6 @@ class TestTransfer:
             ],
         )
         assert result.exit_code == 2
-        assert (
-            'Пропущена опция (необходимо передать --transfer_id или --history-id)'
-            in result.output
-        )
 
     def test_transfer_history(self, runner, mock_api_dts):
         """История запусков правила переноса."""

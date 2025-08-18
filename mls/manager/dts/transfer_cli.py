@@ -8,7 +8,8 @@ from mls.manager.dts.custom_types import ALL_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import ConnectorTarget
 from mls.manager.dts.custom_types import ConnectorTypes
 from mls.manager.dts.custom_types import CronViewModel
-from mls.manager.dts.custom_types import FieldOptions
+from mls.manager.dts.custom_types import OptionalOptions
+from mls.manager.dts.custom_types import RequiredOptions
 from mls.manager.dts.custom_types import STRATEGY
 from mls.manager.dts.custom_types import TARGET_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import Transfer
@@ -23,6 +24,7 @@ from mls.manager.dts.decorators import opt_page_number
 from mls.manager.dts.decorators import opt_page_size
 from mls.manager.dts.decorators import opt_source_name
 from mls.manager.dts.decorators import opt_transfer_id
+from mls.manager.dts.decorators import opt_transfer_id_optional
 from mls.manager.dts.help import TransferActivateHelp
 from mls.manager.dts.help import TransferCreateHelp
 from mls.manager.dts.help import TransferDeactivateHelp
@@ -52,43 +54,43 @@ def transfer():
 
 
 @transfer.command(cls=TransferCreateHelp, name='create')
-@click.option('--name', help='Имя правила переноса.', nargs=1, cls=TransferCreateRequired)
+@click.option('--name', help='Имя правила переноса', nargs=1, cls=TransferCreateRequired)
 @click.option(
     '--connector-id',
-    help='ID коннектора источника.',
+    help='ID коннектора источника',
     nargs=1,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--dst-connector-id',
-    help='ID коннектора места назначения.',
+    help='ID коннектора места назначения',
     nargs=1,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--connector-type',
-    help='Тип коннектора источника.',
+    help='Тип коннектора источника',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--dst-connector-type',
-    help='Тип коннектора места назначения.',
+    help='Тип коннектора места назначения',
     type=RussianChoice(TARGET_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--source',
-    help="Источник данных (если несколько, укажите через запятую, например 'folder1/,folder5/').",
+    help="Источник данных. Если источников несколько, укажите через запятую, например 'folder1/,folder5/'",
     type=str,
     required=True,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--destination',
-    help="Место назначения (укажите как минимум корень '/').",
+    help="Место назначения. Укажите как минимум корень '/'",
     type=str,
     required=True,
     cls=TransferCreateRequired,
@@ -97,14 +99,14 @@ def transfer():
     '--weekday',
     callback=lambda ctx, param, value: validate_ints(ctx, param, value, 1, 7),
     type=int,
-    help='В какие дни недели будет повторяться (1-7, где 1 - Пн).',
+    help='В какие дни недели будет повторяться (1-7, где 1 - Пн)',
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--monthday',
     callback=lambda ctx, param, value: validate_ints(ctx, param, value, 1, 31),
-    help='Какого числа каждый месяц будет повторяться (1-31).',
+    help='Какого числа каждый месяц будет повторяться (1-31)',
     type=int,
     cls=TransferCreateOptional,
     default=None,
@@ -112,20 +114,20 @@ def transfer():
 @click.option(
     '--period',
     type=int,
-    help='Каждые ХХ часов будет повторяться (2 - каждые 2 часа).',
+    help='Каждые ХХ часов будет повторяться (2 - каждые 2 часа)',
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--description',
-    help='Описание правила переноса.',
+    help='Описание правила переноса',
     type=str,
     default='',
     cls=TransferCreateOptional,
 )
 @click.option(
     '--cluster-name',
-    help="Имя кластера по умолчанию 'christofari-1'.",
+    help='Имя кластера',
     type=str,
     default='christofari-1',
     nargs=1,
@@ -133,7 +135,7 @@ def transfer():
 )
 @click.option(
     '--strategy',
-    help='Стратегия переноса.',
+    help='Стратегия переноса',
     type=RussianChoice(STRATEGY),
     cls=TransferCreateRequired,
 )
@@ -161,7 +163,7 @@ def create(
 
     Синтаксис: mls transfer create [options]
 
-    Пример: transfer create --name MyTransfer --connector-id 5f3ec6de-152b-42ec-b5f0-6c18f69c7713
+    Пример: mls transfer create --name MyTransfer --connector-id 5f3ec6de-152b-42ec-b5f0-6c18f69c7713
  --dst-connector-id 44e6e6a8-5224-4f5e-93e6-7790dc8ea6d9 --connector-type s3custom --dst-connector-type s3custom
  --source folder1/subfolder,folder2/manifest.yaml --destination my_dest_folder --strategy write_all
     """
@@ -219,6 +221,8 @@ def delete(api, transfer_ids):
     """Команда удаления одного и более правил переноса.
 
     Синтаксис: mls transfer delete [args]
+
+    Пример: mls transfer delete ebe0e039-2f8c-4d54-8298-92fbff2989ba
     """
     click.echo(success_format(api.transfer_delete(transfer_ids=transfer_ids)))
 
@@ -230,7 +234,8 @@ def delete(api, transfer_ids):
 @click.option(
     '--field',
     'fields',
-    cls=FieldOptions,
+    help='Выбор параметров правила переноса для отображения',
+    cls=OptionalOptions,
     type=RussianChoice(TRANSFER_FIELD_NAMES.keys()),
     multiple=True,
     default=None,
@@ -241,9 +246,7 @@ def list_(api: DTSApi, page_size: int, page_number: int, fields: list):
 
     Синтаксис: mls transfer list [options]
 
-    Пример: mls transfer list
-
-    Пример с дополнительными полями: transfer list --field cluster-name --field description --field source-category
+    Пример: mls transfer list --field cluster-name --field description --field source-category
     """
     transfers_list = api.transfer_list()
 
@@ -283,7 +286,7 @@ def get(api: DTSApi, transfer_id: str):
 def activate(api: DTSApi, transfer_id: str):
     """Команда активации периодического правила переноса.
 
-    Синтаксис: mls transfer activate [args] [options]
+    Синтаксис: mls transfer activate [options]
 
     Пример: mls transfer activate --transfer-id 12c408ec-a4cd-4346-8f76-7364687d14f6
     """
@@ -331,11 +334,17 @@ def logs(api: DTSApi, transfer_id: str | None = None, history_id: str | None = N
 
 
 @transfer.command(cls=TransferStopHelp, name='stop')
-@click.option('--transfer-id', help='ID правила переноса.', required=True)
+@click.option(
+    '--transfer-id',
+    help='ID правила переноса',
+    required=True,
+    cls=RequiredOptions,
+)
 @click.option(
     '--execution-date',
-    help='Дата запуска переноса в формате 1970-01-13T14:55:35.',
+    help='Дата запуска переноса в формате 1970-01-13T14:55:35',
     required=True,
+    cls=RequiredOptions,
 )
 @opt_output_format
 @client
@@ -352,79 +361,62 @@ def cancel(api: DTSApi, transfer_id: str, execution_date: datetime):
 @transfer.command(cls=TransferUpdateHelp, name='update')
 @click.option(
     '--transfer-id',
-    help='ID правила переноса.',
+    help='ID правила переноса',
     nargs=1,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--period',
-    help='Как часто правило переноса должно запускаться (если не указано или задан 0, то перенос выполнится один раз).',
+    help='Частота запуска правила переноса. По умолчанию перенос выполняется один раз',
     type=int,
     default=None,
     cls=TransferCreateOptional,
 )
 @click.option(
-    '-N',
     '--name',
-    help='Имя правила переноса.',
+    help='Имя правила переноса',
     nargs=1,
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--connector-id',
-    help='ID коннектора источника.',
+    help='ID коннектора источника',
     nargs=1,
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--dst-connector-id',
-    help='ID коннектора места назначения.',
-    nargs=1,
-    cls=TransferCreateOptional,
-    default=None,
-)
-@click.option(
-    '--connector-type',
-    help='Тип коннектора источника.',
-    type=RussianChoice(ALL_CONNECTOR_TYPES),
-    nargs=1,
-    cls=TransferCreateOptional,
-    default=None,
-)
-@click.option(
-    '--dst-connector-type',
-    help='Тип коннектора места назначения.',
-    type=RussianChoice(TARGET_CONNECTOR_TYPES),
+    help='ID коннектора места назначения',
     nargs=1,
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--source',
-    help="Источник данных (если несколько, укажите через запятую, например 'folder1/,folder5/').",
+    help="Источник данных (если несколько, укажите через запятую, например 'folder1/,folder5/')",
     type=str,
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--destination',
-    help="Место назначения (укажите как минимум корень '/').",
+    help="Место назначения (укажите как минимум корень '/')",
     type=str,
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--description',
-    help='Описание правила переноса.',
+    help='Описание правила переноса',
     type=str,
     default=None,
     cls=TransferCreateOptional,
 )
 @click.option(
     '--cluster-name',
-    help="Имя кластера по умолчанию 'christofari-1'.",
+    help='Имя кластера',
     type=str,
     default=None,
     nargs=1,
@@ -432,8 +424,24 @@ def cancel(api: DTSApi, transfer_id: str, execution_date: datetime):
 )
 @click.option(
     '--strategy',
-    help='Стратегия переноса.',
+    help='Стратегия переноса',
     type=RussianChoice(STRATEGY),
+    cls=TransferCreateOptional,
+    default=None,
+)
+@click.option(
+    '--connector-type',
+    help='Тип коннектора источника',
+    type=RussianChoice(ALL_CONNECTOR_TYPES),
+    nargs=1,
+    cls=TransferCreateOptional,
+    default=None,
+)
+@click.option(
+    '--dst-connector-type',
+    help='Тип коннектора места назначения',
+    type=RussianChoice(TARGET_CONNECTOR_TYPES),
+    nargs=1,
     cls=TransferCreateOptional,
     default=None,
 )
@@ -502,7 +510,7 @@ def update(
 
 
 @transfer.command(cls=TransferHistoryHelp, name='history')
-@opt_transfer_id
+@opt_transfer_id_optional
 @opt_source_name
 @opt_output_format
 @client

@@ -3,13 +3,15 @@ import click
 
 from mls.manager.dts.custom_types import ALL_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import CUSTOM_CONNECTOR_TYPES
-from mls.manager.dts.custom_types import PaginationParamsOptional
+from mls.manager.dts.custom_types import OptionalOptions
+from mls.manager.dts.custom_types import RequiredOptions
 from mls.manager.dts.utils import RussianChoice
 from mls.manager.job.custom_types import ProfileOptions
 
 opt_custom_connector_type = click.option(
     '--connector-type',
-    help='Тип коннектора.',
+    help='Тип коннектора',
+    cls=RequiredOptions,
     required=True,
     type=RussianChoice(CUSTOM_CONNECTOR_TYPES),
     nargs=1,
@@ -17,33 +19,62 @@ opt_custom_connector_type = click.option(
 
 opt_all_connector_types = click.option(
     '--connector-type',
-    help='Тип коннектора.',
+    help='Тип коннектора',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
+    cls=OptionalOptions,
     default=None,
     nargs=1,
 )
 
 opt_connector_id_prompt = click.option(
-    '--connector-id', prompt='ID коннектора', help='ID коннектора.', nargs=1,
+    '--connector-id',
+    prompt='ID коннектора',
+    help='ID коннектора',
+    nargs=1,
+    cls=RequiredOptions,
 )
-opt_connector_id = click.option('--connector-id', help='ID коннектора.', nargs=1)
+opt_connector_id = click.option(
+    '--connector-id',
+    help='ID коннектора',
+    required=True,
+    cls=RequiredOptions,
+    type=str,
+    nargs=1,
+)
 
 opt_transfer_ids = click.option(
     '--transfer-id',
     'transfer_ids',
     required=True,
-    help='ID правил переноса.',
+    help='ID правил переноса',
     multiple=True,
     expose_value=True,
 )
 opt_transfer_id = click.option(
-    '--transfer-id', help='ID правила переноса.', default=None,
+    '--transfer-id',
+    help='ID правила переноса',
+    default=None,
+    cls=RequiredOptions,
+    required=True,
+)
+opt_transfer_id_optional = click.option(
+    '--transfer-id',
+    help='ID правила переноса',
+    default=None,
+    cls=OptionalOptions,
+    required=False,
 )
 opt_source_name = click.option(
-    '--source-name', help='Имя переносимого объекта.', default=None,
+    '--source-name',
+    help='Имя переносимого объекта',
+    default=None,
+    cls=OptionalOptions,
 )
 opt_history_id = click.option(
-    '--history-id', help='ID истории правила переноса.', default=None,
+    '--history-id',
+    help='ID истории правила переноса',
+    default=None,
+    cls=OptionalOptions,
 )
 arg_connector_ids = click.argument(
     'connector-ids', required=False, default=None, nargs=-1,
@@ -56,7 +87,7 @@ opt_output_format = click.option(
     cls=ProfileOptions,
     index=1,
     type=RussianChoice(['json', 'text']),
-    help='Формат вывода в консоль.',
+    help='Формат вывода в консоль',
     default='text',
 )
 opt_json_output_format = click.option(
@@ -65,7 +96,7 @@ opt_json_output_format = click.option(
     cls=ProfileOptions,
     index=1,
     type=RussianChoice(['json', 'text']),
-    help='Формат вывода в консоль.',
+    help='Формат вывода в консоль',
     default='json',
 )
 
@@ -80,19 +111,19 @@ def validate_positive(ctx, param, value):
 
 opt_page_size = click.option(
     '--page-size',
-    help='Количество элементов на странице, передается совместно с --page-number.',
+    help='Количество элементов на странице, передается совместно с --page-number',
     required=False,
     default=None,
     type=int,
     callback=validate_positive,
-    cls=PaginationParamsOptional,
+    cls=OptionalOptions,
 )
 opt_page_number = click.option(
     '--page-number',
-    help='Номер страницы, передается совместно с --page-size.',
+    help='Номер страницы, передается совместно с --page-size',
     required=False,
     default=None,
     type=int,
     callback=validate_positive,
-    cls=PaginationParamsOptional,
+    cls=OptionalOptions,
 )

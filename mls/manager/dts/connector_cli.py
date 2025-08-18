@@ -5,7 +5,7 @@ import click
 
 from mls.manager.dts.custom_types import CONNECTOR_FIELDS
 from mls.manager.dts.custom_types import ConnectorInput
-from mls.manager.dts.custom_types import FieldOptions
+from mls.manager.dts.custom_types import OptionalOptions
 from mls.manager.dts.decorators import arg_connector_ids
 from mls.manager.dts.decorators import opt_all_connector_types
 from mls.manager.dts.decorators import opt_connector_id
@@ -46,16 +46,17 @@ def connector():
 @opt_all_connector_types
 @arg_connector_ids
 @opt_output_format
-@opt_page_size
-@opt_page_number
 @click.option(
     '--field',
     'fields',
-    cls=FieldOptions,
+    cls=OptionalOptions,
     type=RussianChoice(CONNECTOR_FIELDS),
     multiple=True,
     default=None,
+    help='Выбор параметров коннектора для отображения',
 )
+@opt_page_size
+@opt_page_number
 @client
 def list_(
     api: DTSApi,
@@ -65,13 +66,11 @@ def list_(
     page_number: int,
     fields: list,
 ):
-    """Команда просмотра списка коннекторов. Опции --page-number и --page-size должны быть переданы вместе.
+    """Команда просмотра списка коннекторов.
 
     Синтаксис: mls connector list [args] [options]
 
-    Пример: mls connector list 13c408ec-a4cd-4346-8f76-7364687d14f7 --connector-type s3custom
-
-    Пример с дополнительными полями: mls connector list --field create --field parameters --field system
+    Пример: mls connector list 8ad28362-e7cf-401f-8057-d80e8e3d8069 --field created --field parameters --field system
     """
     connectors_list = api.conn_list(connector_ids, connector_type)
     if api.USER_OUTPUT_PREFERENCE == 'json':
@@ -94,8 +93,9 @@ def list_(
 @click.option(
     '--public',
     is_flag=True,
-    help='Публичный коннектор (доступен всем пользователям воркспейса).',
+    help='Публичный коннектор (доступен всем пользователям воркспейса)',
     default=False,
+    cls=OptionalOptions,
 )
 @client
 def create(api: DTSApi, connector_type: str, public: bool):
@@ -143,7 +143,7 @@ def activate(api: DTSApi, connector_id: str, connector_type: str):
 
     Синтаксис: mls connector activate [options]
 
-    Пример: connector activate --connector-type s3custom --connector-id 48173044-64b7-41eb-9993-edafab55828c
+    Пример: mls connector activate --connector-type s3custom --connector-id 48173044-64b7-41eb-9993-edafab55828c
     """
     click.echo(success_format(api.conn_activate(connector_id, connector_type)))
 
@@ -158,7 +158,7 @@ def deactivate(api: DTSApi, connector_id: str, connector_type: str):
 
     Синтаксис: mls connector deactivate [options]
 
-    Пример: connector deactivate --connector-type s3custom --connector-id 48173044-64b7-41eb-9993-edafab55828c
+    Пример: mls connector deactivate --connector-type s3custom --connector-id 48173044-64b7-41eb-9993-edafab55828c
     """
     click.echo(success_format(api.conn_deactivate(connector_id, connector_type)))
 
@@ -171,6 +171,8 @@ def delete(api: DTSApi, connector_ids: list):
     """Команда удаления коннектора.
 
     Синтаксис: mls connector delete [args]
+
+    Пример: mls connector delete 48173044-64b7-41eb-9993-edafab55828c
     """
     click.echo(success_format(api.conn_delete(connector_ids)))
 
@@ -181,6 +183,8 @@ def delete(api: DTSApi, connector_ids: list):
 def sources(api: DTSApi):
     """Команда получения схем возможных типов коннектора.
 
-    Синтаксис: mls connector sources [options]
+    Синтаксис: mls connector sources
+
+    Пример: mls connector sources
     """
     click.echo(success_format(api.conn_sources()))

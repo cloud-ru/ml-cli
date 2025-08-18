@@ -201,7 +201,7 @@ class CustomGroupedOption(click.Option):
 
 class ProfileOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Опции профиля:'
+    GROUP: str = 'Опции профиля'
     GROUP_INDEX = 11
 
 
@@ -219,7 +219,7 @@ class JobRecommenderOptions(CustomGroupedOption):
 
 class JobDebugOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Режим отладки:'
+    GROUP: str = 'Опции отладки'
     GROUP_INDEX = 100
 
 
