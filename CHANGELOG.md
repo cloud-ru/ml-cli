@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v0.7.2 (2025-08-18)
+
+### Bug Fixes
+
+- **docs**: Help
+  ([`e2fbe15`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/e2fbe151c3661a2d064adde3cbfa504fd0c780a0))
+
+- **docs**: Help
+  ([`f807e5a`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/f807e5aedb1b3baf7d840f012be11e76591546dd))
+
+### Documentation
+
+- **Add mls --help**: Добавил help
+  ([`a862c2f`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/a862c2fb085e6e42267990b64724a249430041ec))
+
+
 ## v0.7.1 (2025-06-06)
 
 ### Bug Fixes
