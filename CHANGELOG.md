@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.7.3 (2025-08-26)
+
+### Bug Fixes
+
+- **autogenerate-issue**: Исправления для автогенерации docs
+  ([`e7e3ea9`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/e7e3ea9bc173a0a5f8fbb781e984fe62abe031d3))
+
+
 ## v0.7.2 (2025-08-18)
 
 ### Bug Fixes
