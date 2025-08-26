@@ -6,7 +6,7 @@ import responses
 from requests import ReadTimeout
 
 from mls_core import TrainingJobApi
-from mls_core.exeptions import InvalidAuthorizationToken
+from mls_core.exceptions import InvalidAuthorizationToken
 
 
 @pytest.fixture

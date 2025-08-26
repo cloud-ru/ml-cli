@@ -23,8 +23,36 @@ def populate_eq(value):
 
 
 def empty():
-    """Удаляет последний символ из строки."""
+    """Оставляет пустоту."""
     return ' '
+
+
+def new_line_after_dot(value):
+    """Убрать пробелы и переместить новое предложение с новой строки."""
+    return '.\n'.join(map(str.strip, value.split('.')))
+
+
+def double_code_quotes(value):
+    """Кавычки добавил."""
+    if value:
+        return f'``{value}``'
+    else:
+        return ''
+
+
+def first_letter_to_lower(value: str):
+    """Только первое буква в предложении сделается маленькой."""
+    return value[0].lower() + value[1:]
+
+
+def under_scope(value: str):
+    """Заменить пробелы на нижнее подчеркивание."""
+    return '_'.join(value.split(' '))
+
+
+def replace_local_test(value: str):
+    """Заменить локальное отображение."""
+    return value.replace('python ./mls/cli.py', 'mls')
 
 
 def execute_command(command):
@@ -43,7 +71,7 @@ def parse_command_output(command_output):
     """Парсит вывод команды на секции и параметры."""
     sections = {}
     current_section = None
-    pattern = r'^\s*(?P<short_opt>-\w\s+)?(?P<long_opt>--\w+(?:-\w+)*)\s*(::\s*\[\s*(?P<format>[^]]*)\s*\])?\s+(?P<description>.+)$'
+    pattern = r'^\s*(?P<short_opt>-\w\s+)?(?P<long_opt>--\w+(?:-\w+)*)\s*(\s*\[(?P<format>\w*\s*)\s*\])?\s+(?P<description>.+)$'
     for line in command_output:
         if line.strip().endswith(':'):
             current_section = line.strip()
@@ -78,10 +106,14 @@ def main(template_filename, command, output_filename, **kwargs):
     env.filters['remove_last'] = remove_last
     env.filters['empty'] = empty
     env.filters['populate_eq'] = populate_eq
+    env.filters['new_line'] = new_line_after_dot
+    env.filters['lower_first'] = first_letter_to_lower
+    env.filters['replace_local_test'] = replace_local_test
+    env.filters['under_scope'] = under_scope
+    env.filters['double_code_quotes'] = double_code_quotes
 
     # Создание шаблона из содержания файла
     template = env.from_string(template_content)
-
     # Рендеринг шаблона
     rendered = template.render(line=parsed_output['line'], options=parsed_output['options'], **kwargs)
 

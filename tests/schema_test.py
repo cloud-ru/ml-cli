@@ -52,7 +52,7 @@ def sample():
             'uid': '232d33b0-e3a4-49a7-85c1-000000000000',
             'job_name': 'lm-mpi-job-d305a5a8-12c6-4a65-801d-000000000000',
             'status': 'Pending',
-            'region': 'DGX2-MT',
+            'region': 'A100-MT',
             'instance_type': 'v100.1gpu',
             'job_desc': 'set any useful description',
             'created_dt': '2025-02-24T10:59:38Z',
@@ -77,7 +77,7 @@ def test_display_jobs_body(sample):
         '+-------------------------------------------------+'
         '---------+---------+---------------+----------------------------+----------------+------------------+\n'
         '| lm-mpi-job-d305a5a8-12c6-4a65-801d-000000000000 |'
-        ' Pending | DGX2-MT |   v100.1gpu   | set any useful description |       1        | 8 days, 19:31:01 |\n'
+        ' Pending | A100-MT |   v100.1gpu   | set any useful description |       1        | 8 days, 19:31:01 |\n'
         '+-------------------------------------------------+'
         '---------+---------+---------------+----------------------------+----------------+------------------+'
     )
@@ -101,7 +101,7 @@ def test_sort_key(sample):
             'uid': '232d33b0-e3a4-49a7-85c1-000000000000',
             'job_name': 'lm-mpi-job-d305a5a8-12c6-4a65-801d-000000000000',
             'status': 'Running',
-            'region': 'DGX2-MT',
+            'region': 'A100-MT',
             'instance_type': 'v100.1gpu',
             'job_desc': 'set any useful description',
             'created_dt': '2025-02-24T10:59:38Z',

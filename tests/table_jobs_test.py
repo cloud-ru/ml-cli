@@ -72,7 +72,7 @@ def test_table_command_basic_filter(runner, mock_api_job, monkeypatch):
     with runner.isolated_filesystem():
         result = runner.invoke(
             cli,
-            ['job', 'table', '-R', 'ru-central1', '-l100', '-o0', '-j0d', '-g2', '--status', 'Pending'],
+            ['job', 'table', '-R', 'A100-MT', '-l100', '-o0', '-j0d', '-g2', '--status', 'Pending'],
             obj={'api_job': mock_api_job},
         )
         assert result.exit_code == 0
@@ -89,7 +89,7 @@ def test_table_command_basic_no_status(runner, mock_api_job, monkeypatch):
     with runner.isolated_filesystem():
         result = runner.invoke(
             cli,
-            ['job', 'table', '-R', 'ru-central1', '-l100', '-o0', '-j0d', '-g1', '--status', 'Foo'],
+            ['job', 'table', '-R', 'A100-MT', '-l100', '-o0', '-j0d', '-g1', '--status', 'Foo'],
             obj={'api_job': mock_api_job},
         )
 
@@ -98,9 +98,9 @@ def test_table_command_basic_no_status(runner, mock_api_job, monkeypatch):
             'Usage: cli job table [OPTIONS]\n'
             "Try 'cli job table --help' for help.\n"
             '\n'
-            "Error: Invalid value for '-s' / '--status': 'Foo' is not one of "
-            "'Completed', 'Completing', 'Deleted', 'Failed', 'Pending', 'Running', 'Stopped', 'Succeeded', 'Terminated'."
-            '\n'
+            "Error: Invalid value for '-s' / '--status': Недопустимый выбор 'Foo'. "
+            "Допустимые варианты: 'Completed', 'Completing', 'Deleted', 'Failed', 'Pending', 'Running', 'Stopped', "
+            "'Succeeded', 'Terminated'\n"
         )
 
 
@@ -121,7 +121,7 @@ def test_filters_and_sorting_no_created_at(runner, mock_api_job, monkeypatch):
         cli,
         [
             'job', 'table',
-            '-R', 'ru-central1',
+            '-R', 'A100-MT',
             '-g', '2',
             '--asc_sort', 'gpu_count',
             '--desc_sort', 'created_at',
@@ -133,9 +133,10 @@ def test_filters_and_sorting_no_created_at(runner, mock_api_job, monkeypatch):
     assert result.exit_code == 2
     assert result.output == (
         'Usage: cli job table [OPTIONS]\n'
-        "Try 'cli job table --help' for help.\n\n"
-        'Error: Invalid value for '
-        "'--desc_sort': 'created_at' is not one of 'gpu_count', 'instance_type', 'job_desc', 'job_name'.\n"
+        "Try 'cli job table --help' for help.\n"
+        '\n'
+        "Error: Invalid value for '--desc_sort': Недопустимый выбор 'created_at'. "
+        "Допустимые варианты: 'gpu_count', 'instance_type', 'job_desc', 'job_name'\n"
     )
 
 
@@ -157,7 +158,7 @@ def test_filters_and_sorting(runner, mock_api_job, monkeypatch):
         cli,
         [
             'job', 'table',
-            '-R', 'ru-central1',
+            '-R', 'A100-MT',
             '-g', '2',
             '--asc_sort', 'gpu_count',
             '--desc_sort', 'instance_type',

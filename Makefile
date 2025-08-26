@@ -9,7 +9,7 @@ SAMPLES = samples
 test: samples
 	PYTHONPATH=$(CI_PROJECT_DIR) poetry run pytest -vvv ./tests/ \
 		--cov=mls --cov=mls_core --cov-report=term-missing --cov-report=xml:${CI_PROJECT_DIR}/cover/coverage.xml \
-		--junitxml=${CI_PROJECT_DIR}/cover/rspec.xml --cov-fail-under=90
+		--junitxml=${CI_PROJECT_DIR}/cover/rspec.xml --cov-fail-under=90 -s
 
 test_report: samples
 	PYTHONPATH=$(CI_PROJECT_DIR) poetry run pytest -vvv ./tests/ \

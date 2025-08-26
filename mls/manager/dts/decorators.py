@@ -5,12 +5,13 @@ from mls.manager.dts.custom_types import ALL_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import CUSTOM_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import OptionalOptions
 from mls.manager.dts.custom_types import RequiredOptions
-from mls.manager.dts.utils import RussianChoice
 from mls.manager.job.custom_types import ProfileOptions
+from mls.utils.common_types import config_option_format_of_output
+from mls.utils.common_types import RussianChoice
 
 opt_custom_connector_type = click.option(
     '--connector-type',
-    help='Тип коннектора',
+    help=f'Тип коннектора {RussianChoice(CUSTOM_CONNECTOR_TYPES).options}',
     cls=RequiredOptions,
     required=True,
     type=RussianChoice(CUSTOM_CONNECTOR_TYPES),
@@ -19,7 +20,7 @@ opt_custom_connector_type = click.option(
 
 opt_all_connector_types = click.option(
     '--connector-type',
-    help='Тип коннектора',
+    help=f'Тип коннектора {RussianChoice(CUSTOM_CONNECTOR_TYPES).options}',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
     cls=OptionalOptions,
     default=None,
@@ -86,8 +87,8 @@ opt_output_format = click.option(
     '--output',
     cls=ProfileOptions,
     index=1,
-    type=RussianChoice(['json', 'text']),
-    help='Формат вывода в консоль',
+    type=config_option_format_of_output,
+    help=f'Формат вывода в консоль {config_option_format_of_output.options}',
     default='text',
 )
 opt_json_output_format = click.option(
@@ -95,8 +96,8 @@ opt_json_output_format = click.option(
     '--output',
     cls=ProfileOptions,
     index=1,
-    type=RussianChoice(['json', 'text']),
-    help='Формат вывода в консоль',
+    type=config_option_format_of_output,
+    help=f'Формат вывода в консоль {config_option_format_of_output.options}',
     default='json',
 )
 

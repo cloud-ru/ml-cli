@@ -25,18 +25,18 @@ def common_cli_options(func):
         cls=ProfileOptions,
         index=4,
         default=DEFAULT_PROFILE,
-        help='Определить параметры региона, формата вывода по имени профиля.',
+        help='Определение параметров региона, формата вывода по имени профиля',
     )(func)
 
     func = click.option(
-        '-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API.',
+        '-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API',
     )(func)
     func = click.option(
         '-D',
         '--debug',
         cls=JobDebugOptions,
         is_flag=True,
-        help='Вывод в консоль отладочной информации.',
+        help='Вывод в консоль отладочной информации',
     )(func)
     return func
 
@@ -89,30 +89,6 @@ def collect_connector_params(connector_type: str) -> Connector:
         )
 
     return Connector(name=click.prompt('Имя коннектора'), parameters=params)
-
-
-class RussianChoice(click.Choice):
-    """Класс для перевода ошибок ввода на русский язык."""
-
-    def __init__(self, choices):
-        """Метод инициализирует экземпляр класса."""
-        super().__init__(choices)
-
-    def __repr__(self):
-        """Метод отображает список возможных вариантов."""
-        return ', '.join(self.choices)
-
-    def convert(self, value, param, ctx):
-        """Метод заменяет наследуемый новым сообщением об ошибке."""
-        try:
-            return super().convert(value, param, ctx)
-        except click.BadParameter:
-            choices_str = ', '.join(f"'{c}'" for c in self.choices)
-            self.fail(
-                f"Недопустимый выбор '{value}'. Допустимые варианты: {choices_str}",
-                param,
-                ctx,
-            )
 
 
 def validate_connector_exists(api, connector_id, connector_type):

@@ -39,8 +39,8 @@ from mls.manager.dts.table import DataTransferTableView
 from mls.manager.dts.table import display_transfers
 from mls.manager.dts.utils import client
 from mls.manager.dts.utils import process_json
-from mls.manager.dts.utils import RussianChoice
 from mls.manager.dts.utils import validate_ints
+from mls.utils.common_types import RussianChoice
 from mls.utils.style import success_format
 from mls_core.client import DTSApi
 
@@ -69,14 +69,14 @@ def transfer():
 )
 @click.option(
     '--connector-type',
-    help='Тип коннектора источника',
+    help=f'Тип коннектора источника {RussianChoice(ALL_CONNECTOR_TYPES).options}',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--dst-connector-type',
-    help='Тип коннектора места назначения',
+    help=f'Тип коннектора места назначения {RussianChoice(TARGET_CONNECTOR_TYPES).options}',
     type=RussianChoice(TARGET_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateRequired,
@@ -135,7 +135,7 @@ def transfer():
 )
 @click.option(
     '--strategy',
-    help='Стратегия переноса',
+    help=f'Стратегия переноса {RussianChoice(STRATEGY).options}',
     type=RussianChoice(STRATEGY),
     cls=TransferCreateRequired,
 )
@@ -234,7 +234,7 @@ def delete(api, transfer_ids):
 @click.option(
     '--field',
     'fields',
-    help='Выбор параметров правила переноса для отображения',
+    help=f'Выбор параметров правила переноса для отображения {RussianChoice(TRANSFER_FIELD_NAMES.keys()).options}',
     cls=OptionalOptions,
     type=RussianChoice(TRANSFER_FIELD_NAMES.keys()),
     multiple=True,
@@ -424,14 +424,14 @@ def cancel(api: DTSApi, transfer_id: str, execution_date: datetime):
 )
 @click.option(
     '--strategy',
-    help='Стратегия переноса',
+    help=f'Стратегия переноса {RussianChoice(STRATEGY).options}',
     type=RussianChoice(STRATEGY),
     cls=TransferCreateOptional,
     default=None,
 )
 @click.option(
     '--connector-type',
-    help='Тип коннектора источника',
+    help=f'Тип коннектора источника {RussianChoice(ALL_CONNECTOR_TYPES).options}',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateOptional,
@@ -439,7 +439,7 @@ def cancel(api: DTSApi, transfer_id: str, execution_date: datetime):
 )
 @click.option(
     '--dst-connector-type',
-    help='Тип коннектора места назначения',
+    help=f'Тип коннектора места назначения {RussianChoice(TARGET_CONNECTOR_TYPES).options}',
     type=RussianChoice(TARGET_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateOptional,

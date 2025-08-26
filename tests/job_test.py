@@ -2,9 +2,8 @@
 import click
 import pytest
 
-from mls.manager.job.custom_types import output_choice
-from mls.manager.job.custom_types import ProfileOptions
-from mls.manager.job.custom_types import ViewRegionKeys
+from mls.manager.job.decorators import opt_output_format
+from mls.manager.job.decorators import regions_selected
 from mls.manager.job.utils import job_client
 
 
@@ -36,8 +35,8 @@ def fake_command(monkeypatch, runner, user_profile):
     result = []
 
     @click.command()
-    @click.option('-R', '--region', cls=ProfileOptions, index=0, type=ViewRegionKeys(), help='Ключ региона.')
-    @click.option('-O', '--output', cls=ProfileOptions, index=1, type=output_choice, help='Формат вывода в консоль.')
+    @regions_selected
+    @opt_output_format
     @job_client
     def command(api_job, region, *args, **kwargs):
         result.append([api_job, region, args, kwargs])
@@ -66,7 +65,7 @@ def fake_command(monkeypatch, runner, user_profile):
 
         ],
         [
-            ['--region', 'abc', '--endpoint_url', 'https://api.ai.cloud.ru/public/v2'],
+            ['--region', 'SR008', '--endpoint_url', 'https://api.ai.cloud.ru/public/v2'],
             {
                 'debug': False,
                 'endpoint_url': 'https://api.ai.cloud.ru/public/v2',
@@ -76,7 +75,7 @@ def fake_command(monkeypatch, runner, user_profile):
                 'x_api_key': 'test_x_api_key',
             },
             'json',
-            'abc',
+            'SR008',
         ],
         [
             ['--output', 'text', '--endpoint_url', 'https://api.ai.cloud.ru/public/v3'],

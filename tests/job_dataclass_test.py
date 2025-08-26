@@ -77,7 +77,7 @@ def unknown_yaml():
                 'workers': 1,
             },
             'script': 'python -c "from time import sleep; sleep(1000);" ',
-            'type': 'binary,horovod,pytorch,pytorch2,pytorch_elastic,spark,binary_exp',
+            'type': 'binary,horovod,pytorch,pytorch2,pytorch_elastic,binary_exp',
         },
     }
 
