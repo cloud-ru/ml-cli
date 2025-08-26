@@ -28,8 +28,8 @@ from mls.manager.dts.table import display_connectors
 from mls.manager.dts.utils import client
 from mls.manager.dts.utils import collect_connector_params
 from mls.manager.dts.utils import process_json
-from mls.manager.dts.utils import RussianChoice
 from mls.manager.dts.utils import validate_connector_exists
+from mls.utils.common_types import RussianChoice
 from mls.utils.style import success_format
 from mls_core.client import DTSApi
 
@@ -53,7 +53,7 @@ def connector():
     type=RussianChoice(CONNECTOR_FIELDS),
     multiple=True,
     default=None,
-    help='Выбор параметров коннектора для отображения',
+    help=f'Выбор параметров коннектора для отображения {RussianChoice(CONNECTOR_FIELDS).options}',
 )
 @opt_page_size
 @opt_page_number

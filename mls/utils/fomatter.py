@@ -53,7 +53,7 @@ class CommonGroupFormatter(click.Group):
         """
         prefix = text_format(
             formatter.current_indent *
-            ' ' + 'Использование: ',
+            ' ' + 'Синтаксис: ',
         )
         formatter.write_usage(
             text_format(ctx.command_path),
@@ -122,7 +122,7 @@ class CommonGroupFormatter(click.Group):
                                 formatter.write_text(
                                     highlight_format(
                                         f'{" ".join(param.opts):<25}',
-                                    ) + text_format(f' [{str(param.type).lower():>10}]  {help_option}'),
+                                    ) + text_format(f' [{str(param.type).lower():<10}]  {help_option}'),
                                 )
                     self.dedent(intend, formatter)
 

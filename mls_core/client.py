@@ -16,9 +16,9 @@ from requests.adapters import HTTPAdapter  # type: ignore
 from requests.sessions import ChunkedEncodingError  # type: ignore
 from urllib3.util.retry import Retry
 
-from .exeptions import AuthorizationError
-from .exeptions import DataStreamingFailure
-from .exeptions import InvalidAuthorizationToken
+from .exceptions import AuthorizationError
+from .exceptions import DataStreamingFailure
+from .exceptions import InvalidAuthorizationToken
 from .setting import BACKOFF_FACTOR
 from .setting import CONNECT_TIMEOUT
 from .setting import MAX_RETRIES
@@ -265,8 +265,8 @@ class TrainingJobApi(_CommonPublicApiInterface):
 
     @_handle_api_response
     def get_pods(self, name):
-        """Вызов получения списка подов для задач pytorch (elastic) или spark."""
-        return self.get(f'jobs/spark/{name}/pods')
+        """Вызов получения списка подов для задач pytorch (elastic)."""
+        return self.get(f'jobs/elastic/{name}/pods')
 
     @_handle_api_response
     def delete_job(self, name, region):

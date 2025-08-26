@@ -44,8 +44,8 @@ from mls.utils.execption import EncryptionError
 from mls.utils.execption import MissingPassword
 from mls.utils.style import error_format
 from mls.utils.style import text_format
-from mls_core.exeptions import AuthorizationError
-from mls_core.exeptions import InvalidAuthorizationToken
+from mls_core.exceptions import AuthorizationError
+from mls_core.exceptions import InvalidAuthorizationToken
 
 
 @click.group(cls=MLSHelp)

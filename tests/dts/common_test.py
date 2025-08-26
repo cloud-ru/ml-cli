@@ -22,9 +22,9 @@ from mls.manager.dts.table import process_transfer_table_content
 from mls.manager.dts.utils import collect_connector_params
 from mls.manager.dts.utils import paginate
 from mls.manager.dts.utils import process_json
-from mls.manager.dts.utils import RussianChoice
 from mls.manager.dts.utils import validate_connector_exists
 from mls.manager.dts.utils import validate_ints
+from mls.utils.common_types import RussianChoice
 
 
 class TestValidateConnector:
@@ -115,7 +115,7 @@ class TestChoice:
         """Тест строкового представления."""
         choices = STRATEGY
         rc = RussianChoice(choices)
-        assert repr(rc) == ', '.join(STRATEGY)
+        assert repr(rc.options) == "'Допустимые варианты: write_all, append_new, sync_all'"
 
     def test_convert_valid_choice(self):
         """Тест конвертации допустимого значения."""

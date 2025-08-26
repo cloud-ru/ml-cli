@@ -2,16 +2,18 @@
 import click
 import pytest
 
-from mls.utils.common_types import Choice
 from mls.utils.common_types import Path
 from mls.utils.common_types import PositiveIntWithZeroView
+from mls.utils.common_types import RussianChoice
 
 
 def test_types():
     """Тесты типов."""
-    assert str(Path(exists=True)) == 'OS.PATH'
-    assert str(Choice(['поработать до полуночи', 'пойти спать'])) == 'поработать до полуночи, пойти спать'
-    assert str(PositiveIntWithZeroView()) == 'INT GTE(0)'
+    assert str(Path(exists=True)) == 'string'
+    assert str(RussianChoice(['поработать до полуночи', 'пойти спать']).options) == (
+        'Допустимые варианты: поработать до полуночи, пойти спать'
+    )
+    assert str(PositiveIntWithZeroView()) == 'int'
 
 
 def test_positive_convector_alphabet():

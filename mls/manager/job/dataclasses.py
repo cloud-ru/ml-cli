@@ -18,12 +18,12 @@ from typing import TypeVar
 import click
 import yaml  # type: ignore
 
-from .custom_types import job_types
-from .custom_types import priority
+from .constants import job_types
+from .constants import priority
 
 T = TypeVar('T', bound='MergeMixin')
 
-binary, horovod, pytorch, pytorch2, pytorch_elastic, spark, binary_exp = job_types
+binary, horovod, pytorch, pytorch2, pytorch_elastic, binary_exp = job_types
 low, medium, high = priority
 
 
@@ -216,7 +216,6 @@ class Job(MergeMixin):
         return defaultdict(
             lambda: create_unknown_job_class(type_), {
                 pytorch2: Pytorch2Job,
-                spark: SparkJob,
                 binary: BinaryJob,
                 horovod: HorovodJob,
                 pytorch: PytorchJob,
@@ -264,7 +263,7 @@ class VolcanoJob(Job):
 
 
 @dataclass
-class Pytorch2Job(VolcanoJob):  # TODO
+class Pytorch2Job(VolcanoJob):
     """Структура Pytorch2Job."""
     environment: Optional[Pytorch2Environment]
     type: str = note(pytorch2)
@@ -279,26 +278,6 @@ class Pytorch2Job(VolcanoJob):  # TODO
                     'pytorch_use_env': self.environment.use_env,
                 } if self.environment and self.environment.use_env else {}
             ),
-        }
-
-
-@dataclass
-class SparkResource(Resource):
-    """Класс ресурс для Spark задач обучения."""
-    memory: float = note(0.2)
-
-
-@dataclass
-class SparkJob(Job):
-    """Структура SparkJob."""
-    resource: Optional[SparkResource]
-    type: str = note(spark)
-
-    def to_json(self, region) -> dict:
-        """Дополнение spark спецификой данных для отправки."""
-        return {
-            **super().to_json(region),
-            **({'spark_executor_memory': self.resource.memory} if self.resource and self.resource.memory else {}),
         }
 
 

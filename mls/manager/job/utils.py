@@ -13,11 +13,9 @@ from typing import List
 import click
 import yaml  # type: ignore
 
-from .custom_types import DictView
-from .custom_types import ExecuteScriptView
 from .custom_types import ExternalActionView
-from .custom_types import int_or_default
-from .custom_types import InternalActionView
+from .custom_types import job_actions_in_fail_input
+from .custom_types import job_types_input
 from .custom_types import JobDebugOptions
 from .custom_types import JobElasticOptions
 from .custom_types import JobEnvironmentOptions
@@ -27,16 +25,14 @@ from .custom_types import JobPolicyOptions
 from .custom_types import JobPytorch2Options
 from .custom_types import JobRequiredOptions
 from .custom_types import JobResourceOptions
-from .custom_types import JobSparkOptions
-from .custom_types import json
-from .custom_types import MaxRetryInView
-from .custom_types import NFSPathView
 from .custom_types import priority_class
 from .custom_types import ProfileOptions
-from .custom_types import ViewTypeTask
+from .custom_types import worker_input
 from .dataclasses import Job
 from mls.utils.common import load_saved_config
-from mls.utils.common_types import positive_int_with_zero
+from mls.utils.common_types import DictView
+from mls.utils.common_types import IntOrStrView
+from mls.utils.common_types import RangeView
 from mls.utils.execption import ConfigReadError
 from mls.utils.settings import DEFAULT_PROFILE
 from mls.utils.settings import SECRET_PASSWORD
@@ -51,13 +47,13 @@ def common_cli_options(func):
     # Средний приоритет загрузка из файла
     func = click.option(
         '-P', '--profile', cls=ProfileOptions,  index=4, default=DEFAULT_PROFILE,
-        help='Определить параметры региона, формата вывода ... по имени профиля.',
+        help='Определение параметров региона, формата вывода по имени профиля',
     )(func)
 
     # Опции имеющие умолчания
     # func = click.option('-O', '--output', cls=ProfileOptions,  index=1, type=output_choice, help='Формат вывода в консоль.')(func)
-    func = click.option('-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API.')(func)
-    func = click.option('-D', '--debug',  cls=JobDebugOptions, is_flag=True, help='Вывод в консоль отладочной информации.')(func)
+    func = click.option('-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API')(func)
+    func = click.option('-D', '--debug',  cls=JobDebugOptions, is_flag=True, help='Вывод в консоль отладочной информации')(func)
     return func
 
 
@@ -81,7 +77,7 @@ def job_client(func):
         )
         calculated_options = dict(region=kwargs.pop('region', '') or profile.get('region', ''))
         client = TrainingJobApi(**have_defaults, **stable_rules)
-        client.USER_OUTPUT_PREFERENCE = kwargs.pop('output', None) or profile.get('output', json)
+        client.USER_OUTPUT_PREFERENCE = kwargs.pop('output', None) or profile.get('output', 'json')  # FIXME
 
         return func(client, *args, **kwargs, **calculated_options)
 
@@ -104,7 +100,12 @@ def read_profile(profile_name):
     try:
         return {**dict(config.items(profile_name)), **dict(credentials.items(profile_name))}
     except NoSectionError as err:
-        raise ConfigReadError(f'Нет секции с названием: {err.section}')
+        error_message = (
+            f'Профиль конфигурации с именем {err.section} используется по умолчанию, если конфигурация еще не задана.\n'
+            'Настройте конфигурацию профиля, выполнив команду:\n'
+            'mls configure'
+        )
+        raise ConfigReadError(error_message)
 
 
 def read_yaml(file_path: str):
@@ -129,64 +130,91 @@ def define_run_job_options() -> List:
         # Node options
         option(
             '-i', '--instance_type', cls=JobRequiredOptions, index=0,
-            type=click.STRING, help='Конфигурация ресурсов (e.g., v100.1gpu).',
+            type=click.STRING, help='Конфигурация ресурсов (e.g., v100.1gpu)',
         ),
-        option('-w', '--workers', cls=JobResourceOptions, index=0, type=positive_int_with_zero, help='Количество рабочих узлов.'),
-        option('-p', '--processes', cls=JobResourceOptions, index=1, type=int_or_default, help='Кол-во процессов.'),
+        option('-w', '--workers', cls=JobResourceOptions, index=0, type=worker_input, help='Количество рабочих узлов'),
+        option(
+            '-p', '--processes', cls=JobResourceOptions, index=1, type=IntOrStrView(), help=(
+                'Количество процессов. int -  прямое указание числа процессов, '
+                'Строка равная default - расчет оптимального количества процессов для запуска задачи'
+            ),
+        ),
 
         # Job options
-        option('-t', '--type',  cls=JobRequiredOptions, index=2, type=ViewTypeTask(), help='Тип задачи обучения.'),
-        option('-s', '--script', cls=JobRequiredOptions, index=3, type=ExecuteScriptView(), help='Путь к исполняемому файлу.'),
-        option('-d', '--description', type=click.STRING, help='Описание задачи.'),
+        option(
+            '-t', '--type',  cls=JobRequiredOptions, index=2, type=job_types_input, help=f'Тип задачи обучения. {job_types_input.options}',
+        ),
+        option(
+            '-s', '--script', cls=JobRequiredOptions, index=3, type=click.STRING,
+            help='Путь к исполняемому файлу. Например, к скрипту - /home/jovyan/test_script.py или к исполняемому файлу -ls, -rm, -pwd',
+        ),
+        option('-d', '--description', type=click.STRING, help='Описание задачи'),
 
         # Environment options
-        option('-I', '--image', cls=JobRequiredOptions, index=1, type=click.STRING, help='Название образа. '),
-        option('-e', '--conda_name', cls=JobEnvironmentOptions, index=0, type=click.STRING, help='Название Conda окружения в образе.'),
-        option('-f', '--flags', cls=JobEnvironmentOptions, index=1, type=DictView('-f'), help='Дополнительные флаги.'),
-        option('-v', '--variables', cls=JobEnvironmentOptions, index=2, type=DictView('-v'), help='Переменные окружения.'),
+        option('-I', '--image', cls=JobRequiredOptions, index=1, type=click.STRING, help='Название образа'),
+        option('-e', '--conda_name', cls=JobEnvironmentOptions, index=0, type=click.STRING, help='Название Conda-окружения в образе'),
+        option(
+            '-f', '--flags', cls=JobEnvironmentOptions, index=1, type=DictView('-f'),
+            help='Дополнительные флаги: key1=value1,key2=value2',
+        ),
+        option(
+            '-v', '--variables', cls=JobEnvironmentOptions, index=2, type=DictView('-v'),
+            help='Переменные окружения: key1=value1,key2=value2',
+        ),
 
         # Policy options
         option(
             '-r', '--max_retry', cls=JobPolicyAllocationOptions, index=2,
-            type=MaxRetryInView(), help='Макс. количество попыток перезапуска.',
+            type=RangeView(2, 100), help='Максимальное количество попыток перезапуска. От 3 до 100',
         ),
-        option('-k', '--checkpoint_dir', cls=JobPolicyOptions, index=1, type=NFSPathView(), help='Путь для сохранения checkpoint.'),
-        option('-a', '--internet_access', cls=JobPolicyOptions, index=0, type=click.BOOL, help='Разрешён ли доступ в интернет.'),
-        option('--priority_class', cls=JobPolicyOptions, index=2, type=priority_class, help='Приоритет выполнения задачи.'),
+        option(
+            '-k', '--checkpoint_dir', cls=JobPolicyOptions, index=1, type=click.STRING,
+            help='Путь для сохранения checkpoint. Например,  /home/jovyan/...',
+        ),
+        option('-a', '--internet_access', cls=JobPolicyOptions, index=0, type=click.BOOL, help='Определяет наличие доступ в интернет'),
+        option(
+            '--priority_class', cls=JobPolicyOptions, index=2, type=priority_class,
+            help=f'Приоритет выполнения задачи. {priority_class.options}',
+        ),
 
         # Health options
-        option('--period', cls=JobHealthOptions, index=0, type=click.INT, help='Минутный интервал для отслеживания появления логов.'),
+        option('--period', cls=JobHealthOptions, index=0, type=click.INT, help='Минутный интервал для отслеживания появления логов'),
         option(
             '--internal_action', cls=JobHealthOptions, index=1,
-            type=InternalActionView(), help='Действие направленное к задачи обучения.',
+            type=job_actions_in_fail_input, help=f'Действие направленное к задаче обучения. {job_actions_in_fail_input.options}',
         ),
         # Исключение из правил это единственная опция
         option(
             '--external_actions', multiple=True, cls=JobHealthOptions, index=2,
-            type=ExternalActionView(), default=['notify'], help='Действие направленное к пользователю.',
+            type=ExternalActionView(), default=['notify'], help=(
+                'Действие направленное к пользователю. Доступные варианты: [], [\'notify\']'
+            ),
         ),
 
         # ElasticJob options
         option(
-            '--elastic_min_workers', cls=JobElasticOptions, index=0, type=int_or_default,
-            help='Минимальное количество воркеров.',
+            '--elastic_min_workers', cls=JobElasticOptions, index=0, type=IntOrStrView(),
+            help='Минимальное количество воркеров.  '
+                 'int -  прямое указание числа процессов, Строка равная default - расчет оптимального количества процессов '
+                 'для запуска задачи',
         ),
         option(
-            '--elastic_max_workers', cls=JobElasticOptions, index=1, type=int_or_default,
-            help='Максимальное количество воркеров.',
+            '--elastic_max_workers', cls=JobElasticOptions, index=1, type=IntOrStrView(),
+            help='Максимальное количество воркеров.  '
+                 'int -  прямое указание числа процессов, Строка равная default - расчет оптимального количества процессов '
+                 'для запуска задачи',
         ),
         option(
-            '--elastic_max_restarts', cls=JobElasticOptions, index=2, type=positive_int_with_zero,
-            help='Максимальное количество перезапусков.',
+            '--elastic_max_restarts', cls=JobElasticOptions, index=2, type=worker_input,
+            help='Максимальное количество перезапусков',
         ),
-
-        # SparkJob options
-        option('--spark_memory', cls=JobSparkOptions, type=click.FLOAT, help='Объем памяти для Spark.'),
 
         # Pytorch2Job options
         option(
-            '--use_env', cls=JobPytorch2Options, type=click.BOOL,
-            is_flag=True, help='Использовать torch.distributed.launch с --use_env',
+            '--use_env', cls=JobPytorch2Options, type=click.BOOL, is_flag=True,
+            help=(
+                'Использование переменные окружения для конфигурации вместо профиля по умолчанию или явно заданного файла настроек'
+            ),
         ),
     ]
 

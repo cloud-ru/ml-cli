@@ -105,7 +105,7 @@ def asserts(job_client, payload_, res):
     assert res['job']['policy']['internet_access'] == payload_['internet']
     assert res['job']['policy']['priority_class'] == payload_['priority_class']
     assert 'max_retry' not in payload_
-    assert payload_['region'] == 'DGX2-MT'
+    assert payload_['region'] == 'A100-MT'
     assert job_client.USER_OUTPUT_PREFERENCE == 'text'
 
 
@@ -116,7 +116,6 @@ def asserts(job_client, payload_, res):
         'template.binary_exp.yaml',
         # 'template.nogpu.yaml',
         'template.pytorch2.yaml',
-        'template.spark.yaml',
         'template.pytorch_elastic.yaml',
     ],
 )
@@ -126,7 +125,7 @@ def test_run_job_params(client_api, mock_responses, samples, template, runner, m
     res = samples(template)
     result = runner.invoke(
         cli,
-        ['job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT', '-r', '0', '-O', 'text'],
+        ['job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'A100-MT', '-r', '0', '-O', 'text'],
     )
     payload_, job_client = client_api
 
@@ -142,7 +141,7 @@ def test_pytorch_period(client_api, mock_responses, load_profile, runner, monkey
     """Проверка выключения параметра health_params."""
     runner.invoke(
         cli, [
-            'job', 'submit', '--config', './samples/template.pytorch.yaml', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT',
+            'job', 'submit', '--config', './samples/template.pytorch.yaml', '--instance_type', 'v100.1gpu', '-R', 'A100-MT',
             '-r', '0', '--period', '0',
         ],
     )
@@ -153,7 +152,6 @@ def test_pytorch_period(client_api, mock_responses, load_profile, runner, monkey
 @pytest.mark.parametrize(
     'template', [
         # 'template.nogpu.yaml',
-        'template.spark.yaml',
         'template.pytorch_elastic.yaml',
     ],
 )
@@ -162,7 +160,7 @@ def test_run_max_retry(client_api, mock_responses, samples, template, runner, mo
     """Проверка игнорирования не своих параметров."""
     result = runner.invoke(
         cli,
-        ['job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT', '-r', '4', '-O', 'text'],
+        ['job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'A100-MT', '-r', '4', '-O', 'text'],
     )
 
     assert result.output == (
@@ -178,7 +176,7 @@ def test_max_retry_binary_ignore(client_api, mock_responses, samples, runner, mo
     """Проверка игнорирования не своих параметров."""
     template = 'template.pytorch_elastic.yaml'
     runner.invoke(
-        cli, ['job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT', '-r', '10'],
+        cli, ['job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'A100-MT', '-r', '10'],
     )
     payload_, _ = client_api
     assert 'max_retry' not in payload_
@@ -191,7 +189,7 @@ def test_use_env_pytorch_ignore(client_api, mock_responses, samples, runner, mon
     runner.invoke(
         cli,
         [
-            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT', '-r', '10',
+            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'A100-MT', '-r', '10',
             '--use_env',
         ],
     )
@@ -206,7 +204,7 @@ def test_use_env_pytorch2(client_api, mock_responses, samples, runner, monkeypat
     runner.invoke(
         cli,
         [
-            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT', '-r', '10',
+            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'A100-MT', '-r', '10',
             '--use_env', '-d', 'pytorch_elastic',
         ],
     )
@@ -222,7 +220,7 @@ def test_elastic_pytorch_ignore(client_api, mock_responses, samples, runner, mon
     runner.invoke(
         cli,
         [
-            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT', '-r', '10',
+            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'A100-MT', '-r', '10',
             '--elastic_max_workers', '3', '--elastic_min_workers', '2', '-w', '2',
         ],
     )
@@ -239,7 +237,7 @@ def test_elastic_pytorch(client_api, mock_responses, samples, runner, monkeypatc
     runner.invoke(
         cli,
         [
-            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'DGX2-MT', '-r', '10',
+            'job', 'submit', '--config', f'./samples/{template}', '--instance_type', 'v100.1gpu', '-R', 'A100-MT', '-r', '10',
             '--elastic_max_workers', '3', '--elastic_min_workers', '2', '-w', '3',
         ],
     )
