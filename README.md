@@ -139,3 +139,5 @@ complete -F _mls_completion mls
 > pytorch2 YAML  [pytorch2](./samples/template.pytorch2.yaml).
 > 
 > pytorch_elastic YAML  [pytorch_elastic](./samples/template.pytorch_elastic.yaml).
+
+docs: .gitlab-ci.yml rules
