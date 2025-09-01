@@ -9,9 +9,9 @@
 
 Чтобы установить `mls` на локальную машину, в терминале выполните:
 
-Задавайте версию mls==0.7.2 (есть пакет на https://pypi.org/simple - который не относится к данному проекту)
+Задавайте версию mls==0.7.3 (есть пакет на https://pypi.org/simple - который не относится к данному проекту)
 ```bash
-pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.7.2
+pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.7.3
 ```
 ![GIF Установка](install.gif)
 
