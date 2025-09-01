@@ -1,3 +1,11 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_AUTHOR =~ /semantic-release/
+      when: never
+    - if: $GITLAB_USER_ID == "3605"
+      when: never
+    - when: always
+    
 include:
   - project: products/aicloud/cicd
     ref: fix-test-functiona
