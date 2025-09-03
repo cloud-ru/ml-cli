@@ -124,7 +124,6 @@ client.run_job(
 
 ```bash
 
-
 _mls_completion() {
     autocomplete "${COMP_WORDS[@]}"
 }
