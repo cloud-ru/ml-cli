@@ -58,3 +58,4 @@ directory:
 samples: directory $(addprefix , $(addsuffix .yaml, $(TYPES)))
 
 .PHONY: test clear coverage build verion yaml directory
+
