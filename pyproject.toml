@@ -128,3 +128,9 @@ message_format = "^(feat|fix)"
 
 [mypy]
 ignore_missing_imports = true
+
+
+[tool.hatch.publish.pypi]
+repository = "https://upload.pypi.org/legacy/"
+username = { env = "PYPI_USER" }
+auth = { env = "PYPI_TOKEN" }
