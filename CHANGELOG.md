@@ -1,6 +1,85 @@
 # CHANGELOG
 
 
+## v0.8.0 (2025-09-30)
+
+### Documentation
+
+- .gitlab-ci.yml
+  ([`d1b9a00`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/d1b9a00cc93cca2ffa69e7e530bf2ed1a2a7c21e))
+
+- .gitlab-ci.yml
+  ([`9831a9c`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/9831a9c7fd73e7f8e8e11d23a93b0f55b0ccd76c))
+
+- .gitlab-ci.yml file
+  ([`eab07d5`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/eab07d5f44d7b3682e3fc835ac16595f22433941))
+
+- .gitlab-ci.yml file
+  ([`aeb1bb8`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/aeb1bb80ad0c0f90ae560fb2cb8154c0959b8e47))
+
+- .gitlab-ci.yml file
+  ([`b249db2`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/b249db2c8aa6f6596bafec198940ef9ca88a8430))
+
+- .gitlab-ci.yml file
+  ([`30726e4`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/30726e44cc38bd576b7ef04462c3e45bb35372ec))
+
+- .gitlab-ci.yml rules
+  ([`c60b2f5`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/c60b2f5a054c34db4f688c045b1659eae0a62847))
+
+- .gitlab-ci.yml rules
+  ([`2177d86`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/2177d8647aeb29b4ba6e0e7924909daaafbd768c))
+
+- .gitlab-ci.yml rules
+  ([`e5f77ca`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/e5f77ca956388a683ca43d5a8815d1196a7d3002))
+
+- Change
+  ([`536e3d1`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/536e3d1fdb7bddba922cb0df52221e41cc4a486f))
+
+- Remove line
+  ([`4905230`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/49052305cca2268f083b878d0ce3de4cebeb9c54))
+
+- Remove line
+  ([`1be64ad`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/1be64ada87fa71de6b8d74cd6db63dc212f139d7))
+
+- Test
+  ([`85f288c`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/85f288c2039c6caeebfac06147b8516923a453de))
+
+- Test
+  ([`f9be30f`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/f9be30fc552d409acd44cf4f50d475ba79802fe0))
+
+- Test
+  ([`edcfdf9`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/edcfdf9910cf05cac6eda6031d5188df2b775099))
+
+- Test
+  ([`68ae679`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/68ae679ba354d92ca4ac54fd4fada95bd573f014))
+
+- Test
+  ([`730fab2`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/730fab250700bc394d70330bffa95ccc6628aad8))
+
+- Test
+  ([`499b9b5`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/499b9b5c008278cd2a5eb7ff853efec332155f16))
+
+- Test
+  ([`293a806`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/293a8069983580afcc2c0f4632273bc1c7f217bd))
+
+- Test
+  ([`e450778`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/e45077857065e9519288e317a0af4651574db8ee))
+
+- Test
+  ([`f99e8f9`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/f99e8f97b51cc3a736ddc7b8e8577acb76a0a923))
+
+- Test
+  ([`fdffe6f`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/fdffe6ffcec255453d3b9ca39743f72525a0f6d1))
+
+- Удаление строки
+  ([`a35a88e`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/a35a88e7529f1d93888e81999a560b45c63fe235))
+
+### Features
+
+- **queue_name**: Add queue_name
+  ([`584dd07`](https://git.sbercloud.tech/products/aicloud/mlspace-cli/-/commit/584dd07d3ea2d09f6cc9ca49b1c9fb3e3fe288a9))
+
+
 ## v0.7.3 (2025-08-26)
 
 ### Bug Fixes
