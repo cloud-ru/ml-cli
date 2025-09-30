@@ -11,9 +11,9 @@
 
 
 ```bash
-pip install cloudru-ml-cli==0.6.9
+pip install cloudru-ml-cli==0.8.0
 Зеркало: 
-pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.7.3
+pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.8.0
 ```
 ![GIF Установка](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/feature/add-to-pypi/install.gif)
 
