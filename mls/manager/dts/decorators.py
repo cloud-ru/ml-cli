@@ -104,6 +104,7 @@ opt_json_output_format = click.option(
 
 def validate_positive(ctx, param, value):
     """Проверка параметра на позитивное значение."""
+    _ = ctx
     if value is not None and value < 0:
         raise click.BadParameter(f'Значение {param} должно быть >= 0')
 

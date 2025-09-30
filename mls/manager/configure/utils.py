@@ -102,7 +102,7 @@ def configure_profile(profile=None, encrypt=False):
         raise er
     except Exception as er:
         click.echo(error_format('Профиль не сохранен !'))
-        raise ConfigWriteError(er)
+        raise ConfigWriteError(er) from er
 
     click.echo(success_format(f"Профиль '{profile_name}' успешно сохранен!"))
 
@@ -128,8 +128,7 @@ def get_encrypt_password():
     if password == confirm_password:
         return password
 
-    else:
-        click.echo(error_format('Пароли не совпадают'))
+    click.echo(error_format('Пароли не совпадают'))
 
     return get_encrypt_password()
 
@@ -189,7 +188,7 @@ def prepare_profile(profile_name, password=None):
         raise er
     except Exception as er:
         click.echo(error_format('Профиль не загружен !'))
-        raise ConfigReadError(er)
+        raise ConfigReadError(er) from er
 
     for section in config, credentials:
         if not section.has_section(profile_name):
@@ -213,7 +212,7 @@ def save_profile(config, credentials, password=None):
     """
     os.makedirs(os.path.dirname(CREDENTIALS_FILE), exist_ok=True)
 
-    with open(CONFIG_FILE, 'w') as config_file:
+    with open(CONFIG_FILE, 'w', encoding='utf-8') as config_file:
         config.write(config_file)
 
     fp = StringIO()
@@ -223,5 +222,5 @@ def save_profile(config, credentials, password=None):
         with open(ENCRYPTED_CREDENTIALS_FILE, 'wb') as cred_file:
             cred_file.write(enc(fp.getvalue(), password))
     else:
-        with open(CREDENTIALS_FILE, 'w') as cred_file:
+        with open(CREDENTIALS_FILE, 'w', encoding='utf-8') as cred_file:
             cred_file.write(fp.getvalue())

@@ -36,8 +36,7 @@ def double_code_quotes(value):
     """Кавычки добавил."""
     if value:
         return f'``{value}``'
-    else:
-        return ''
+    return ''
 
 
 def first_letter_to_lower(value: str):
@@ -60,7 +59,7 @@ def execute_command(command):
     env = os.environ.copy()
     env['COLUMNS'] = '300'  # Установите нужное количество столбцов
     env['LINES'] = '300'  # Установите нужное количество строк (опционально)
-    result = subprocess.run(command, shell=True, capture_output=True, text=True, env=env)
+    result = subprocess.run(command, shell=True, capture_output=True, text=True, env=env, check=False)
     if result.returncode != 0:
         print(f'Ошибка выполнения команды: {result.stderr}', file=sys.stderr)
         sys.exit(1)

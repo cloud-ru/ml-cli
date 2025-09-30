@@ -29,6 +29,7 @@ job:
     internet_access: true
     max_retry: 5
     priority_class: medium
+    queue_name: my-favorite-allocation
   resource:
     instance_type: a100.1gpu
     processes: 1

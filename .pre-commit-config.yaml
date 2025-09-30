@@ -47,3 +47,11 @@ repos:
       - id: pydocstyle
         args: [--convention=google]
         additional_dependencies: ['tomli']
+-   repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: ["--rcfile=.pylintrc"] # Optional: Customize Pylint arguments

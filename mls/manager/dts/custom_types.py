@@ -60,7 +60,7 @@ TRANSFER_FIELD_NAMES = {
     'description': 'Описание',
 }
 
-CONNECTOR_FIELDS = [f for f in CONNECTOR_FIELD_NAMES]
+CONNECTOR_FIELDS = list(CONNECTOR_FIELD_NAMES)
 
 
 @dataclass

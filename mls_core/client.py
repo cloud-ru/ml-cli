@@ -153,11 +153,10 @@ class _CommonPublicApiInterface:
             response.raise_for_status()
         except requests.exceptions.RetryError as ex:
             self._logger.debug(ex)
-        else:
-            if response.headers.get('content-type') == 'application/json':
-                return response.json()
-            else:
-                return response.text
+            return None
+        if response.headers.get('content-type') == 'application/json':
+            return response.json()
+        return response.text
 
     def _get_auth_token(self, client_id: str, client_secret: str):
         try:
@@ -175,7 +174,7 @@ class _CommonPublicApiInterface:
             return token
         except requests.exceptions.HTTPError as ex:
             self._logger.debug(ex)
-            raise AuthorizationError(ex)
+            raise AuthorizationError(ex) from ex
 
     def get(self, *args, **kwargs):
         """GET запрос."""
@@ -224,10 +223,8 @@ class TrainingJobApi(_CommonPublicApiInterface):
         if self.USER_OUTPUT_PREFERENCE:
             if self.USER_OUTPUT_PREFERENCE == 'json' and isinstance(result, dict):
                 return json.dumps(result, indent=4, ensure_ascii=False)
-            else:
-                return result
-        else:
             return result
+        return result
 
     def _handle_http_error(self, ex):
         """Обработка исключений HTTPError."""
@@ -325,8 +322,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
         last_error = None
         for attempt in range(1, self.max_retries + 1):
             try:
-                for chunk in response.iter_content(chunk_size=256, decode_unicode=True):
-                    yield chunk
+                yield from response.iter_content(chunk_size=256, decode_unicode=True)
                 return
             except ChunkedEncodingError as er:
                 sleep_time = self.backoff_factor * (2 ** (attempt - 1))
@@ -408,10 +404,8 @@ class DTSApi(_CommonPublicApiInterface):
                 result, (dict, list),
             ):
                 return json.dumps(result, indent=4, ensure_ascii=False)
-            else:
-                return result
-        else:
             return result
+        return result
 
     def _handle_http_error(self, ex):
         """Обработка исключений HTTPError."""
@@ -436,7 +430,7 @@ class DTSApi(_CommonPublicApiInterface):
     def are_ids_valid(values) -> bool:
         """Проверка валидности uuid значений."""
         try:
-            [UUID(value) for value in values]
+            _ = [UUID(value) for value in values]
             return True
 
         except ValueError:

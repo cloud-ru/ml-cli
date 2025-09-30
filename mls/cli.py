@@ -79,7 +79,7 @@ def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):
         sys.stdout.write('\n\u00A0\n')
         sys.stdout.write('\n'.join(help_options))
     else:
-        sys.stdout.write('\n'.join(suggest_autocomplete(cleaned_arg, mapping))) or ''
+        sys.stdout.write('\n'.join(suggest_autocomplete(cleaned_arg, mapping)))
 
 
 def autocomplete():

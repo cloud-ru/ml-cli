@@ -1,4 +1,4 @@
 include:
   - project: products/aicloud/cicd
-    ref: fix-test-functiona
+    ref: master
     file: /gitlab-ci-mlspace-cli.yaml

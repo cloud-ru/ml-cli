@@ -46,6 +46,7 @@ class RussianChoice(click.Choice):
                 param,
                 ctx,
             )
+            return None
 
 
 class PositiveIntWithZeroView(click.ParamType):
@@ -90,9 +91,10 @@ class DictView(click.ParamType):
         """Метод преобразования строки ключей-значений в словарь."""
         try:
             kv_pairs = value.split(',')
-            return {k: v for k, v in (pair.split('=') for pair in kv_pairs)}
+            return dict((pair.split('=') for pair in kv_pairs))
         except Exception as e:
             self.fail(f'Ошибка при преобразовании {value} в ключ=значение. Пар: {e}')
+            return None
 
     def __repr__(self):
         """Метод __repr__.

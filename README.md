@@ -8,11 +8,13 @@
 
 Чтобы установить `mls` на локальную машину, в терминале выполните:
 
-Задавайте версию mls==0.7.3 (есть пакет на https://pypi.org/simple - который не относится к данному проекту)
+
 ```bash
+pip install cloudru-ml-cli==0.6.9
+Зеркало: 
 pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.7.3
 ```
-![GIF Установка](install.gif)
+![GIF Установка](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/feature/add-to-pypi/install.gif)
 
 `mls-core` установится автоматически.
 
@@ -23,7 +25,7 @@ pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --
 ```bash
 mls configure
 ```
-![GIF Установка](Справочник CLI/static/QS6.png)
+![GIF Установка](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/feature/add-to-pypi/%D0%A1%D0%BF%D1%80%D0%B0%D0%B2%D0%BE%D1%87%D0%BD%D0%B8%D0%BA%20CLI/static/QS6.png)
 
 # Примеры использования
 
@@ -32,14 +34,14 @@ mls configure
 ```Bash
 mls job list
 ```
-![GIF Получение списка задач](list.gif)
+![GIF Получение списка задач](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/feature/add-to-pypi/list.gif)
 
 ## Просмотр логов задачи
 
 ```Bash
 mls job logs
 ```
-![GIF Просмотр логов задачи](logs.gif)
+![GIF Просмотр логов задачи](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/feature/add-to-pypi/logs.gif)
 
 ## Запуск задачи через библиотеку
 
@@ -114,6 +116,7 @@ client.run_job(
     ├── Быстрый старт.md        # Быстрый старт.
     ├── Запуск задачи.md        # Запуск задач.
     └── Настройка автокомплитера.md # Автозаполнение.
+
 ```
 
 # zsh Автокомплитер 
