@@ -28,6 +28,7 @@ job:
     elastic_max_restarts: 5
     internet_access: true
     priority_class: medium
+    queue_name: my-favorite-allocation
   resource:
     elastic_max_workers: 3
     elastic_min_workers: 2

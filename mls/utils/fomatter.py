@@ -32,7 +32,7 @@ class CommonGroupFormatter(click.Group):
         :param count: Количество уровней отступа.
         :param formatter: Форматтер, в котором выполняется отступ.
         """
-        for i in range(0, count):
+        for _ in range(0, count):
             formatter.indent()
 
     @staticmethod
@@ -42,7 +42,7 @@ class CommonGroupFormatter(click.Group):
         :param count: Количество уровней возврата.
         :param formatter: Форматтер, в котором убираются уровни отступа.
         """
-        for i in range(0, count):
+        for _ in range(0, count):
             formatter.dedent()
 
     def format_usage(self, ctx, formatter: click.HelpFormatter):

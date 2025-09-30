@@ -16,7 +16,10 @@ test_report: samples
 		--cov=mls --cov=mls_core --cov-report=term-missing --cov-report=html:${CI_PROJECT_DIR}/cover/html \
 		--junitxml=${CI_PROJECT_DIR}/cover/rspec.xml --cov-fail-under=90
 
-lint:
+reinstall_package: build
+	@command pip install ./dist/mls-*.whl --force-reinstall
+
+lint: reinstall_package
 	@pre-commit run --all-files
 
 check: lint test

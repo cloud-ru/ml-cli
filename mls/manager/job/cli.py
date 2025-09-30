@@ -199,7 +199,7 @@ def restart(api_job, name, *_, **__):
 
 @job.command(cls=YamlHelp)
 @click.argument('type', required=False, default='binary')
-def yaml(type):
+def yaml(type):  # pylint: disable=redefined-builtin
     """команда генерации yaml-файла по типу задачи.  Если аргумент type не передан, по умолчанию отображается задача типа binary.
 
     Синтаксис: mls job yaml [type]

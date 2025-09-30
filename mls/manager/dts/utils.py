@@ -98,10 +98,10 @@ def validate_connector_exists(api, connector_id, connector_type):
         if isinstance(conn_list, str):
             conn_list = json.loads(conn_list)
 
-    except Exception:
+    except Exception as e:
         raise click.exceptions.UsageError(
             f'Не удалось проверить доступность коннектора с ID: {connector_id}',
-        )
+        ) from e
 
     if isinstance(conn_list, list) and len(conn_list) == 1:
         return conn_list[0].get('connector_id') == connector_id
@@ -139,10 +139,11 @@ def process_json(data: str, page_number: int, page_size: int):
 
 def validate_ints(ctx, param, value, min_val, max_val):
     """Проверка вхождения значения в обозначенные границы."""
+    _ = ctx, param
     if value is None:
         return None
 
-    if not (min_val <= value <= max_val):
+    if not min_val <= value <= max_val:
         raise click.BadParameter(
             f'Число должно быть в пределах от {min_val} до {max_val}',
         )

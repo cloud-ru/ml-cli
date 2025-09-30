@@ -104,8 +104,9 @@ def read_profile(profile_name):
             f'Профиль конфигурации с именем {err.section} используется по умолчанию, если конфигурация еще не задана.\n'
             'Настройте конфигурацию профиля, выполнив команду:\n'
             'mls configure'
+            'Или export MLS_PROFILE_DEFAULT=<Ваш профиль по умолчанию>'
         )
-        raise ConfigReadError(error_message)
+        raise ConfigReadError(error_message) from err
 
 
 def read_yaml(file_path: str):
@@ -175,6 +176,10 @@ def define_run_job_options() -> List:
         option(
             '--priority_class', cls=JobPolicyOptions, index=2, type=priority_class,
             help=f'Приоритет выполнения задачи. {priority_class.options}',
+        ),
+        option(
+            '-q', '--queue_name', cls=JobPolicyOptions, index=3, type=click.STRING,
+            help='Имя очереди, в которой будет запланировано и выполнено задание.',
         ),
 
         # Health options

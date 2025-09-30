@@ -82,8 +82,8 @@ def encrypt(data: str, password: str) -> bytes:
     try:
         padded_data = pad(data.encode('utf-8'), PADDING_BLOCK_SIZE)
         encrypted_data = cipher.encrypt(padded_data)
-    except (ValueError, UnicodeError):
-        raise EncryptionError('Unable to encrypt data')
+    except (ValueError, UnicodeError) as e:
+        raise EncryptionError('Unable to encrypt data') from e
 
     result = base64.b64encode(SALTED_LITERAL + salt + encrypted_data)
 
@@ -98,8 +98,8 @@ def decrypt(msg: bytes, password: str) -> str:
     """
     try:
         data = base64.b64decode(msg)
-    except ValueError:
-        raise DecryptionError('Invalid input data')
+    except ValueError as e:
+        raise DecryptionError('Invalid input data') from e
 
     if data[:len(SALTED_LITERAL)] != SALTED_LITERAL:
         raise DecryptionError('Invalid message structure')
@@ -117,5 +117,5 @@ def decrypt(msg: bytes, password: str) -> str:
     try:
         padded_data = cipher.decrypt(encrypted_data)
         return str(unpad(padded_data, PADDING_BLOCK_SIZE).decode('utf-8'))
-    except ValueError:
-        raise DecryptionError('Unable to decrypt data')
+    except ValueError as e:
+        raise DecryptionError('Unable to decrypt data') from e

@@ -29,7 +29,7 @@ low, medium, high = priority
 
 def note(text):
     """Функция для генерации yaml контракта."""
-    return field(metadata={'note': text})
+    return field(metadata={'note': text})  # pylint: disable=invalid-field-call
 
 
 class MergeMixin:
@@ -100,6 +100,7 @@ class Policy(MergeMixin):
     priority_class: Optional[str] = note('medium')
     checkpoint_dir: Optional[str] = note('/home/jovyan/checkpoint')
     internet_access: Optional[bool] = note(True)
+    queue_name: Optional[str] = note('my-favorite-allocation')
 
 
 @dataclass
@@ -123,7 +124,7 @@ class ElasticResource(Resource):
 
     def __post_init__(self):
         """Метод валидации аргументов до вызова."""
-        if not self.elastic_min_workers <= self.workers:
+        if self.elastic_min_workers > self.workers:
             raise click.BadArgumentUsage(
                 f'Не выполнено условие (workers >= elastic_min_workers) {self.workers} >= {self.elastic_min_workers}',
             )
@@ -173,6 +174,7 @@ class Job(MergeMixin):
             **({'job_desc': self.description} if self.description else {}),
             **({'processes_per_worker': self.resource.processes} if self.resource and self.resource.processes else {}),
             **({'internet': self.policy.internet_access} if self.policy and self.policy.internet_access else {}),
+            **({'queue_name': self.policy.queue_name} if self.policy and self.policy.queue_name else {}),
             **({'conda_env': self.environment.conda_name} if self.environment and self.environment.conda_name else {}),
             **({'priority_class': self.policy.priority_class} if self.policy and self.policy.priority_class else {}),
             **({'checkpoint_dir': self.policy.checkpoint_dir} if self.policy and self.policy.checkpoint_dir else {}),
@@ -334,7 +336,7 @@ def create_unknown_job_class(type_) -> Type[Job]:
 
     @dataclass
     class UnknownJob(Job):
-        pass
+        pass  # pylint: disable=unnecessary-pass
 
     UnknownJob.type = type_
     return UnknownJob

@@ -29,7 +29,7 @@ def load_saved_config(password=None):
             with open(ENCRYPTED_CREDENTIALS_FILE, 'rb') as cred_file:
                 credentials_data = decrypt(cred_file.read(), password)
         else:
-            with open(CREDENTIALS_FILE, 'r') as cred_file:
+            with open(CREDENTIALS_FILE, 'r', encoding='utf-8') as cred_file:
                 credentials_data = cred_file.read()
     except FileNotFoundError:
         credentials_data = ''
@@ -70,10 +70,6 @@ def handle_click_exception(error: click.ClickException, ctx: click.Context):
     elif isinstance(error, click.NoSuchOption):
         option_name = error.option_name or ''
         message = f'Ошибка: отсутствует опция: {option_name}'
-    elif isinstance(error, click.BadParameter):
-        message = message
-    elif isinstance(error, click.UsageError):
-        message = message
 
     if ctx:
         click.echo(f'{ctx.get_help()}')
@@ -91,7 +87,7 @@ def suggest_autocomplete(input_str, commands_dict):
             last = full[-1]
             prev = ' '.join(full[:-1])
             items = commands_dict.get(prev, [])
-            suggest = [*filter(lambda x: x.startswith(last), items)]
+            suggest = [*filter(lambda x, start=last: x.startswith(start), items)]
             suggestions.extend(suggest)
 
     return list(set(suggestions))
