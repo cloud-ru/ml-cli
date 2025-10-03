@@ -104,37 +104,56 @@ def entry_point():
         cli(standalone_mode=False)
     except ConfigReadError as error:
         click.echo(error_format(str(error)))
+        sys.exit(1)
     except ConfigWriteError as error:
         click.echo(error_format(str(error)))
+        sys.exit(1)
     except click.ClickException as error:
         ctx = getattr(error, 'ctx', None)
         handle_click_exception(error, ctx)
+        sys.exit(1)
     except click.exceptions.Abort:
         click.echo(text_format('Выполнение прервано пользователем'))
+        sys.exit(1)
     except urllib3.exceptions.MaxRetryError as error:
         click.echo(error_format(f'Достигнут предел по количеству запросов к {error.url}'))
+        sys.exit(1)
     except urllib3.exceptions.NameResolutionError as error:
         click.echo(error_format(f'Не удалось сопоставить IP-адрес с {error.conn.host}'))
+        sys.exit(1)
     except requests.exceptions.ConnectionError:
         click.echo(error_format('Не удалось установить соединение, проверьте настройки сети'))
+        sys.exit(1)
     except AuthorizationError:
         click.echo(error_format('Попытка выполнить запрос неавторизованным пользователем'))
+        sys.exit(1)
     except InvalidAuthorizationToken:
         click.echo(error_format('Неизвестная ошибка авторизации'))
+        sys.exit(1)
     except DecryptionError:
         click.echo(error_format('Невозможно расшифровать учётные данные'))
+        sys.exit(1)
     except EncryptionError:
         click.echo(error_format('Невозможно зашифровать учётные данные'))
+        sys.exit(1)
     except BrokenPipeError as error:
         click.echo(error_format(error))
+        sys.exit(1)
     except MissingSchema as error:
         click.echo(error_format(f'Не указан endpoint_url. {error.args}'))
+        sys.exit(1)
     except requests.exceptions.InvalidURL as error:
         click.echo(error_format(f'Указан не валидный endpoint_url. {error.args[0]}'))
+        sys.exit(1)
     except MissingPassword:
         click.echo(error_format('Пароль не может быть пустым'))
+        sys.exit(1)
     except requests.exceptions.ChunkedEncodingError:
         click.echo(error_format('Сервер объявил chunked кодировку, но отправил не валидный chunk'))
+        sys.exit(1)
+    except Exception as er:
+        click.echo(error_format(f'{er}'))
+        sys.exit(2)
 
 
 if __name__ == '__main__':
