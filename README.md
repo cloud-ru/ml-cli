@@ -1,9 +1,8 @@
 # О пакетах
 
-Репозиторий содержит инструменты разработчика для работы с [Cloud.ru ML Space](https://cloud.ru/docs/aicloud/mlspace/index.html):
-- `mls` — CLI-утилита, которая позволяет запускать некоторые сервисы ML Space из терминала.
-- `mls-core` — Python-библиотека с открытым исходным кодом для использования некоторых сервисов ML Space в своих проектах (SDK).
-
+Репозиторий содержит инструменты разработчика для работы с [Cloud.ru Distributed Train](https://cloud.ru/docs/aicloud/mlspace/index.html):
+- `mls` — CLI-утилита, которая позволяет запускать некоторые сервисы Distributed Train из терминала.
+- `mls-core` — Python-библиотека с открытым исходным кодом для использования некоторых сервисов Distributed Train в своих проектах (SDK).
 
 # Установка
 
@@ -13,15 +12,15 @@
 ```bash
 pip install cloudru-ml-cli==0.8.0
 Зеркало: 
-pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.8.0
+pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.8.1
 ```
 ![GIF Установка](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/feature/add-to-pypi/install.gif)
 
 `mls-core` установится автоматически.
 
-# До использования 
+# Перед началом работы
 
-## Выполните 
+Выполните:
 
 ```bash
 mls configure
@@ -48,7 +47,6 @@ mls job logs
 
 ```python
 from mls_core import TrainingJobApi
-# Это будет еще переделываться ()
 
 client = TrainingJobApi(
     'https://api.ai.cloud.ru/public/v2',
@@ -120,11 +118,10 @@ client.run_job(
 
 ```
 
-# zsh Автокомплитер 
+# Автокомплитер Zsh
 
-## Пользователям ZSH доступна опция авто заполнения в cli 
-
-### Добавьте скрипт ниже в zsh профиль
+Пользователям Zsh доступна автозаполнение в CLI.
+Чтобы использовать опцию, добавьте скрипт ниже в Zsh-профиль:
 
 ```bash
 

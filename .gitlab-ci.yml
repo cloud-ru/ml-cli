@@ -1,4 +1,0 @@
-include:
-  - project: products/aicloud/cicd
-    ref: master
-    file: /gitlab-ci-mlspace-cli.yaml
