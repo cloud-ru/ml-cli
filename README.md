@@ -10,9 +10,9 @@
 
 
 ```bash
-pip install cloudru-ml-cli==0.8.0
+pip install cloudru-ml-cli==0.8.3
 Зеркало: 
-pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.8.1
+pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.8.3
 ```
 ![GIF Установка](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/feature/add-to-pypi/install.gif)
 
@@ -133,10 +133,10 @@ complete -F _mls_completion mls
 ```
 
 Примеры 
-> binary YAML  [binary](./samples/template.binary.yaml).
+> binary YAML  [binary](https://github.com/cloud-ru/ml-cli/blob/master/samples/template.binary.yaml).
 > 
-> pytorch2 YAML  [pytorch2](./samples/template.pytorch2.yaml).
+> pytorch2 YAML  [pytorch2](https://github.com/cloud-ru/ml-cli/blob/master/samples/template.pytorch2.yaml).
 > 
-> pytorch_elastic YAML  [pytorch_elastic](./samples/template.pytorch_elastic.yaml).
+> pytorch_elastic YAML  [pytorch_elastic](https://github.com/cloud-ru/ml-cli/blob/master/samples/template.pytorch_elastic.yaml).
 
 docs: .gitlab-ci.yml rules
