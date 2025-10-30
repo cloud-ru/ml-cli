@@ -155,7 +155,7 @@ def collect_user_inputs(config, credentials, profile_name):
 
         (
             'region',
-            'Название региона по умолчанию[A100-MT,SR002-MT,SR003,SR004,SR005,SR006,SR008]', config, lambda x: x, lambda x: x,
+            'Название региона по умолчанию[A100-MT,SR003,SR004,SR005,SR006,SR008]', config, lambda x: x, lambda x: x,
         ),
 
         ('output', 'Формат вывода по умолчанию [json|text]', config, lambda x: x, lambda x: x),
