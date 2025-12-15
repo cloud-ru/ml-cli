@@ -272,5 +272,3 @@ def test_configure_with_prompt(monkeypatch, profile_read):
 
     assert config.get('Alice', 'region') == 'DGX-MT'
     assert not config.get('Alice', 'output')
-
-# TODO Добавить тест на отсутствие профиля

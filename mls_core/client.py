@@ -32,10 +32,11 @@ from mls.manager.dts.custom_types import Transfer
 from mls.manager.dts.custom_types import TransferUpdate
 
 
-class _CommonPublicApiInterface:
+class CommonPublicApiInterface:
     """API клиент."""
 
     AUTH_ENDPOINT = 'service_auth'
+    USER_OUTPUT_PREFERENCE = None
 
     def __init__(
         self,
@@ -80,6 +81,7 @@ class _CommonPublicApiInterface:
         self.max_retries = max_retries
         self.backoff_factor = backoff_factor
         self.ssl_verify = ssl_verify
+        self.workspace_id = x_workspace_id
 
         headers = {
             'authorization': self._get_auth_token(client_id, client_secret),
@@ -200,8 +202,38 @@ class _CommonPublicApiInterface:
         """HEAD запрос."""
         return self._request('HEAD', *args, **kwargs)
 
+    @staticmethod
+    def _handle_api_response(method):
+        """Метод обработки ответа от API."""
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+            try:
+                response = method(self, *args, **kwargs)
+            except requests.exceptions.HTTPError as ex:
+                response = self._handle_http_error(ex)
+            return self._user_preference_output(response)
 
-class TrainingJobApi(_CommonPublicApiInterface):
+        return wrapper
+
+    def _user_preference_output(self, result):
+        """Формат вывода пользователю сообщений."""
+        if self.USER_OUTPUT_PREFERENCE:
+            if self.USER_OUTPUT_PREFERENCE == 'json' and isinstance(result, (dict, list)):
+                return json.dumps(result, indent=4, ensure_ascii=False)
+            return result
+        return result
+
+    def _handle_http_error(self, ex):
+        """Обработка исключений HTTPError."""
+        self._logger.debug(ex)
+        if ex.response.headers.get('content-type') == 'application/json':
+            result = ex.response.json()
+        else:
+            result = ex.response.text
+        return self._user_preference_output(result)
+
+
+class TrainingJobApi(CommonPublicApiInterface):
     """Выделенный клиент api содержащий логику взаимодействия с задачами обучения."""
 
     USER_OUTPUT_PREFERENCE = None
@@ -249,7 +281,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
         return self.get(f'jobs/{name}')
 
     @_handle_api_response
-    def get_list_jobs(self, region, allocation_name, status, limit, offset):
+    def get_list_jobs(self, region, queue, allocation_name, status, limit, offset):
         """Получение логов задачи."""
         params = {
             'region': region,
@@ -257,6 +289,7 @@ class TrainingJobApi(_CommonPublicApiInterface):
             'status': status,
             'limit': limit,
             'offset': offset,
+            'queue_id': queue,
         }
         return self.get('jobs', params=params)
 
@@ -379,7 +412,7 @@ class TransferRoutes:
     UPDATE: str = 'data_transfer/v5/transfer/{transfer_id}'
 
 
-class DTSApi(_CommonPublicApiInterface):
+class DTSApi(CommonPublicApiInterface):
     """Выделенный API-клиент, содержащий логику взаимодействия с коннекторами, правилами переноса и их историей."""
 
     USER_OUTPUT_PREFERENCE = None

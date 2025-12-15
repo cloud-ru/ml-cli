@@ -49,3 +49,12 @@ offset_selected = click.option(
     help='Смещение относительно начала списка',
     default=0, type=PositiveIntWithZeroView(),
 )
+
+
+queue_selected = click.option(
+    '-q',
+    '--queue',
+    multiple=False,
+    help='ID очереди',
+    default=None,
+)

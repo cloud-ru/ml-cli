@@ -31,3 +31,7 @@ ENCRYPTED_CREDENTIALS_FILE = os.path.join(PROFILE_DIR, 'credentials.key')
 DEFAULT_PROFILE = os.getenv('MLS_PROFILE_DEFAULT', 'default')
 
 ENDPOINT_URL = 'https://api.ai.cloud.ru/public/v2'
+
+# Расширяемый перечень регионов
+# export MLS_REGIONS='AMC, DGX2-MT-001'
+REGIONS = os.getenv('MLS_REGIONS', '').replace(' ', '').split(',')

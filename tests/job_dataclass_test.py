@@ -70,7 +70,8 @@ def unknown_yaml():
                 'checkpoint_dir': '/home/jovyan/checkpoint',
                 'internet_access': True,
                 'priority_class': 'medium',
-                'queue_name': 'my-favorite-allocation',
+                'allocation_name': 'my-favorite-allocation',
+                'queue_name': 'my-favorite-queue',
             },
             'resource': {
                 'instance_type': 'a100.1gpu',

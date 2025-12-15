@@ -100,7 +100,8 @@ class Policy(MergeMixin):
     priority_class: Optional[str] = note('medium')
     checkpoint_dir: Optional[str] = note('/home/jovyan/checkpoint')
     internet_access: Optional[bool] = note(True)
-    queue_name: Optional[str] = note('my-favorite-allocation')
+    allocation_name: Optional[str] = note('my-favorite-allocation')
+    queue_name: Optional[str] = note('my-favorite-queue')
 
 
 @dataclass
@@ -174,6 +175,7 @@ class Job(MergeMixin):
             **({'job_desc': self.description} if self.description else {}),
             **({'processes_per_worker': self.resource.processes} if self.resource and self.resource.processes else {}),
             **({'internet': self.policy.internet_access} if self.policy and self.policy.internet_access else {}),
+            **({'allocation_name': self.policy.allocation_name} if self.policy and self.policy.allocation_name else {}),
             **({'queue_name': self.policy.queue_name} if self.policy and self.policy.queue_name else {}),
             **({'conda_env': self.environment.conda_name} if self.environment and self.environment.conda_name else {}),
             **({'priority_class': self.policy.priority_class} if self.policy and self.policy.priority_class else {}),

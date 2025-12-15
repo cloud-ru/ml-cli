@@ -24,11 +24,12 @@ job:
     internal_action: restart
     period: 20
   policy:
+    allocation_name: my-favorite-allocation
     checkpoint_dir: /home/jovyan/checkpoint
     internet_access: true
     max_retry: 5
     priority_class: medium
-    queue_name: my-favorite-allocation
+    queue_name: my-favorite-queue
   resource:
     instance_type: a100.1gpu
     processes: 1

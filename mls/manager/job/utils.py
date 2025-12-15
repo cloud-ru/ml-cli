@@ -103,7 +103,7 @@ def read_profile(profile_name):
         error_message = (
             f'Профиль конфигурации с именем {err.section} используется по умолчанию, если конфигурация еще не задана.\n'
             'Настройте конфигурацию профиля, выполнив команду:\n'
-            'mls configure'
+            'mls configure\n'
             'Или export MLS_PROFILE_DEFAULT=<Ваш профиль по умолчанию>'
         )
         raise ConfigReadError(error_message) from err
@@ -136,8 +136,7 @@ def define_run_job_options() -> List:
         option('-w', '--workers', cls=JobResourceOptions, index=0, type=worker_input, help='Количество рабочих узлов'),
         option(
             '-p', '--processes', cls=JobResourceOptions, index=1, type=IntOrStrView(), help=(
-                'Количество процессов. int -  прямое указание числа процессов, '
-                'Строка равная default - расчет оптимального количества процессов для запуска задачи'
+                'int  - прямое указание числа процессов, default - расчет оптимального количества процессов для запуска задачи'
             ),
         ),
 
@@ -170,7 +169,7 @@ def define_run_job_options() -> List:
         ),
         option(
             '-k', '--checkpoint_dir', cls=JobPolicyOptions, index=1, type=click.STRING,
-            help='Путь для сохранения checkpoint. Например,  /home/jovyan/...',
+            help='Путь для сохранения checkpoint. Например, /home/jovyan/...',
         ),
         option('-a', '--internet_access', cls=JobPolicyOptions, index=0, type=click.BOOL, help='Определяет наличие доступ в интернет'),
         option(
@@ -178,8 +177,16 @@ def define_run_job_options() -> List:
             help=f'Приоритет выполнения задачи. {priority_class.options}',
         ),
         option(
+            '-A',
+            '--allocation_name',
+            cls=JobPolicyOptions,
+            index=3,
+            type=click.STRING,
+            help='Имя аллокации, в которой будет запланировано и выполнено задание',
+        ),
+        option(
             '-q', '--queue_name', cls=JobPolicyOptions, index=3, type=click.STRING,
-            help='Имя очереди, в которой будет запланировано и выполнено задание.',
+            help='Имя очереди, в которой будет запланировано и выполнено задание',
         ),
 
         # Health options
@@ -200,14 +207,13 @@ def define_run_job_options() -> List:
         option(
             '--elastic_min_workers', cls=JobElasticOptions, index=0, type=IntOrStrView(),
             help='Минимальное количество воркеров.  '
-                 'int -  прямое указание числа процессов, Строка равная default - расчет оптимального количества процессов '
-                 'для запуска задачи',
+                 'int - прямое указание числа процессов, default - расчет оптимального количества процессов для запуска задачи',
+
         ),
         option(
             '--elastic_max_workers', cls=JobElasticOptions, index=1, type=IntOrStrView(),
             help='Максимальное количество воркеров.  '
-                 'int -  прямое указание числа процессов, Строка равная default - расчет оптимального количества процессов '
-                 'для запуска задачи',
+                 'int - прямое указание числа процессов, default - расчет оптимального количества процессов для запуска задачи',
         ),
         option(
             '--elastic_max_restarts', cls=JobElasticOptions, index=2, type=worker_input,

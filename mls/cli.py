@@ -29,10 +29,12 @@ import urllib3
 from requests.exceptions import MissingSchema  # type: ignore
 
 from mls import __version__ as version
+from mls.manager.allocation.cli import allocation
 from mls.manager.configure.cli import configure
 from mls.manager.dts.connector_cli import connector
 from mls.manager.dts.transfer_cli import transfer
 from mls.manager.job.cli import job
+from mls.manager.queue.cli import queue
 from mls.utils.cli_entrypoint_help import MLSHelp
 from mls.utils.common import create_autocomplete
 from mls.utils.common import handle_click_exception
@@ -49,7 +51,7 @@ from mls_core.exceptions import InvalidAuthorizationToken
 
 
 @click.group(cls=MLSHelp)
-@click.version_option(version, '-v', '--version', message='mls %(version)s')
+@click.version_option(version, '-v', '--version', message='Версия Distributed Train CLI %(version)s')
 def cli():
     """Основная точка входа для команд MLS.
 
@@ -62,6 +64,8 @@ cli.add_command(job)
 cli.add_command(configure)
 cli.add_command(connector)
 cli.add_command(transfer)
+cli.add_command(allocation)
+cli.add_command(queue)
 
 
 def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):

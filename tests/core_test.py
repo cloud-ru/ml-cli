@@ -33,7 +33,10 @@ def test_training_api(mock_request, api_client):
     """Использование мокирования для _request метода вместо того, чтобы реализовать полную цепочку запроса."""
     assert api_client.get_job_status('fake_job') == {'status': 'success'}
     assert api_client.get_job_logs('fake_job', 'fake_region') == {'status': 'success'}
-    assert api_client.get_list_jobs('fake_region', 'allocation_name', 'status', 'limit', 'offset') == {'status': 'success'}
+    assert api_client.get_list_jobs('fake_region', '', 'allocation_name', 'status', 'limit', 'offset') == {'status': 'success'}
+    assert api_client.get_list_jobs(
+        'fake_region', '00000000-0000-0000-0000-000000000000', 'allocation_name', 'status', 'limit', 'offset',
+    ) == {'status': 'success'}
     assert api_client.get_pods('fake_job') == {'status': 'success'}
     assert api_client.delete_job('fake_job', 'fake_region') == {'status': 'success'}
     assert api_client.restart_job('fake_job') == {'status': 'success'}

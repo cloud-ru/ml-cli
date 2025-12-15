@@ -135,7 +135,7 @@ def transfer():
 )
 @click.option(
     '--strategy',
-    help=f'Стратегия переноса {RussianChoice(STRATEGY).options}',
+    help=f'Стратегия переноса. {RussianChoice(STRATEGY).options}',
     type=RussianChoice(STRATEGY),
     cls=TransferCreateRequired,
 )
@@ -234,7 +234,7 @@ def delete(api, transfer_ids):
 @click.option(
     '--field',
     'fields',
-    help=f'Выбор параметров правила переноса для отображения {RussianChoice(TRANSFER_FIELD_NAMES.keys()).options}',
+    help=f'Выбор параметров правила переноса для отображения. {RussianChoice(TRANSFER_FIELD_NAMES.keys()).options}',
     cls=OptionalOptions,
     type=RussianChoice(TRANSFER_FIELD_NAMES.keys()),
     multiple=True,
@@ -439,7 +439,7 @@ def cancel(api: DTSApi, transfer_id: str, execution_date: datetime):
 )
 @click.option(
     '--dst-connector-type',
-    help=f'Тип коннектора места назначения {RussianChoice(TARGET_CONNECTOR_TYPES).options}',
+    help=f'Тип коннектора места назначения. {RussianChoice(TARGET_CONNECTOR_TYPES).options}',
     type=RussianChoice(TARGET_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateOptional,

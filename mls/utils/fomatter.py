@@ -5,6 +5,7 @@
 import shutil
 
 import click
+from click import Argument
 
 from .style import highlight_format
 from .style import text_format
@@ -143,7 +144,7 @@ class CommonGroupFormatter(click.Group):
         options = []
         if opts:
             for param in opts:
-                if len(param.opts) and param.name.replace('_', '-', -1) == param.opts[0]:
+                if len(param.opts) and param.name.replace('_', '-', -1) == param.opts[0] or isinstance(param, Argument):
                     arguments.append(param)
                 else:
                     options.append(param)

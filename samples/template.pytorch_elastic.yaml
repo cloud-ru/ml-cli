@@ -24,11 +24,12 @@ job:
     internal_action: restart
     period: 20
   policy:
+    allocation_name: my-favorite-allocation
     checkpoint_dir: /home/jovyan/checkpoint
     elastic_max_restarts: 5
     internet_access: true
     priority_class: medium
-    queue_name: my-favorite-allocation
+    queue_name: my-favorite-queue
   resource:
     elastic_max_workers: 3
     elastic_min_workers: 2

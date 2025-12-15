@@ -53,7 +53,10 @@ def filter_by(json_data, options):
 
 def display_jobs(json_data):
     """Выборка из json данных и отображение tabulate."""
-    headers = ['Имя задачи', 'Статус', ' Регион', 'Instance Type', 'Описание задачи', 'Количество GPU', 'Длительность']
+    headers = [
+        'Имя задачи', 'Статус', ' Регион', 'Instance Type', 'Описание задачи', 'Количество GPU', 'Длительность', 'ID очереди',
+        'Название очереди', 'Название аллокации',
+    ]
     # "Дата Создания", "Дата обновления", "Дата Завершения", "Цена", "Namespace"
     table_data = []
     for job in json_data:
@@ -67,6 +70,9 @@ def display_jobs(json_data):
             job.get('job_desc') or '-',
             job.get('gpu_count'),
             f'{duration}',
+            job.get('queue_id'),
+            job.get('queue_name'),
+            job.get('allocation_name'),
             # job.get("created_dt"),
             # job.get("updated_dt"),
             # job.get("completed_dt") or '-',

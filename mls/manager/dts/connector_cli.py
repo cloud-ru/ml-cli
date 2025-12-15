@@ -53,7 +53,7 @@ def connector():
     type=RussianChoice(CONNECTOR_FIELDS),
     multiple=True,
     default=None,
-    help=f'Выбор параметров коннектора для отображения {RussianChoice(CONNECTOR_FIELDS).options}',
+    help=f'Выбор параметров коннектора для отображения. {RussianChoice(CONNECTOR_FIELDS).options}',
 )
 @opt_page_size
 @opt_page_number
