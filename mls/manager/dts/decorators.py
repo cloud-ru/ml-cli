@@ -20,7 +20,7 @@ opt_custom_connector_type = click.option(
 
 opt_all_connector_types = click.option(
     '--connector-type',
-    help=f'Тип коннектора. {RussianChoice(CUSTOM_CONNECTOR_TYPES).options}',
+    help=f'Тип коннектора. {RussianChoice(ALL_CONNECTOR_TYPES).options}',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
     cls=OptionalOptions,
     default=None,

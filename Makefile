@@ -64,3 +64,33 @@ directory:
 samples: directory $(addprefix , $(addsuffix .yaml, $(TYPES)))
 
 .PHONY: test clear coverage build verion yaml directory
+
+# -- оффлайн сборка --
+clean_dist:
+	@rm -rf ./dist || true
+	mkdir ./dist
+	mkdir -p ./dist/offline_packages
+
+export_requirements: clean_dist
+	poetry export --without-hashes --format=requirements.txt > ./dist/offline_packages/requirements.txt
+
+download_packages: export_requirements
+	pip download -r ./dist/offline_packages/requirements.txt -d ./dist/offline_packages
+
+build_wheel:
+	python -m build
+	mv ./dist/*.whl ./dist/offline_packages/
+
+generate_offline_makefile: build_wheel
+	echo "all:\n\tpip install --no-index --find-links=. -r requirements.txt\n\tpip install ./*.whl" > ./dist/offline_packages/Makefile
+
+tar_offline_packages: download_packages build_wheel generate_offline_makefile
+	tar -czvf ./dist/installer.tar.gz -C ./dist/offline_packages .
+
+# -- оффлайн установка --
+
+un_tar_packages:
+	tar -xzvf ./dist/installer.tar.gz -C ./dist/
+
+offline_install:un_tar_packages
+	make -C ./dist/offline_packages all
