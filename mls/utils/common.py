@@ -1,14 +1,17 @@
 """Описание общих функций."""
 from configparser import ConfigParser
+from configparser import NoSectionError
 
 import click
 from click import Command
 from click import Group
 
+from .execption import ConfigReadError
 from .openssl import decrypt
 from .settings import CONFIG_FILE
 from .settings import CREDENTIALS_FILE
 from .settings import ENCRYPTED_CREDENTIALS_FILE
+from .settings import SECRET_PASSWORD
 from .style import error_format
 
 
@@ -105,3 +108,28 @@ def create_autocomplete(start_point, command_or_group, mapping):
         mapping[start_point] = [
             '--' + param.name for param in command_or_group.params if param.opts and isinstance(param, click.core.Option)
         ]
+
+
+def read_profile(profile_name):
+    """Загружает (только существующий) профиль.
+
+    Функция проверяет наличие секции профиля в файлах конфигурации и создаёт её,
+    если она отсутствует.
+
+    Аргументы:
+        profile_name (str): Имя профиля, который загружается.
+
+    Возвращает:
+        dict : Собранный в словарь профиль.
+    """
+    config, credentials = load_saved_config(SECRET_PASSWORD)
+    try:
+        return {**dict(config.items(profile_name)), **dict(credentials.items(profile_name))}
+    except NoSectionError as err:
+        error_message = (
+            f'Профиль конфигурации с именем {err.section} используется по умолчанию, если конфигурация еще не задана.\n'
+            'Настройте конфигурацию профиля, выполнив команду:\n'
+            'mls configure\n'
+            'Или export MLS_PROFILE_DEFAULT=<Ваш профиль по умолчанию>'
+        )
+        raise ConfigReadError(error_message) from err

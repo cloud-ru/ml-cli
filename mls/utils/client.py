@@ -9,7 +9,7 @@ import click
 
 from mls.manager.job.custom_types import JobDebugOptions
 from mls.manager.job.custom_types import ProfileOptions
-from mls.manager.job.utils import read_profile
+from mls.utils.common import read_profile
 from mls.utils.settings import DEFAULT_PROFILE
 from mls_core.client import CommonPublicApiInterface
 

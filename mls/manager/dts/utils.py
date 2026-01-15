@@ -11,7 +11,7 @@ from mls.manager.dts.custom_types import S3Type
 from mls.manager.dts.custom_types import SQLType
 from mls.manager.job.custom_types import JobDebugOptions
 from mls.manager.job.custom_types import ProfileOptions
-from mls.manager.job.utils import read_profile
+from mls.utils.common import read_profile
 from mls.utils.settings import DEFAULT_PROFILE
 from mls.utils.style import success_format
 from mls_core.client import DTSApi

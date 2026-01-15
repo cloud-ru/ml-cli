@@ -6,7 +6,6 @@
 вывода и прочие общие инструменты, необходимые для выполнения задач.
 """
 import os
-from configparser import NoSectionError
 from functools import update_wrapper
 from typing import List
 
@@ -29,13 +28,11 @@ from .custom_types import priority_class
 from .custom_types import ProfileOptions
 from .custom_types import worker_input
 from .dataclasses import Job
-from mls.utils.common import load_saved_config
+from mls.utils.common import read_profile
 from mls.utils.common_types import DictView
 from mls.utils.common_types import IntOrStrView
 from mls.utils.common_types import RangeView
-from mls.utils.execption import ConfigReadError
 from mls.utils.settings import DEFAULT_PROFILE
-from mls.utils.settings import SECRET_PASSWORD
 from mls_core import TrainingJobApi
 
 
@@ -82,31 +79,6 @@ def job_client(func):
         return func(client, *args, **kwargs, **calculated_options)
 
     return update_wrapper(init_client, func)
-
-
-def read_profile(profile_name):
-    """Загружает (только существующий) профиль.
-
-    Функция проверяет наличие секции профиля в файлах конфигурации и создаёт её,
-    если она отсутствует.
-
-    Аргументы:
-        profile_name (str): Имя профиля, который загружается.
-
-    Возвращает:
-        dict : Собранный в словарь профиль.
-    """
-    config, credentials = load_saved_config(SECRET_PASSWORD)
-    try:
-        return {**dict(config.items(profile_name)), **dict(credentials.items(profile_name))}
-    except NoSectionError as err:
-        error_message = (
-            f'Профиль конфигурации с именем {err.section} используется по умолчанию, если конфигурация еще не задана.\n'
-            'Настройте конфигурацию профиля, выполнив команду:\n'
-            'mls configure\n'
-            'Или export MLS_PROFILE_DEFAULT=<Ваш профиль по умолчанию>'
-        )
-        raise ConfigReadError(error_message) from err
 
 
 def read_yaml(file_path: str):

@@ -6,9 +6,9 @@ from unittest.mock import patch
 import click
 import pytest
 
-from mls.manager.job.utils import read_profile
 from mls.utils.common import handle_click_exception
 from mls.utils.common import load_saved_config
+from mls.utils.common import read_profile
 from mls.utils.execption import ConfigReadError
 
 

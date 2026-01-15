@@ -33,7 +33,7 @@ def list_(api: QueueApi, allocation_id: uuid.UUID):
     Пример: mls queue list 00000000-0000-4000-8000-000000000000
 
     """
-    click.echo(success_format(api.get_list_queues(str(allocation_id))))
+    click.echo(success_format(api.get_list_queues_by_allocation_id(str(allocation_id))))
 
 
 @queue.command(cls=InstTypesHelp)
@@ -48,4 +48,4 @@ def inst_types(api: QueueApi, queue_id: uuid.UUID):
     Пример: mls queue inst-types 00000000-0000-4000-8000-000000000000
 
     """
-    click.echo(success_format(api.get_instance_types(queue_id)))
+    click.echo(success_format(api.get_instance_types_by_queue_id(queue_id)))

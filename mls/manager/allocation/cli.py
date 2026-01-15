@@ -32,7 +32,7 @@ def list_(api: AllocationApi):
     Пример: mls allocation list
 
     """
-    click.echo(success_format(api.get_list()))
+    click.echo(success_format(api.get_list_allocations()))
 
 
 @allocation.command(cls=InstTypesHelp)
@@ -47,4 +47,4 @@ def inst_types(api: AllocationApi, allocation_id: uuid.UUID):
     Пример: mls allocation inst-types 00000000-0000-4000-8000-000000000000
 
     """
-    click.echo(success_format(api.get_instance_types(allocation_id)))
+    click.echo(success_format(api.get_instance_types_by_allocation_id(allocation_id)))
