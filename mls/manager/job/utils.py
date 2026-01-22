@@ -103,12 +103,12 @@ def define_run_job_options() -> List:
         # Node options
         option(
             '-i', '--instance_type', cls=JobRequiredOptions, index=0,
-            type=click.STRING, help='Конфигурация ресурсов (e.g., v100.1gpu)',
+            type=click.STRING, help='Конфигурация ресурсов (eꓸgꓸ, v100ꓸ1gpu)',
         ),
         option('-w', '--workers', cls=JobResourceOptions, index=0, type=worker_input, help='Количество рабочих узлов'),
         option(
             '-p', '--processes', cls=JobResourceOptions, index=1, type=IntOrStrView(), help=(
-                'int  - прямое указание числа процессов, default - расчет оптимального количества процессов для запуска задачи'
+                'int  -- прямое указание числа процессов, default -- расчет оптимального количества процессов для запуска задачи'
             ),
         ),
 
@@ -118,7 +118,8 @@ def define_run_job_options() -> List:
         ),
         option(
             '-s', '--script', cls=JobRequiredOptions, index=3, type=click.STRING,
-            help='Путь к исполняемому файлу. Например, к скрипту - /home/jovyan/test_script.py или к исполняемому файлу -ls, -rm, -pwd',
+            help='Путь к исполняемому файлу. Например, к скрипту - :file:'
+                 '`/home/jovyan/test_scriptꓸpy` или к исполняемому файлу -ls, -rm, -pwd',
         ),
         option('-d', '--description', type=click.STRING, help='Описание задачи'),
 
@@ -141,20 +142,20 @@ def define_run_job_options() -> List:
         ),
         option(
             '-k', '--checkpoint_dir', cls=JobPolicyOptions, index=1, type=click.STRING,
-            help='Путь для сохранения checkpoint. Например, /home/jovyan/...',
+            help='Путь для сохранения checkpoint. Например, :file:`/home/jovyan/`',
         ),
-        option('-a', '--internet_access', cls=JobPolicyOptions, index=0, type=click.BOOL, help='Определяет наличие доступ в интернет'),
+        option('-A', '--internet_access', cls=JobPolicyOptions, index=0, type=click.BOOL, help='Определяет наличие доступа в интернет'),
         option(
             '--priority_class', cls=JobPolicyOptions, index=2, type=priority_class,
             help=f'Приоритет выполнения задачи. {priority_class.options}',
         ),
         option(
-            '-A',
+            '-a',
             '--allocation_name',
             cls=JobPolicyOptions,
             index=3,
             type=click.STRING,
-            help='Имя аллокации, в которой будет запланировано и выполнено задание',
+            help='Имя аллокации, в которой запланировано или выполнено задание',
         ),
         option(
             '-q', '--queue_name', cls=JobPolicyOptions, index=3, type=click.STRING,
@@ -179,13 +180,13 @@ def define_run_job_options() -> List:
         option(
             '--elastic_min_workers', cls=JobElasticOptions, index=0, type=IntOrStrView(),
             help='Минимальное количество воркеров.  '
-                 'int - прямое указание числа процессов, default - расчет оптимального количества процессов для запуска задачи',
+                 'int -- прямое указание числа процессов, default -- расчет оптимального количества процессов для запуска задачи',
 
         ),
         option(
             '--elastic_max_workers', cls=JobElasticOptions, index=1, type=IntOrStrView(),
             help='Максимальное количество воркеров.  '
-                 'int - прямое указание числа процессов, default - расчет оптимального количества процессов для запуска задачи',
+                 'int -- прямое указание числа процессов, default -- расчет оптимального количества процессов для запуска задачи',
         ),
         option(
             '--elastic_max_restarts', cls=JobElasticOptions, index=2, type=worker_input,

@@ -69,14 +69,14 @@ def transfer():
 )
 @click.option(
     '--connector-type',
-    help=f'Тип коннектора источника {RussianChoice(ALL_CONNECTOR_TYPES).options}',
+    help=f'Тип коннектора источника. {RussianChoice(ALL_CONNECTOR_TYPES).options}',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateRequired,
 )
 @click.option(
     '--dst-connector-type',
-    help=f'Тип коннектора места назначения {RussianChoice(TARGET_CONNECTOR_TYPES).options}',
+    help=f'Тип коннектора места назначения. {RussianChoice(TARGET_CONNECTOR_TYPES).options}',
     type=RussianChoice(TARGET_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateRequired,
@@ -431,7 +431,7 @@ def cancel(api: DTSApi, transfer_id: str, execution_date: datetime):
 )
 @click.option(
     '--connector-type',
-    help=f'Тип коннектора источника {RussianChoice(ALL_CONNECTOR_TYPES).options}',
+    help=f'Тип коннектора источника. {RussianChoice(ALL_CONNECTOR_TYPES).options}',
     type=RussianChoice(ALL_CONNECTOR_TYPES),
     nargs=1,
     cls=TransferCreateOptional,

@@ -166,7 +166,7 @@ def pods(api_job, name, *_, **__):
 
 
 @job.command(cls=ListHelp, name='list')
-@click.option('-a', '--allocation_name', help='Набор выделенных ресурсов GPU и CPU', default=None)
+@click.option('-a', '--allocation_name', help='Имя аллокации, в которой запланировано или выполнено задание', default=None)
 @status_of_task
 @regions_selected
 @limit_selected
@@ -241,7 +241,7 @@ def regions():
 @limit_selected
 @offset_selected
 @status_of_task
-@click.option('-a', '--allocation', help='Набор выделенных ресурсов GPU и CPU', default=None)
+@click.option('-a', '--allocation_name', help='Имя аллокации, в которой запланировано или выполнено задание', default=None)
 @regions_selected
 @queue_selected
 @click.option('-g', '--gpu_count', cls=FilterOptions, index=0, type=int, help='Количество GPU')
@@ -257,7 +257,10 @@ def regions():
     help=f'Сортировка загруженной информации в таблицу. {filter_sort_choice.options}',
 )
 @job_client
-def table(api_job, region, queue, gpu_count, instance_type, description, allocation, job_name, status, limit, offset, asc_sort, desc_sort):
+def table(
+        api_job, region, queue, gpu_count, instance_type, description, allocation_name, job_name,
+        status, limit, offset, asc_sort, desc_sort,
+):
     """Команда просмотра таблицы с задачами.
 
     Синтаксис: mls job table [options]
@@ -277,6 +280,6 @@ def table(api_job, region, queue, gpu_count, instance_type, description, allocat
     ]
 
     api_job.USER_OUTPUT_PREFERENCE = None
-    data_source = api_job.get_list_jobs(region, queue, allocation, status, limit, offset).get('jobs', [])
+    data_source = api_job.get_list_jobs(region, queue, allocation_name, status, limit, offset).get('jobs', [])
     result = JobTableView(data_source, filters, sort).display()
     click.echo(success_format(result))
