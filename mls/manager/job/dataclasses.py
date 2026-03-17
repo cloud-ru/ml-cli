@@ -23,7 +23,7 @@ from .constants import priority
 
 T = TypeVar('T', bound='MergeMixin')
 
-binary, horovod, pytorch, pytorch2, pytorch_elastic, binary_exp = job_types
+binary, horovod, pytorch, pytorch2, torchrun, pytorch_elastic, binary_exp = job_types
 low, medium, high = priority
 
 
@@ -220,6 +220,7 @@ class Job(MergeMixin):
         return defaultdict(
             lambda: create_unknown_job_class(type_), {
                 pytorch2: Pytorch2Job,
+                torchrun: TorchrunJob,
                 binary: BinaryJob,
                 horovod: HorovodJob,
                 pytorch: PytorchJob,
@@ -342,3 +343,10 @@ def create_unknown_job_class(type_) -> Type[Job]:
 
     UnknownJob.type = type_
     return UnknownJob
+
+
+@dataclass
+class TorchrunJob(VolcanoJob):
+    """Структура TorchrunJob."""
+    type: str = note(torchrun)
+    script: str = note('/home/jovyan/quick-start/job_launch_pt/train_distributed_example-torch2.py')

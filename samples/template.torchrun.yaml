@@ -1,0 +1,38 @@
+# 🤝 Пример запуска torchrun... задач через ☁️👔🔒 mls job submit --config ./torchrun.yaml
+# 📚 health - 🚀Полностью опциональный параметр...   
+# 📚 policy - 🚀Полностью опциональный параметр...   
+# 📚 processes если не задан устанавливается в соответствии с gpu
+# 📚 Описание https://api.ai.cloud.ru/public/v2/redoc   
+# 📚 Образ: https://cloud.ru/docs/aicloud/mlspace/concepts/environments__basic-images-list__jobs.html 
+# 📚 max_retry параметр применимый только к аллокациям 
+# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️
+# 📚 https://github.com/sbercloud-ai/aicloud-examples/tree/master/quick-start
+job:
+  description: set any useful description
+  environment:
+    conda_name: conda_name
+    flags:
+      flag1: true
+      flag2: true
+    image: cr.ai.cloud.ru/aicloud-base-images/py3.10-torch2.1.2:0.0.40
+    variables:
+      ENV_1: true
+      ENV_2: true
+  health:
+    external_actions:
+    - notify
+    internal_action: restart
+    period: 20
+  policy:
+    allocation_name: my-favorite-allocation
+    checkpoint_dir: /home/jovyan/checkpoint
+    internet_access: true
+    max_retry: 5
+    priority_class: medium
+    queue_name: my-favorite-queue
+  resource:
+    instance_type: a100.1gpu
+    processes: 1
+    workers: 1
+  script: /home/jovyan/quick-start/job_launch_pt/train_distributed_example-torch2.py
+  type: torchrun

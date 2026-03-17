@@ -116,6 +116,7 @@ def asserts(job_client, payload_, res):
         'template.binary_exp.yaml',
         # 'template.nogpu.yaml',
         'template.pytorch2.yaml',
+        'template.torchrun.yaml',
         'template.pytorch_elastic.yaml',
     ],
 )
