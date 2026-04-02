@@ -58,3 +58,21 @@ queue_selected = click.option(
     help='ID очереди',
     default=None,
 )
+
+date_begin_selected = click.option(
+    '-b',
+    '--start_date',
+    multiple=False,
+    help='Фильтр выборки даты начала',
+    default=None,
+    type=click.DateTime(),
+)
+
+date_end_selected = click.option(
+    '-e',
+    '--end_date',
+    multiple=False,
+    help='Фильтр выборки даты окончания',
+    default=None,
+    type=click.DateTime(),
+)

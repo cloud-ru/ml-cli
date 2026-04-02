@@ -281,7 +281,7 @@ class TrainingJobApi(CommonPublicApiInterface):
         return self.get(f'jobs/{name}')
 
     @_handle_api_response
-    def get_list_jobs(self, region, queue, allocation_name, status, limit, offset):
+    def get_list_jobs(self, region, queue, start_date, end_date, allocation_name, status, limit, offset):
         """Получение логов задачи."""
         params = {
             'region': region,
@@ -290,6 +290,8 @@ class TrainingJobApi(CommonPublicApiInterface):
             'limit': limit,
             'offset': offset,
             'queue_id': queue,
+            'start_date': start_date,
+            'end_date': end_date,
         }
         return self.get('jobs', params=params)
 

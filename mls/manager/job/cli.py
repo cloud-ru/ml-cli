@@ -12,6 +12,8 @@ from .custom_types import FilterOptions
 from .custom_types import JobRecommenderOptions
 from .custom_types import SortOptions
 from .dataclasses import Job
+from .decorators import date_begin_selected
+from .decorators import date_end_selected
 from .decorators import limit_selected
 from .decorators import offset_selected
 from .decorators import opt_output_format
@@ -172,9 +174,11 @@ def pods(api_job, name, *_, **__):
 @limit_selected
 @offset_selected
 @queue_selected
+@date_begin_selected
+@date_end_selected
 @opt_output_format
 @job_client
-def list_(api_job, region, queue, allocation_name, status, limit, offset):
+def list_(api_job, region, queue, start_date, end_date, allocation_name, status, limit, offset):
     """Команда просмотра списка задач.
 
     Синтаксис: mls job list [options]
@@ -182,7 +186,7 @@ def list_(api_job, region, queue, allocation_name, status, limit, offset):
     Пример: mls job list --status Pending --status Running --queue 00000000-0000-0000-0000-000000000000 --limit 10
 
     """
-    click.echo(success_format(api_job.get_list_jobs(region, queue, allocation_name, status, limit, offset)))
+    click.echo(success_format(api_job.get_list_jobs(region, queue, start_date, end_date, allocation_name, status, limit, offset)))
 
 
 @job.command(cls=RestartHelp)
@@ -244,6 +248,8 @@ def regions():
 @click.option('-a', '--allocation_name', help='Имя аллокации, в которой запланировано или выполнено задание', default=None)
 @regions_selected
 @queue_selected
+@date_begin_selected
+@date_end_selected
 @click.option('-g', '--gpu_count', cls=FilterOptions, index=0, type=int, help='Количество GPU')
 @click.option('-i', '--instance_type', cls=FilterOptions, index=1, help='Тип сервера')
 @click.option('-d', '--description', cls=FilterOptions, index=2, help='Пользовательское описание задачи')
@@ -258,7 +264,7 @@ def regions():
 )
 @job_client
 def table(
-        api_job, region, queue, gpu_count, instance_type, description, allocation_name, job_name,
+        api_job, region, queue, start_date, end_date, gpu_count, instance_type, description, allocation_name, job_name,
         status, limit, offset, asc_sort, desc_sort,
 ):
     """Команда просмотра таблицы с задачами.
@@ -280,6 +286,6 @@ def table(
     ]
 
     api_job.USER_OUTPUT_PREFERENCE = None
-    data_source = api_job.get_list_jobs(region, queue, allocation_name, status, limit, offset).get('jobs', [])
+    data_source = api_job.get_list_jobs(region, queue, start_date, end_date, allocation_name, status, limit, offset).get('jobs', [])
     result = JobTableView(data_source, filters, sort).display()
     click.echo(success_format(result))
