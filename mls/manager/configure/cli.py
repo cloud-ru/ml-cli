@@ -17,5 +17,6 @@ def configure(profile, encrypt):
 
     Пример:
         mls configure --profile name --encrypt
+
     """
     configure_profile(profile, encrypt)

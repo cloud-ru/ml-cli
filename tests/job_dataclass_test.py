@@ -23,7 +23,7 @@ def test_init_args(unknown_job_args):
     unknown_job_class, expected_type = unknown_job_args
     with pytest.raises(NoSuchOption) as err:
         unknown_job_class(None, None, None, None, '', '', expected_type)
-    assert err.value.args[0] == 'No such option: --script, job.script'
+    assert err.value.option_name == '--script, job.script'
 
 
 def test_init_args_image(unknown_job_args):
@@ -69,6 +69,7 @@ def unknown_yaml():
             'policy': {
                 'checkpoint_dir': '/home/jovyan/checkpoint',
                 'internet_access': True,
+                'logs_dir': '/home/jovyan/my-logs',
                 'priority_class': 'medium',
                 'allocation_name': 'my-favorite-allocation',
                 'queue_name': 'my-favorite-queue',

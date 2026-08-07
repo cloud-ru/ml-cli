@@ -28,7 +28,7 @@ def load_profile(monkeypatch):
 
 @pytest.fixture
 def samples(load_profile):
-    """Считывает все YAML файлы из заданного каталога и возвращает словарь с именем файла и его содержанием."""
+    """Считывает все YAML-файлы из заданного каталога и возвращает словарь с именем файла и его содержанием."""
     def sample_read(template):
         directory_path = './samples'
 

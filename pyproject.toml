@@ -8,7 +8,7 @@ dynamic = ["version"]
 
 requires-python = ">=3.10,<4"
 dependencies = [
-    "click (==8.1.8)",
+    "click (>=8.3.3)",
     "keyrings-alt (>=5.0.2,<6.0.0)",
     "types-requests (>=2.32.0.20241016,<3.0.0.0)",
     "responses (>=0.25.6,<0.26.0)",
@@ -19,6 +19,9 @@ dependencies = [
     "h11 (==0.16.0)",
     "setuptools (>=82.0.1,<83.0.0)",
     "jinja2 (>=3.1.6,<4.0.0)",
+    "gitpython (>=3.1.51,<4.0.0)",
+    "python-gitlab (==6.5.0)",
+    "cryptography (==49.0.0)",
 ]
 
 description = "Библиотека для работы с api Cloud.ru MLSpace"
@@ -59,7 +62,7 @@ release = [
 version = "0.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
+pytest = "^9.0.3"
 pre-commit = "^4.1.0"
 pytest-cov = "^6.0.0"
 hatch = "^1.14.0"
@@ -68,7 +71,12 @@ mypy = "^1.14.1"
 pylint = "^3.3.8"
 
 [tool.poetry.dependencies]
-click = "8.1.8"
+click = "8.3.3"
+
+[[tool.poetry.source]]
+name = "ai-proxy-pypi"
+url = "https://pkg.sbercloud.tech/artifactory/api/pypi/proxies-pypi/simple"
+priority = "primary"
 
 [project.scripts]
 mls = "mls.cli:entry_point"

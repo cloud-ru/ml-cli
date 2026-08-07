@@ -1,6 +1,6 @@
 """Вспомогательные утилиты для модуля управления правилами переноса."""
 import json
-from functools import update_wrapper
+from functools import wraps
 
 import click
 
@@ -9,63 +9,30 @@ from mls.manager.dts.custom_types import DB_LIKE_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import S3_LIKE_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import S3Type
 from mls.manager.dts.custom_types import SQLType
-from mls.manager.job.custom_types import JobDebugOptions
-from mls.manager.job.custom_types import ProfileOptions
+from mls.utils.client import common_api_client_options
+from mls.utils.client import create_configured_client
 from mls.utils.common import read_profile
-from mls.utils.settings import DEFAULT_PROFILE
 from mls.utils.style import success_format
 from mls_core.client import DTSApi
 
 
-def common_cli_options(func):
-    """Декоратор для добавления общих опций."""
-    func = click.option(
-        '-P',
-        '--profile',
-        cls=ProfileOptions,
-        index=4,
-        default=DEFAULT_PROFILE,
-        help='Определение параметров региона, формата вывода по имени профиля',
-    )(func)
-
-    func = click.option(
-        '-E', '--endpoint_url', cls=ProfileOptions, index=2, help='Базовый адрес API',
-    )(func)
-    func = click.option(
-        '-D',
-        '--debug',
-        cls=JobDebugOptions,
-        is_flag=True,
-        help='Вывод в консоль отладочной информации',
-    )(func)
-    return func
-
-
 def client(func):
     """Декоратор создающий api client instance на базе ввода пользователя."""
-    @common_cli_options
-    def _init(*args, **kwargs):
+    @wraps(func)
+    def init_client(*args, **kwargs):
         """Инициализация клиента PublicApi."""
-        profile = read_profile(kwargs.pop('profile'))
-
-        have_defaults = dict(
-            debug=kwargs.pop('debug'),
-        )
-        stable_rules = dict(
-            client_id=profile.get('key_id', ''),
-            client_secret=profile.get('key_secret', ''),
-            x_workspace_id=profile.get('x_workspace_id'),
-            x_api_key=profile.get('x_api_key'),
-            endpoint_url=kwargs.pop('endpoint_url', '') or profile.get('endpoint_url'),
-        )
-        dts_client = DTSApi(**have_defaults, **stable_rules)
-        dts_client.USER_OUTPUT_PREFERENCE = kwargs.pop('output', None) or profile.get(
-            'output', 'json',
+        profile = read_profile(kwargs.pop('profile', None))
+        dts_client = create_configured_client(
+            DTSApi,
+            profile,
+            debug=kwargs.pop('debug', False),
+            endpoint_url=kwargs.pop('endpoint_url', ''),
+            output=kwargs.pop('output', None),
         )
 
         return func(dts_client, *args, **kwargs)
 
-    return update_wrapper(_init, func)
+    return common_api_client_options(init_client)
 
 
 def collect_connector_params(connector_type: str) -> Connector:

@@ -1,0 +1,7 @@
+# 🤝 Пример возобновления TensorBoard: mls tensorboard resume --config ./samples/template.tensorboard.resume.yaml 00000000-0000-4000-8000-000000000000
+# 📚 --config задает базовый шаблон; явно переданные CLI-опции resume переопределяют YAML. UUID передаётся аргументом команды.
+# 📚 Описание API: https://api.ai.cloud.ru/public/v2/redoc
+# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️
+namespace: default
+resume:
+  instance_type: free.0gpu

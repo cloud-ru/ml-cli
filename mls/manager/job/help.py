@@ -64,8 +64,8 @@ class JobHelp(CommonGroupFormatter):
 
 
 class YamlHelp(CommandHelp):
-    """Класс помощи отображения yaml примера."""
-    HEADING = 'Генератор примера yaml файла по типу задачи.'
+    """Класс помощи отображения yaml-примера."""
+    HEADING = 'Генератор примера yaml-файла по типу задачи.'
 
 
 class TypeHelp(CommandHelp):

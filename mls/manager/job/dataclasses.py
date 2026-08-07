@@ -28,7 +28,7 @@ low, medium, high = priority
 
 
 def note(text):
-    """Функция для генерации yaml контракта."""
+    """Функция для генерации yaml-контракта."""
     return field(metadata={'note': text})  # pylint: disable=invalid-field-call
 
 
@@ -99,6 +99,7 @@ class Policy(MergeMixin):
     """Структура Планировщика."""
     priority_class: Optional[str] = note('medium')
     checkpoint_dir: Optional[str] = note('/home/jovyan/checkpoint')
+    logs_dir: Optional[str] = note('/home/jovyan/my-logs')
     internet_access: Optional[bool] = note(True)
     allocation_name: Optional[str] = note('my-favorite-allocation')
     queue_name: Optional[str] = note('my-favorite-queue')
@@ -148,7 +149,7 @@ class Job(MergeMixin):
     resource: Optional[Resource]
     policy: Optional[Policy]
     health: Optional[HealthProbe]
-    script: str = note('python -c "from time import sleep; sleep(1000);" ')
+    script: str = note('python -c "from time import sleep; sleep(1000);" ')  # nosemgrep: apiiro-python-dynamic-execution-system
     description: Optional[str] = note('set any useful description')
     type: str = note(f"{','.join(job_types)}")
 
@@ -180,6 +181,8 @@ class Job(MergeMixin):
             **({'conda_env': self.environment.conda_name} if self.environment and self.environment.conda_name else {}),
             **({'priority_class': self.policy.priority_class} if self.policy and self.policy.priority_class else {}),
             **({'checkpoint_dir': self.policy.checkpoint_dir} if self.policy and self.policy.checkpoint_dir else {}),
+            # logs_dir=None не включается в JSON — сервер использует дефолтную директорию (/home/jovyan/.mlspace-logs)
+            **({'logs_dir': self.policy.logs_dir} if self.policy and self.policy.logs_dir else {}),
             **({
                 'health_params': {
                     'log_period': self.health.period,
@@ -210,7 +213,7 @@ class Job(MergeMixin):
 
     @classmethod
     def to_yaml(cls, type_):
-        """Метод получения yaml задач."""
+        """Метод получения yaml-задач."""
         job_structure = cls._dataclass_to_dict(cls.mapping(type_))
         return yaml.dump({'job': job_structure}, default_flow_style=False)
 

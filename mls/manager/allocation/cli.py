@@ -6,7 +6,7 @@ import click
 from .help import AllocationHelp
 from .help import InstTypesHelp
 from .help import ListHelp
-from mls.manager.job.decorators import opt_output_format
+from mls.manager.decorators import opt_output_format
 from mls.utils.client import api_client
 from mls.utils.style import success_format
 from mls_core import AllocationApi

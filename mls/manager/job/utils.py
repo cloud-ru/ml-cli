@@ -10,7 +10,6 @@ from functools import update_wrapper
 from typing import List
 
 import click
-import yaml  # type: ignore
 
 from .custom_types import ExternalActionView
 from .custom_types import job_actions_in_fail_input
@@ -28,6 +27,8 @@ from .custom_types import priority_class
 from .custom_types import ProfileOptions
 from .custom_types import worker_input
 from .dataclasses import Job
+from mls.manager.utils import read_yaml
+from mls.utils.client import create_client_stable_rules
 from mls.utils.common import read_profile
 from mls.utils.common_types import DictView
 from mls.utils.common_types import IntOrStrView
@@ -65,12 +66,9 @@ def job_client(func):
         have_defaults = dict(
             debug=kwargs.pop('debug'),
         )
-        stable_rules = dict(
-            client_id=profile.get('key_id', ''),
-            client_secret=profile.get('key_secret', ''),
-            x_workspace_id=profile.get('x_workspace_id'),
-            x_api_key=profile.get('x_api_key'),
-            endpoint_url=kwargs.pop('endpoint_url', '') or profile.get('endpoint_url'),
+        stable_rules = create_client_stable_rules(
+            profile,
+            endpoint_url=kwargs.pop('endpoint_url', ''),
         )
         calculated_options = dict(region=kwargs.pop('region', '') or profile.get('region', ''))
         client = TrainingJobApi(**have_defaults, **stable_rules)
@@ -79,17 +77,6 @@ def job_client(func):
         return func(client, *args, **kwargs, **calculated_options)
 
     return update_wrapper(init_client, func)
-
-
-def read_yaml(file_path: str):
-    """Читает YAML файл и возвращает содержимое в виде словаря."""
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return yaml.safe_load(file)
-    except Exception as e:
-        raise click.ClickException(
-            f"Ошибка чтения YAML файла '{file_path}': {e}",
-        )
 
 
 def define_run_job_options() -> List:
@@ -118,8 +105,7 @@ def define_run_job_options() -> List:
         ),
         option(
             '-s', '--script', cls=JobRequiredOptions, index=3, type=click.STRING,
-            help='Путь к исполняемому файлу. Например, к скрипту - :file:'
-                 '`/home/jovyan/test_scriptꓸpy` или к исполняемому файлу -ls, -rm, -pwd',
+            help='Путь к исполняемому файлу. Например, к скрипту - /home/jovyan/test_scriptꓸpy или к исполняемому файлу -ls, -rm, -pwd',
         ),
         option('-d', '--description', type=click.STRING, help='Описание задачи'),
 
@@ -142,7 +128,11 @@ def define_run_job_options() -> List:
         ),
         option(
             '-k', '--checkpoint_dir', cls=JobPolicyOptions, index=1, type=click.STRING,
-            help='Путь для сохранения checkpoint. Например, :file:`/home/jovyan/`',
+            help='Путь для сохранения checkpoint. Например, /home/jovyan/',
+        ),
+        option(
+            '-l', '--logs_dir', cls=JobPolicyOptions, index=1, type=click.STRING,
+            help='Путь к директории, в которую сохраняются логи задачи обучения. Например, /home/jovyan/my-logs',
         ),
         option('-A', '--internet_access', cls=JobPolicyOptions, index=0, type=click.BOOL, help='Определяет наличие доступа в интернет'),
         option(

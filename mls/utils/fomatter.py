@@ -11,6 +11,21 @@ from .style import highlight_format
 from .style import text_format
 
 
+class ArgumentWithHelpLine(click.Argument):
+    """Аргумент с подписью в разделе «Аргументы» (CommonGroupFormatter)."""
+
+    def __init__(self, *param_decls, argument_help: str = '', **attrs):
+        """Инициализирует аргумент и сохраняет строку подписи для форматтера справки.
+
+        Args:
+            *param_decls: Декларации имени аргумента для ``click.Argument``.
+            argument_help: Текст, выводимый в разделе «Аргументы» рядом с именем параметра.
+            **attrs: Прочие аргументы конструктора ``click.Argument``.
+        """
+        self.argument_help = argument_help
+        super().__init__(*param_decls, **attrs)
+
+
 def init_formater(formatter: click.HelpFormatter):
     """Инициализирует форматтер с настройками ширины вывода, соответствующими размеру терминала, и поменяет буфер.
 
@@ -115,10 +130,13 @@ class CommonGroupFormatter(click.Group):
                 with formatter.section(text_format(param_name)):
                     for item in items:
                         param = item['value']
-                        if isinstance(param, click.decorators.HelpOption):
+                        if self.is_help_option(param):
                             formatter.write_text(text_format(f'--{param.name}'))
                         else:
                             help_option = getattr(param, 'help', None) or '-'
+                            secondary_opts = getattr(param, 'secondary_opts', None) or []
+                            if secondary_opts:
+                                help_option = f'{help_option}. Обратные флаги: {" ".join(secondary_opts)}'
                             if not getattr(param, 'hidden', False):
                                 formatter.write_text(
                                     highlight_format(
@@ -133,9 +151,16 @@ class CommonGroupFormatter(click.Group):
         if arguments:
             with formatter.section(text_format('Аргументы')):
                 for param in arguments:
-                    formatter.write_text(
-                        highlight_format(f'{param.name}'),
-                    )
+                    arg_help = getattr(param, 'argument_help', None) or getattr(param, 'help', None) or ''
+                    line = highlight_format(f'{param.name}')
+                    if arg_help:
+                        line += text_format(f'  {arg_help}')
+                    formatter.write_text(line)
+
+    @staticmethod
+    def is_help_option(param):
+        """Определяет встроенную Click help-option без привязки к внутренним классам Click."""
+        return getattr(param, 'name', None) == 'help' and '--help' in getattr(param, 'opts', ())
 
     @staticmethod
     def separate_arguments_options(opts):
@@ -162,8 +187,8 @@ class CommonGroupFormatter(click.Group):
                         continue
                     formatter.write_text(highlight_format(command))
                     if isinstance(cmd, click.Group):
-                        commands = '|'.join(cmd.list_commands(ctx))
-                        text = cmd.help.replace('[command]', f'[{commands}]')
+                        child_commands = '|'.join(cmd.list_commands(ctx))
+                        text = (cmd.help or '').replace('[command]', f'[{child_commands}]')
                         formatter.write_text(text_format(f'{text}'))
                         formatter.write_text('')
                     else:
@@ -186,5 +211,6 @@ class CommonGroupFormatter(click.Group):
         rendered_text = [*formatter.buffer]
         if len(rendered_text) > shutil.get_terminal_size().lines:
             click.echo_via_pager(rendered_text)
+            formatter.buffer = []
         else:
             pass

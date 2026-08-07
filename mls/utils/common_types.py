@@ -24,7 +24,9 @@ class RussianChoice(click.Choice):
 
     def __init__(self, choices):
         """Метод инициализирует экземпляр класса."""
-        super().__init__(choices)
+        normalized_choices = list(choices)
+        super().__init__(normalized_choices)
+        self.choices = normalized_choices
 
     def __repr__(self):
         """Метод отображает список возможных вариантов."""

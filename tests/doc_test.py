@@ -1,7 +1,12 @@
 """Тестовые сценарии для проверки работы форматтера."""
+import os
 import shutil
+import subprocess
+import sys
+from pathlib import Path
 
 import click
+import pytest
 
 from mls.manager.job.help import CommandHelp
 from mls.utils.cli_entrypoint_help import MLSHelp
@@ -127,6 +132,86 @@ def test_format_options_section(runner):
     assert 'string' in result.output
 
 
+def test_format_options_section_includes_secondary_bool_options(runner):
+    """Кастомный formatter показывает обе стороны boolean-флага."""
+    @click.command(cls=CommonGroupFormatter)
+    @click.option('--timer-enabled/--timer-disabled', default=True, help='Таймер')
+    def cmd(timer_enabled):
+        """Тестовая команда."""
+        pass
+
+    result = runner.invoke(cmd, ['--help'])
+
+    assert result.exit_code == 0
+    assert '--timer-enabled' in result.output
+    assert '--timer-disabled' in result.output
+
+
+def render_cli_doc(tmp_path: Path, command: str) -> str:
+    """Рендерит rst-документацию из help-output локального CLI."""
+    output_path = tmp_path / 'command.rst'
+    env = os.environ.copy()
+    env['PYTHONPATH'] = os.getcwd()
+    env['COLUMNS'] = '300'
+    env['LINES'] = '300'
+    subprocess.run(
+        [
+            sys.executable,
+            'docs/script.py',
+            'docs/template.rst',
+            f'{sys.executable} ./mls/cli.py {command} --help',
+            str(output_path),
+        ],
+        env=env,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    return output_path.read_text(encoding='utf-8')
+
+
+@pytest.mark.parametrize(
+    'command, expected_options',
+    [
+        ('js create', ['--namespace', '--name', '--image-name', '--instance-type']),
+        ('js list', ['--notebook-type', '--status', '--access_mode']),
+        ('js modify', ['--shutdown-in', '--timer-disabled', '--s3-buckets-json']),
+        ('js resume', ['--namespace', '--instance-type']),
+        ('js autoshutdown set', ['--shutdown-in', '--timer-disabled', '--by-timer-json']),
+        ('tensorboard create', ['--namespace', '--name', '--logdir', '--tensorboard-params']),
+        ('tensorboard list', ['--order_by', '--status']),
+        ('tensorboard modify', ['--shutdown-in', '--timer-disabled', '--s3-buckets-json']),
+        ('tensorboard resume', ['--namespace', '--instance-type']),
+        ('ws list', ['--customer-id']),
+    ],
+)
+def test_generated_docs_include_service_command_options(tmp_path, command, expected_options):
+    """Генерация docs из --help сохраняет параметры команд."""
+    rendered = render_cli_doc(tmp_path, command)
+
+    for option in expected_options:
+        assert option in rendered
+
+
+def test_generated_docs_normalize_command_whitespace(tmp_path):
+    """Генерация docs схлопывает отступы многострочного примера команды."""
+    rendered = render_cli_doc(tmp_path, 'js create')
+
+    assert (
+        'mls js create --namespace default --name my-js --image-name '
+        'cr.ai.cloud.ru/aicloud-jupyter/jupyter-server --image-tag latest '
+        '--image-type datahub --instance-type free.0gpu'
+    ) in rendered
+
+
+def test_generated_docs_use_single_spaces_between_option_names(tmp_path):
+    """Имена опций в list-table разделяются одним пробелом."""
+    rendered = render_cli_doc(tmp_path, 'js create')
+
+    assert '   * - ``--image-name``\n' in rendered
+    assert '   * - ``-c`` ``--config``\n' in rendered
+
+
 class MyTestCommand(CommandHelp):
     """Тестовая команда."""
     HEADING = 'Тестовый заголовок'
@@ -139,7 +224,7 @@ def create_any_test_cli():
         """Главная тестовая команда."""
         pass
 
-    @cli.command(cls=MyTestCommand)
+    @cli.command(cls=MyTestCommand, name='test-command')
     def test_command():
         """Тестовая подкоманда."""
         click.echo('Тестовый вывод')

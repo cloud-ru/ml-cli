@@ -39,6 +39,7 @@ def connector():
     """Группа команд (входная точка) для работы с коннекторами.
 
     Синтаксис: mls connector [command] [args] [options]
+
     """
 
 

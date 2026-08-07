@@ -34,7 +34,10 @@ from mls.manager.configure.cli import configure
 from mls.manager.dts.connector_cli import connector
 from mls.manager.dts.transfer_cli import transfer
 from mls.manager.job.cli import job
+from mls.manager.jupyter_server.cli import js
 from mls.manager.queue.cli import queue
+from mls.manager.tensorboard.cli import tensorboard
+from mls.manager.workspace.cli import ws
 from mls.utils.cli_entrypoint_help import MLSHelp
 from mls.utils.common import create_autocomplete
 from mls.utils.common import handle_click_exception
@@ -66,6 +69,9 @@ cli.add_command(connector)
 cli.add_command(transfer)
 cli.add_command(allocation)
 cli.add_command(queue)
+cli.add_command(js)
+cli.add_command(tensorboard)
+cli.add_command(ws)
 
 
 def auto_complete_function(mapping: Optional[Dict[Any, Any]] = None):

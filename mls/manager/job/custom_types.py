@@ -119,7 +119,7 @@ class JobPytorch2Options(CustomGroupedOption):
 
 class FilterOptions(CustomGroupedOption):
     """Класс очередности отображения."""
-    GROUP: str = 'Опции фильтрации:'
+    GROUP: str = 'Опции дополнительные:'
     GROUP_INDEX = 8
 
 

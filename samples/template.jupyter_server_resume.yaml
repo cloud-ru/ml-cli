@@ -1,0 +1,7 @@
+# 🤝 Пример возобновления Jupyter Server: mls js resume --config ./samples/template.jupyter_server_resume.yaml
+# 📚 --config задает базовый шаблон; явно переданные CLI-опции resume переопределяют YAML.
+# 📚 UUID сервера передаётся аргументом команды. Регион берётся из профиля или из --region. Описание API: https://api.ai.cloud.ru/public/v2/redoc
+# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️
+namespace: default
+resume:
+  instance_type: free.0gpu

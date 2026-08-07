@@ -3,6 +3,10 @@ WHL_DIR = dist
 COVER = cover
 DOCS = docs
 SAMPLES = samples
+JS_CREATE_SAMPLE = samples/template.jupyter_server_create.yaml
+JS_RESUME_SAMPLE = samples/template.jupyter_server_resume.yaml
+TB_CREATE_SAMPLE = samples/template.tensorboard.create.yaml
+TB_RESUME_SAMPLE = samples/template.tensorboard.resume.yaml
 
 ##################################################################################
 
@@ -17,7 +21,7 @@ test_report: samples
 		--junitxml=${CI_PROJECT_DIR}/cover/rspec.xml --cov-fail-under=90
 
 reinstall_package: build
-	@command pip install ./dist/mls-*.whl --force-reinstall
+	@command pip install -i https://pkg.sbercloud.tech/artifactory/api/pypi/proxies-pypi/simple ./dist/mls-*.whl --force-reinstall
 
 lint: reinstall_package
 	@pre-commit run --all-files
@@ -40,7 +44,7 @@ clear:
 	rm -rf $(COVER)
 	rm -rf $(DOCS)
 
-TYPES = $(shell python ./mls/cli.py job types)
+TYPES = $(shell PYTHONPATH=$(CI_PROJECT_DIR) python -m mls.cli job types)
 
 directory:
 	@mkdir -p samples
@@ -59,11 +63,53 @@ directory:
 	@echo "# 📚 https://github.com/sbercloud-ai/aicloud-examples/tree/master/quick-start" >> ./samples/template.$@
 
 
-	@python ./mls/cli.py job yaml $* >> ./samples/template.$@
+	@env PYTHONPATH=$(CI_PROJECT_DIR) python ./mls/cli.py job yaml $* >> ./samples/template.$@
+	@echo "Создан или обновлен файл ./samples/template.$@"
 
-samples: directory $(addprefix , $(addsuffix .yaml, $(TYPES)))
+$(JS_CREATE_SAMPLE): directory
+	@echo "# 🤝 Пример создания Jupyter Server: mls js create --config ./samples/template.jupyter_server_create.yaml" > $(JS_CREATE_SAMPLE)
+	@echo "# 📚 --config задает базовый шаблон; явно переданные CLI-опции create переопределяют YAML. Region берётся из профиля, YAML или --region." >> $(JS_CREATE_SAMPLE)
+	@echo "# 📚 Описание API: https://api.ai.cloud.ru/public/v2/redoc" >> $(JS_CREATE_SAMPLE)
+	@echo "# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️" >> $(JS_CREATE_SAMPLE)
+	@env PYTHONPATH=$(CI_PROJECT_DIR) poetry run python ./mls/cli.py js yaml >> $(JS_CREATE_SAMPLE)
+	@echo "Создан или обновлен файл $(JS_CREATE_SAMPLE)"
 
-.PHONY: test clear coverage build verion yaml directory
+$(JS_RESUME_SAMPLE): directory
+	@echo "# 🤝 Пример возобновления Jupyter Server: mls js resume --config ./samples/template.jupyter_server_resume.yaml" > $(JS_RESUME_SAMPLE)
+	@echo "# 📚 --config задает базовый шаблон; явно переданные CLI-опции resume переопределяют YAML." >> $(JS_RESUME_SAMPLE)
+	@echo "# 📚 UUID сервера передаётся аргументом команды. Регион берётся из профиля или из --region. Описание API: https://api.ai.cloud.ru/public/v2/redoc" >> $(JS_RESUME_SAMPLE)
+	@echo "# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️" >> $(JS_RESUME_SAMPLE)
+	@env PYTHONPATH=$(CI_PROJECT_DIR) poetry run python ./mls/cli.py js yaml --resume >> $(JS_RESUME_SAMPLE)
+	@echo "Создан или обновлен файл $(JS_RESUME_SAMPLE)"
+
+$(TB_CREATE_SAMPLE): directory
+	@echo "# 🤝 Пример создания TensorBoard: mls tensorboard create --config ./samples/template.tensorboard.create.yaml" > $(TB_CREATE_SAMPLE)
+	@echo "# 📚 --config задает базовый шаблон; явно переданные CLI-опции create переопределяют YAML. Region берётся из профиля, YAML или --region." >> $(TB_CREATE_SAMPLE)
+	@echo "# 📚 Описание API: https://api.ai.cloud.ru/public/v2/redoc" >> $(TB_CREATE_SAMPLE)
+	@echo "# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️" >> $(TB_CREATE_SAMPLE)
+	@env PYTHONPATH=$(CI_PROJECT_DIR) poetry run python ./mls/cli.py tensorboard yaml >> $(TB_CREATE_SAMPLE)
+	@echo "Создан или обновлен файл $(TB_CREATE_SAMPLE)"
+
+$(TB_RESUME_SAMPLE): directory
+	@echo "# 🤝 Пример возобновления TensorBoard: mls tensorboard resume --config ./samples/template.tensorboard.resume.yaml 00000000-0000-4000-8000-000000000000" > $(TB_RESUME_SAMPLE)
+	@echo "# 📚 --config задает базовый шаблон; явно переданные CLI-опции resume переопределяют YAML. UUID передаётся аргументом команды." >> $(TB_RESUME_SAMPLE)
+	@echo "# 📚 Описание API: https://api.ai.cloud.ru/public/v2/redoc" >> $(TB_RESUME_SAMPLE)
+	@echo "# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️" >> $(TB_RESUME_SAMPLE)
+	@env PYTHONPATH=$(CI_PROJECT_DIR) poetry run python ./mls/cli.py tensorboard yaml --resume >> $(TB_RESUME_SAMPLE)
+	@echo "Создан или обновлен файл $(TB_RESUME_SAMPLE)"
+
+jupyter_server_samples: $(JS_CREATE_SAMPLE) $(JS_RESUME_SAMPLE)
+	@echo "Jupyter Server samples готовы"
+
+tensorboard_samples: $(TB_CREATE_SAMPLE) $(TB_RESUME_SAMPLE)
+	@echo "TensorBoard samples готовы"
+
+samples: directory $(addprefix , $(addsuffix .yaml, $(TYPES))) jupyter_server_samples tensorboard_samples
+
+sample: samples
+	@echo "Samples готовы в ./samples"
+
+.PHONY: test clear coverage build verion yaml directory sample jupyter_server_samples tensorboard_samples
 
 # -- оффлайн сборка --
 clean_dist:

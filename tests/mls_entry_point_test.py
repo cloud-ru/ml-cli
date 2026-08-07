@@ -116,6 +116,61 @@ def test_cli_autocomplete_config():
     mapping = {}
     auto_complete_function(mapping)
     assert set(mapping['mls configure']) == {'--profile', '--encrypt'}
+    assert set(mapping['mls js create']) == {
+        '--allocation_name',
+        '--debug',
+        '--description',
+        '--endpoint_url',
+        '--image_name',
+        '--image_tag',
+        '--image_type',
+        '--instance_type',
+        '--name',
+        '--namespace',
+        '--output',
+        '--pause_at',
+        '--postponed_pause_enabled',
+        '--profile',
+        '--queue_name',
+        '--region',
+        '--s3_buckets_json',
+        '--s3_credentials_json',
+        '--config',
+    }
+    assert set(mapping['mls js resume']) == {
+        '--config',
+        '--debug',
+        '--endpoint_url',
+        '--instance_type',
+        '--namespace',
+        '--output',
+        '--profile',
+        '--region',
+    }
+    assert set(mapping['mls js modify']) == {
+        '--autoshutdown_config_json',
+        '--debug',
+        '--description',
+        '--endpoint_url',
+        '--output',
+        '--profile',
+        '--s3_buckets_json',
+        '--s3_credentials_json',
+        '--shutdown_in',
+        '--timer_enabled',
+    }
+    assert set(mapping['mls js autoshutdown set']) == {
+        '--by_load_json',
+        '--by_schedule_json',
+        '--by_timer_json',
+        '--debug',
+        '--endpoint_url',
+        '--output',
+        '--profile',
+        '--shutdown_in',
+        '--timer_enabled',
+    }
+    assert set(mapping['mls ws list']) == {'--customer_id', '--debug', '--endpoint_url', '--output', '--profile'}
 
 
 def test_cli_suggest():
@@ -125,10 +180,13 @@ def test_cli_suggest():
     assert set(suggest_autocomplete('mls job re', mapping)) == {'regions', 'restart'}
     assert set(suggest_autocomplete('mls job s', mapping)) == {'status', 'submit'}
     assert suggest_autocomplete('mls job su', mapping) == ['submit']
-    assert suggest_autocomplete('mls j', mapping) == ['job']
+    assert set(suggest_autocomplete('mls j', mapping)) == {'job', 'js'}
     assert set(suggest_autocomplete('mls co', mapping)) == {'configure', 'connector'}
     assert suggest_autocomplete('mls conf', mapping) == ['configure']
     assert suggest_autocomplete('mls conn', mapping) == ['connector']
+    assert suggest_autocomplete('mls js cr', mapping) == ['create']
+    assert suggest_autocomplete('mls te', mapping) == ['tensorboard']
+    assert suggest_autocomplete('mls w', mapping) == ['ws']
     assert suggest_autocomplete('mls connector cr', mapping) == ['create']
     assert suggest_autocomplete('mls tr', mapping) == ['transfer']
     assert set(suggest_autocomplete('mls transfer de', mapping)) == {'deactivate', 'delete'}

@@ -10,6 +10,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+dist/temp/
 develop-eggs/
 dist/
 downloads/
@@ -170,3 +171,4 @@ target-repo/
 /samples/spark.yaml
 
 .idea/
+.DS_Store

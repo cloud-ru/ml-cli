@@ -1,0 +1,23 @@
+# 🤝 Пример создания TensorBoard: mls tensorboard create --config ./samples/template.tensorboard.create.yaml
+# 📚 --config задает базовый шаблон; явно переданные CLI-опции create переопределяют YAML. Region берётся из профиля, YAML или --region.
+# 📚 Описание API: https://api.ai.cloud.ru/public/v2/redoc
+# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️
+namespace: default
+tensorboard:
+  name: my-tensorboard
+  image:
+    name: cr.ai.cloud.ru/aicloud-tensorboard/tensorboard-server
+    tag: latest
+    type: datahub
+  instance_type: free.0gpu
+  logdir:
+  - /home/jovyan/logs
+  postponed_pause_enabled: false
+  tensorboard_params:
+    --port: '6006'
+  s3_buckets:
+  - bucket_name: test
+    access_rule: ro
+  s3_credentials:
+    s3_credentials_source: iam-product-sa
+    s3_tenant_id: tenant_id

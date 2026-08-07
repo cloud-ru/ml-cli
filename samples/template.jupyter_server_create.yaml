@@ -1,0 +1,23 @@
+# 🤝 Пример создания Jupyter Server: mls js create --config ./samples/template.jupyter_server_create.yaml
+# 📚 --config задает базовый шаблон; явно переданные CLI-опции create переопределяют YAML. Region берётся из профиля, YAML или --region.
+# 📚 Описание API: https://api.ai.cloud.ru/public/v2/redoc
+# 📚 ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️
+namespace: default
+jupyter_server:
+  name: my-notebook
+  image:
+    name: cr.ai.cloud.ru/aicloud-jupyter/jupyter-server
+    tag: latest
+    type: datahub
+  instance_type: free.0gpu
+  postponed_pause_enabled: false
+  allocation_name: my-allocation
+  queue_name: my-queue
+  description: Описание Jupyter Server
+  pause_at: 45 * * * *
+  s3_buckets:
+  - bucket_name: bucket-name
+    access_rule: ro
+  s3_credentials:
+    s3_credentials_source: iam-product-sa
+    s3_tenant_id: tenant_id

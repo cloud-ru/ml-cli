@@ -2,7 +2,7 @@
 import click
 import pytest
 
-from mls.manager.job.decorators import opt_output_format
+from mls.manager.decorators import opt_output_format
 from mls.manager.job.decorators import regions_selected
 from mls.manager.job.utils import job_client
 

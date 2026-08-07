@@ -36,7 +36,7 @@ class CommonPublicApiInterface:
     """API клиент."""
 
     AUTH_ENDPOINT = 'service_auth'
-    USER_OUTPUT_PREFERENCE = None
+    USER_OUTPUT_PREFERENCE: str | None = None
 
     def __init__(
         self,
@@ -90,6 +90,12 @@ class CommonPublicApiInterface:
         }
 
         self._session.headers.update(headers)
+
+    def set_workspace_id(self, workspace_id: str | UUID):
+        """Обновляет workspace ID в клиенте и HTTP-заголовках."""
+        workspace_id_value = str(workspace_id)
+        self.workspace_id = workspace_id_value
+        self._session.headers.update({'x-workspace-id': workspace_id_value})
 
     def _init_session(self, backoff_factor: float, max_retries: int):
         session = requests.Session()
@@ -156,9 +162,24 @@ class CommonPublicApiInterface:
         except requests.exceptions.RetryError as ex:
             self._logger.debug(ex)
             return None
-        if response.headers.get('content-type') == 'application/json':
+        return self._parse_response(response)
+
+    @staticmethod
+    def _parse_response(response: requests.Response):
+        """Безопасный разбор тела HTTP-ответа с учетом пустых JSON-пейлоадов."""
+        is_json = response.headers.get('content-type') == 'application/json'
+
+        if not is_json:
+            return response.text
+
+        response_text = response.text
+        if not response_text or not response_text.strip():
+            return {}
+
+        try:
             return response.json()
-        return response.text
+        except ValueError:
+            return response_text
 
     def _get_auth_token(self, client_id: str, client_secret: str):
         try:
@@ -226,10 +247,7 @@ class CommonPublicApiInterface:
     def _handle_http_error(self, ex):
         """Обработка исключений HTTPError."""
         self._logger.debug(ex)
-        if ex.response.headers.get('content-type') == 'application/json':
-            result = ex.response.json()
-        else:
-            result = ex.response.text
+        result = self._parse_response(ex.response)
         return self._user_preference_output(result)
 
 
@@ -261,10 +279,7 @@ class TrainingJobApi(CommonPublicApiInterface):
     def _handle_http_error(self, ex):
         """Обработка исключений HTTPError."""
         self._logger.debug(ex)
-        if ex.response.headers.get('content-type') == 'application/json':
-            result = ex.response.json()
-        else:
-            result = ex.response.text
+        result = self._parse_response(ex.response)
         return self._user_preference_output(result)
 
     @_handle_api_response
@@ -445,10 +460,7 @@ class DTSApi(CommonPublicApiInterface):
     def _handle_http_error(self, ex):
         """Обработка исключений HTTPError."""
         self._logger.debug(ex)
-        if ex.response.headers.get('content-type') == 'application/json':
-            result = ex.response.json()
-        else:
-            result = ex.response.text
+        result = self._parse_response(ex.response)
         return self._user_preference_output(result)
 
     @staticmethod

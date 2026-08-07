@@ -9,9 +9,9 @@
 Чтобы установить `mls` на локальную машину, в терминале выполните:
 
 ```bash
-pip install cloudru-ml-cli==0.13.0
+pip install cloudru-ml-cli==1.0.0
 Зеркало: 
-pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==0.13.0
+pip install --index-url https://gitverse.ru/api/packages/cloudru/pypi/simple/ --extra-index-url https://pypi.org/simple --trusted-host gitverse.ru mls==1.0.0
 ```
 ![GIF Установка](https://raw.githubusercontent.com/cloud-ru/ml-cli/refs/heads/master/install.gif)
 
@@ -47,7 +47,7 @@ mls job logs
 ```python
 import logging
 from mls.utils.common import read_profile
-from mls_core import TrainingJobApi, DTSApi, AllocationApi, QueueApi
+from mls_core import AllocationApi, DTSApi, QueueApi, TensorboardApi, TrainingJobApi, JupyterServerApi
 from pydantic.v1 import BaseSettings
 
 
@@ -83,6 +83,8 @@ class ManagerApi:
         self.dts = DTSApi(**client_kwargs)
         self.allocation = AllocationApi(**client_kwargs)
         self.queue = QueueApi(**client_kwargs)
+        self.jupyter_server = JupyterServerApi(**client_kwargs)
+        self.tensorboard = TensorboardApi(**client_kwargs)
 
 
 if __name__ == "__main__":
@@ -113,6 +115,8 @@ if __name__ == "__main__":
     print(api.dts.conn_sources())
     print(api.allocation.get_list_allocations())
     print(api.queue.get_list_queues_by_allocation_id('00000000-0000-0000-0000-000000000000'))
+    print(api.jupyter_server.get_jupyter_servers_list())
+    print(api.tensorboard.get_tensorboards_list())
 
 ```
 ## Файловая структура 
@@ -149,9 +153,26 @@ if __name__ == "__main__":
 │   │   │    ├── dataclasses.py  # Дата-классы задач.
 │   │   │    ├── help.py         # Помощь для job.
 │   │   │    └── utils.py        # Утилиты задач ML.
-│   │   └── queue               # Подкоманда: mls queue.
+│   │   ├── queue               # Подкоманда: mls queue.
 │   │        ├── cli.py         # Работа с queue.
 │   │        └── help.py        # Помощь для queue.
+│   │   └── jupyter_server      # Подкоманда: mls js (Jupyter Server); mls js autoshutdown (get/set/delete).
+│   │        ├── cli.py         # Команды Jupyter Server и группа autoshutdown.
+│   │        ├── constants.py   # Константы Jupyter Server.
+│   │        ├── help.py        # Справка Jupyter Server и autoshutdown.
+│   │        └── utils.py       # Утилиты Jupyter Server.
+│   │   └── tensorboard         # Подкоманда: mls tensorboard.
+│   │        ├── cli.py         # Команды TensorBoard.
+│   │        ├── constants.py   # Константы TensorBoard.
+│   │        ├── create_cli_options.py # Опции create.
+│   │        ├── dataclasses.py # Payload DTO TensorBoard.
+│   │        ├── help.py        # Помощь для tensorboard.
+│   │        ├── resume_cli_options.py # Опции resume.
+│   │        ├── utils.py       # Утилиты TensorBoard.
+│   │        └── yaml_contract.py # YAML-контракт create.
+│   │   └── workspace           # Команда: mls ws.
+│   │        ├── cli.py         # Просмотр workspaces.
+│   │        └── help.py        # Помощь для workspace.
 │   └── utils                   # Поддержка CLI.
 │       ├── cli_entrypoint_help.py # Помощь CLI.
 │       ├── common.py           # Общая логика.
@@ -168,23 +189,30 @@ if __name__ == "__main__":
 │   │    └── client.py          # Выделенный клиент allocation. 
 │   ├── queue
 │   │    └── client.py          # Выделенный клиент queue.
+│   ├── jupyter_server
+│   │    └── client.py          # Выделенный клиент Jupyter Server (в т.ч. workspace autoshutdown).
+│   ├── tensorboard
+│   │    └── client.py          # Выделенный клиент tensorboard.
 │   ├── client.py               # Клиенты SDK.
 │   ├── exeptions.py            # Исключения SDK.
 │   └── setting.py              # Настройки SDK.
 ├── samples
-│   ├── template.binary.yaml    # Шаблон бинарных задач.
-│   ├── template.binary_exp.yaml# Тестовый шаблон (Нестабильный). TODO 
-│   ├── template.horovod.yaml   # Шаблон Horovod.
-│   ├── template.pytorch.yaml   # Шаблон PyTorch. (Используйте pytorch2)
-│   ├── template.pytorch2.yaml  # Шаблон PyTorch2.(минорно отличается от pytorch)
-│   └── template.pytorch_elastic.yaml # Шаблон PyTorch Elastic.
+│   ├── template.binary.yaml             # Шаблон бинарных задач.
+│   ├── template.binary_exp.yaml         # Тестовый шаблон (Нестабильный). TODO 
+│   ├── template.horovod.yaml            # Шаблон Horovod.
+│   ├── template.pytorch.yaml            # Шаблон PyTorch. (Используйте pytorch2)
+│   ├── template.pytorch2.yaml           # Шаблон PyTorch2.(минорно отличается от pytorch)
+│   ├── template.tensorboard.create.yaml # Шаблон создания tensorboard.
+│   └── template.pytorch_elastic.yaml    # Шаблон PyTorch Elastic.
 └── Руководство cli
     ├── FAQ.md                  # FAQ.
     ├── Быстрый старт.md        # Быстрый старт.
     ├── Запуск задачи.md        # Запуск задач.
+    ├── Jupyter Servers примеры.md # Примеры команд Jupyter Server (CLI).
     ├── Работа переменных окружений.md
     ├── Сокрытие credentials.md
-    └── Настройка автокомплитера.md # Автозаполнение.
+    ├── Настройка автокомплитера.md # Автозаполнение.
+    └── TensorBoard YAML-примеры.md # Примеры YAML для tensorboard команд.
 
 ```
 
@@ -208,5 +236,27 @@ complete -F _mls_completion mls
 > pytorch2 YAML  [pytorch2](https://github.com/cloud-ru/ml-cli/blob/master/samples/template.pytorch2.yaml).
 > 
 > pytorch_elastic YAML  [pytorch_elastic](https://github.com/cloud-ru/ml-cli/blob/master/samples/template.pytorch_elastic.yaml).
+
+# Jupyter servers в CLI
+
+В CLI добавлены команды управления Jupyter Server:
+
+```bash
+mls js list
+mls js config
+mls ws list
+mls js create --namespace default --name my-js --image-name cr.ai.cloud.ru/aicloud-jupyter/jupyter-server \
+  --image-tag 0.0.95 --image-type datahub --instance-type free.0gpu
+mls js modify 11111111-1111-4111-8111-111111111111 --shutdown-in 3600
+mls js pause 11111111-1111-4111-8111-111111111111
+mls js delete 11111111-1111-4111-8111-111111111111
+mls js get 11111111-1111-4111-8111-111111111111
+mls js resume --namespace default --region SR006 --instance-type free.0gpu 11111111-1111-4111-8111-111111111111
+mls js autoshutdown get 00000000-0000-4000-8000-000000000000
+mls js autoshutdown set 00000000-0000-4000-8000-000000000000 --shutdown-in 3600
+mls js autoshutdown delete 00000000-0000-4000-8000-000000000000
+```
+
+Параметры create / resume можно задавать через CLI или YAML `--config`; явно переданные CLI-опции переопределяют YAML. Доступные регионы, instance types и образы для Jupyter берутся из `mls js config`. Подробнее в `Справочник CLI/Jupyter Servers примеры.md`.
 
 docs: .gitlab-ci.yml rules

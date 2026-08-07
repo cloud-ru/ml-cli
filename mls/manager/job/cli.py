@@ -16,7 +16,6 @@ from .decorators import date_begin_selected
 from .decorators import date_end_selected
 from .decorators import limit_selected
 from .decorators import offset_selected
-from .decorators import opt_output_format
 from .decorators import queue_selected
 from .decorators import regions_selected
 from .decorators import status_of_task
@@ -34,6 +33,7 @@ from .help import TypeHelp
 from .help import YamlHelp
 from .utils import apply_options
 from .utils import job_client
+from mls.manager.decorators import opt_output_format
 from mls.schema import JobTableView
 from mls.utils.common_types import Path
 from mls.utils.common_types import PositiveIntWithZeroView
@@ -120,7 +120,7 @@ def kill(api_job, name, region):
 
 @job.command(cls=RunHelp)
 @click.option(
-    '-c', '--config', cls=JobRecommenderOptions, type=Path(exists=True), help='Путь к YAML манифесту с описанием задачи', default=None,
+    '-c', '--config', cls=JobRecommenderOptions, type=Path(exists=True), help='Путь к YAML-манифесту с описанием задачи', default=None,
 )
 @regions_selected
 @opt_output_format
@@ -132,6 +132,7 @@ def submit(api_job, region, type_job, *_, **__):
     Синтаксис: mls job submit [options]
 
     Пример: mls job submit --config ./binary.yaml
+
     """
     click.echo(success_format(api_job.run_job(type_job.to_json(region))))
 

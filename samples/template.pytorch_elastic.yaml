@@ -28,6 +28,7 @@ job:
     checkpoint_dir: /home/jovyan/checkpoint
     elastic_max_restarts: 5
     internet_access: true
+    logs_dir: /home/jovyan/my-logs
     priority_class: medium
     queue_name: my-favorite-queue
   resource:

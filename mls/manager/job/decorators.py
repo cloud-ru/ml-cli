@@ -5,19 +5,8 @@ from mls.manager.job.constants import job_statuses
 from mls.manager.job.custom_types import cluster_key_input
 from mls.manager.job.custom_types import ProfileOptions
 from mls.manager.job.custom_types import status_inputs
-from mls.utils.common_types import config_option_format_of_output
 from mls.utils.common_types import PositiveIntWithZeroView
 from mls.utils.common_types import RussianChoice
-
-opt_output_format = click.option(
-    '-O',
-    '--output',
-    cls=ProfileOptions,
-    index=1,
-    type=config_option_format_of_output,
-    help=f'Формат вывода в консоль. {config_option_format_of_output.options}',
-    default='json',
-)
 
 status_of_task = click.option(
     '-s',
@@ -55,7 +44,7 @@ queue_selected = click.option(
     '-q',
     '--queue',
     multiple=False,
-    help='ID очереди',
+    help='ID очереди. Чтобы узнать ID очереди, выполните mls allocation list, затем mls queue list <allocation-id>',
     default=None,
 )
 
@@ -63,7 +52,7 @@ date_begin_selected = click.option(
     '-b',
     '--start_date',
     multiple=False,
-    help='Фильтр выборки даты начала',
+    help='Начальная дата и время для фильтрации данных в формате ISO. Если end_date не указан, система использует текущую дату и время',
     default=None,
     type=click.DateTime(),
 )
@@ -72,7 +61,7 @@ date_end_selected = click.option(
     '-e',
     '--end_date',
     multiple=False,
-    help='Фильтр выборки даты окончания',
+    help='Конечная дата и время для фильтрации данных в формате ISO',
     default=None,
     type=click.DateTime(),
 )
