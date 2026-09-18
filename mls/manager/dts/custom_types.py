@@ -10,7 +10,7 @@ from mls.manager.job.custom_types import CustomGroupedOption
 S3_LIKE_CONNECTOR_TYPES = ['s3amazon', 's3custom', 's3google']
 DB_LIKE_CONNECTOR_TYPES = ['mssql', 'mysql', 'postgresql', 'clickhouse', 'oracledb']
 CUSTOM_CONNECTOR_TYPES = [*S3_LIKE_CONNECTOR_TYPES, *DB_LIKE_CONNECTOR_TYPES]
-ALL_CONNECTOR_TYPES = [*CUSTOM_CONNECTOR_TYPES, 'nfs', 'nfsprivate', 'nfsshared', 's3evolution']
+ALL_CONNECTOR_TYPES = tuple([*CUSTOM_CONNECTOR_TYPES, 'nfs', 'nfsprivate', 'nfsshared', 's3evolution'])
 TARGET_CONNECTOR_TYPES = ['s3mlspace', 's3custom', 'nfs', 'nfsprivate', 'nfsshared', 's3evolution']
 STRATEGY = ['write_all', 'append_new', 'sync_all']
 

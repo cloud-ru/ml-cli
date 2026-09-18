@@ -34,4 +34,4 @@ ENDPOINT_URL = 'https://api.ai.cloud.ru/public/v2'
 
 # Расширяемый перечень регионов
 # export MLS_REGIONS='AMC, DGX2-MT-001'
-REGIONS = os.getenv('MLS_REGIONS', '').replace(' ', '').split(',')
+REGIONS = os.getenv('MLS_REGIONS', '').replace(' ', '').split(',') if os.getenv('MLS_REGIONS') else []

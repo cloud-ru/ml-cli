@@ -19,14 +19,13 @@ class Path(click.Path):
         return 'string'
 
 
-class RussianChoice(click.Choice):
+class RussianChoice(click.Choice):  # pylint: disable=too-few-public-methods,duplicate-bases
     """Класс для перевода ошибок ввода на русский язык."""
 
     def __init__(self, choices):
         """Метод инициализирует экземпляр класса."""
         normalized_choices = list(choices)
         super().__init__(normalized_choices)
-        self.choices = normalized_choices
 
     def __repr__(self):
         """Метод отображает список возможных вариантов."""
@@ -37,18 +36,17 @@ class RussianChoice(click.Choice):
         """Метод отображает список допустимых вариантов разделенных запятой."""
         return 'Допустимые варианты: ' + ', '.join(f'{c}' for c in self.choices)
 
-    def convert(self, value, param, ctx):
+    def convert(self, value, param, ctx):  # pylint: disable=inconsistent-return-statements
         """Метод заменяет наследуемый новым сообщением об ошибке."""
         try:
             return super().convert(value, param, ctx)
         except click.BadParameter:
             choices_str = ', '.join(f"'{c}'" for c in self.choices)
-            self.fail(
+            self.fail(  # pylint: disable=no-member
                 f"Недопустимый выбор '{value}'. Допустимые варианты: {choices_str}",
                 param,
                 ctx,
             )
-            return None
 
 
 class PositiveIntWithZeroView(click.ParamType):
