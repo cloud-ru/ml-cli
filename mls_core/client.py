@@ -7,6 +7,7 @@ import time
 from dataclasses import asdict
 from datetime import datetime
 from functools import wraps
+from typing import Any
 from typing import Optional
 from uuid import UUID
 
@@ -31,6 +32,15 @@ from mls.manager.dts.custom_types import CUSTOM_CONNECTOR_TYPES
 from mls.manager.dts.custom_types import Transfer
 from mls.manager.dts.custom_types import TransferUpdate
 
+try:
+    from mls import __version__ as library_version
+except ImportError:
+    library_version = 'unknown'
+
+LIBRARY_NAME = __name__
+PYTHON_VERSION = f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}'
+USER_AGENT = f'{LIBRARY_NAME}/{library_version} (Python {PYTHON_VERSION}; requests/{requests.__version__})'
+
 
 class CommonPublicApiInterface:
     """API клиент."""
@@ -39,19 +49,19 @@ class CommonPublicApiInterface:
     USER_OUTPUT_PREFERENCE: str | None = None
 
     def __init__(
-        self,
-        endpoint_url: str,
-        client_id: str,
-        client_secret: str,
-        x_workspace_id: str,
-        x_api_key: str,
-        max_retries: int = MAX_RETRIES,
-        backoff_factor: float = BACKOFF_FACTOR,
-        connect_timeout: int = CONNECT_TIMEOUT,
-        read_timeout: int = READ_TIMEOUT,
-        ssl_verify=SSL_VERIFY,
-        debug: bool = False,
-        logger: Optional[logging.Logger] = None,
+            self,
+            endpoint_url: str,
+            client_id: str,
+            client_secret: str,
+            x_workspace_id: str,
+            x_api_key: str,
+            max_retries: int = MAX_RETRIES,
+            backoff_factor: float = BACKOFF_FACTOR,
+            connect_timeout: int = CONNECT_TIMEOUT,
+            read_timeout: int = READ_TIMEOUT,
+            ssl_verify=SSL_VERIFY,
+            debug: bool = False,
+            logger: Optional[logging.Logger] = None,
     ):
         """Инициализация класса PublicApi.
 
@@ -82,11 +92,12 @@ class CommonPublicApiInterface:
         self.backoff_factor = backoff_factor
         self.ssl_verify = ssl_verify
         self.workspace_id = x_workspace_id
-
         headers = {
             'authorization': self._get_auth_token(client_id, client_secret),
             'x-workspace-id': x_workspace_id,
             'x-api-key': x_api_key,
+            'User-Agent': USER_AGENT,
+            'X-Client-Library': f'{LIBRARY_NAME}/{library_version}',
         }
 
         self._session.headers.update(headers)
@@ -95,7 +106,11 @@ class CommonPublicApiInterface:
         """Обновляет workspace ID в клиенте и HTTP-заголовках."""
         workspace_id_value = str(workspace_id)
         self.workspace_id = workspace_id_value
-        self._session.headers.update({'x-workspace-id': workspace_id_value})
+        self._session.headers.update(
+            {
+                'x-workspace-id': workspace_id_value,
+            },
+        )
 
     def _init_session(self, backoff_factor: float, max_retries: int):
         session = requests.Session()
@@ -148,7 +163,7 @@ class CommonPublicApiInterface:
             (self._connect_timeout, self._read_timeout),
         )
         headers = kwargs.pop('headers', {})
-
+        headers.update(self._session.headers)
         try:
             response = self._session.request(
                 method,
@@ -183,17 +198,19 @@ class CommonPublicApiInterface:
 
     def _get_auth_token(self, client_id: str, client_secret: str):
         try:
-            response: dict = self.post(
+            response: (None | str | dict[Any, Any] | Any) = self.post(
                 self.AUTH_ENDPOINT,
                 json={
                     'client_id': client_id,
                     'client_secret': client_secret,
                 },
             )
-            if not (token := response['token']['access_token']):
+            if not isinstance(response, dict):
                 self._logger.debug(response)
                 raise InvalidAuthorizationToken()
-
+            if not (token := response.get('token', {}).get('access_token')):
+                self._logger.debug(response)
+                raise InvalidAuthorizationToken()
             return token
         except requests.exceptions.HTTPError as ex:
             self._logger.debug(ex)
@@ -226,6 +243,7 @@ class CommonPublicApiInterface:
     @staticmethod
     def _handle_api_response(method):
         """Метод обработки ответа от API."""
+
         @wraps(method)
         def wrapper(self, *args, **kwargs):
             try:
@@ -284,7 +302,7 @@ class TrainingJobApi(CommonPublicApiInterface):
 
     @_handle_api_response
     def get_job_logs(
-        self, name: str, region: str, tail: int = 0, verbose: bool = False,
+            self, name: str, region: str, tail: int = 0, verbose: bool = False,
     ):
         """Получение логов задачи."""
         params = {'region': region, 'tail': tail, 'verbose': verbose}
@@ -437,6 +455,7 @@ class DTSApi(CommonPublicApiInterface):
     @staticmethod
     def _handle_api_response(method):
         """Метод обработки ответа от API."""
+
         @wraps(method)
         def wrapper(self, *args, **kwargs):
             try:
@@ -451,7 +470,7 @@ class DTSApi(CommonPublicApiInterface):
         """Формат вывода пользователю сообщений."""
         if self.USER_OUTPUT_PREFERENCE:
             if self.USER_OUTPUT_PREFERENCE == 'json' and isinstance(
-                result, (dict, list),
+                    result, (dict, list),
             ):
                 return json.dumps(result, indent=4, ensure_ascii=False)
             return result
@@ -586,7 +605,7 @@ class DTSApi(CommonPublicApiInterface):
         return self.get_transfers()
 
     def transfer(self, transfer_id: str):
-        """Вспомогательный метод для получения провила переноса."""
+        """Вспомогательный метод для получения правила переноса."""
         return self.get(TransferRoutes.GET.format(transfer_id=transfer_id))
 
     @_handle_api_response
@@ -669,10 +688,14 @@ class DTSApi(CommonPublicApiInterface):
         """Проверка, является ли правило переноса периодическим."""
         try:
             res = self.transfer(transfer_id)
+            if not res:
+                return False
+            if not isinstance(res, dict):
+                return False
             if not res.get('crontab'):
                 return False
 
-            ct = CronViewModel(**res.get('crontab'))
+            ct = CronViewModel(**res.get('crontab', {}))
 
             if not any([ct.time, ct.weekdays, ct.monthdays, ct.period]):
                 return False

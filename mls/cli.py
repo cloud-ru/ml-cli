@@ -138,7 +138,7 @@ def entry_point():
         click.echo(error_format('Попытка выполнить запрос неавторизованным пользователем'))
         sys.exit(1)
     except InvalidAuthorizationToken:
-        click.echo(error_format('Неизвестная ошибка авторизации'))
+        click.echo(error_format('Неизвестная ошибка при попытке авторизоваться'))
         sys.exit(1)
     except DecryptionError:
         click.echo(error_format('Невозможно расшифровать учётные данные'))

@@ -49,13 +49,15 @@ class TestClient:
     @staticmethod
     def mock_api():
         """Имитация объекта DTSApi."""
-        return DTSApi(
+        DTSApi._get_auth_token = lambda obj, client_id, client_secret: {'token': {'access_token': 'hello'}}
+        api = DTSApi(
             endpoint_url='https://test-ep',
             client_id='id1',
             client_secret='secret2',
             x_workspace_id='x-ws-id3',
             x_api_key='x-api-key4',
         )
+        return api
 
     def test_transfer_cancel(self, mock_post):
         """Проверка метода отмены переноса."""
